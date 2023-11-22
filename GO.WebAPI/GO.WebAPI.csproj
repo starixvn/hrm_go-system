@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Remove="App_Data\SpNames.xml" />
+        <None Remove="logs\log.txt" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="App_Data\SpNames.xml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="logs\log.txt">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Fanex.Logging.Extensions.AspNetCore" Version="1.0.0" />
+        <PackageReference Include="Fanex.Logging.Extensions.Database" Version="1.0.8" />
+        <PackageReference Include="Fanex.Logging.Sentry" Version="1.0.6" />
+        <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.7" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
+        <PackageReference Include="Serilog.Enrichers.Thread" Version="3.1.0" />
+        <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\GO.Core\GO.Core.csproj" />
+        <ProjectReference Include="..\GO.Models\GO.Models.csproj" />
+    </ItemGroup>
+</Project>
