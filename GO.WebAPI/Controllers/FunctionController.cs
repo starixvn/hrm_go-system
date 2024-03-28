@@ -4,11 +4,9 @@
     using GO.Core.Services;
     using GO.Models;
     using GO.WebAPI.Criteria.Function;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
-    [Authorize]
     public class FunctionController : BaseController
     {
         private readonly IBaseService baseService;

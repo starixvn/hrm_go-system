@@ -38,7 +38,7 @@
             var criteria = new GetMenuItemByUserIdCriteria
             {
                 UserId = UserId,
-                SiteId = SiteId
+                SiteId = Site.SiteId
             };
             var menuItems = await baseService.GetDataAsync<MenuItem>(criteria);
             return Json(menuItems);
@@ -56,7 +56,7 @@
         [Route("api/user/getAll")]
         public async Task<IActionResult> GetBySiteId(GetUserBySiteIdCriteria criteria)
         {
-            criteria.SiteId = SiteId;
+            criteria.SiteId = Site.SiteId;
             var users = await baseService.GetDataAsync<User>(criteria);
             return Json(users);
         }
@@ -73,7 +73,7 @@
         [Route("api/user/create")]
         public async Task<IActionResult> Create([FromBody] CreateUserCommand command)
         {
-            command.SiteId = SiteId;
+            command.SiteId = Site.SiteId;
             command.CreatedBy = UserId;
             if (!string.IsNullOrWhiteSpace(command.BCryptPassword))
             {
@@ -93,7 +93,7 @@
         [Route("api/user/update")]
         public async Task<IActionResult> Update([FromBody] UpdateUserInfoCommand command)
         {
-            command.SiteId = SiteId;
+            command.SiteId = Site.SiteId;
             command.ModifiedBy = UserId;
             CommandResult commandResult = await baseService.ExecuteNonQueryAsync(command);
             return Json(commandResult);
@@ -103,7 +103,7 @@
         [Route("api/user/assignRole")]
         public async Task<IActionResult> AssignRole([FromBody] AssignRoleToUserCommand command)
         {
-            command.SiteId = SiteId;
+            command.SiteId = Site.SiteId;
             command.ModifiedBy = UserId;
             CommandResult commandResult = await baseService.ExecuteNonQueryAsync(command);
             return Json(commandResult);
@@ -129,7 +129,7 @@
                 var command = new UpdateUserPasswordCommand
                 {
                     UserId = UserId,
-                    SiteId = SiteId,
+                    SiteId = Site.SiteId,
                     Password = BCrypt.Net.BCrypt.HashPassword(param.Password),
                     IsResetPassword = false,
                     ModifiedBy = UserId
@@ -151,7 +151,7 @@
             var command = new UpdateUserPasswordCommand
             {
                 UserId = param.UserId,
-                SiteId = SiteId,
+                SiteId = Site.SiteId,
                 Password = BCrypt.Net.BCrypt.HashPassword(param.Password),
                 IsResetPassword = true,
                 ModifiedBy = UserId
@@ -165,7 +165,7 @@
         [Route("api/user/delete")]
         public async Task<IActionResult> Delete([FromBody] DeleteUserCommand command)
         {
-            command.SiteId = SiteId;
+            command.SiteId = Site.SiteId;
             command.ModifiedBy = UserId;
             CommandResult commandResult = await baseService.ExecuteNonQueryAsync(command);
             return Json(commandResult);

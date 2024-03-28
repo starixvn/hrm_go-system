@@ -41,7 +41,7 @@
         {
             var command = new UpdateUnitHeadInfoCommand
             {
-                SiteId = SiteId,
+                SiteId = Site.SiteId,
                 ModifiedBy = UserId,
                 Value = infos != null && infos.Any() ? infos.ToXML().ToString() : string.Empty
             };
@@ -70,7 +70,7 @@
         {
             var command = new UpdateUnitHeadScheduleCommand
             {
-                SiteId = SiteId,
+                SiteId = Site.SiteId,
                 ModifiedBy = UserId,
                 Value = schedules != null && schedules.Any() ? schedules.ToXML().ToString() : string.Empty
             };

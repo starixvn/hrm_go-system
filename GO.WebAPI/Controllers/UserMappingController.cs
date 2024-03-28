@@ -5,11 +5,9 @@
     using System.Threading.Tasks;
     using GO.Models.UserMapping;
     using GO.WebAPI.Services;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
-    [Authorize]
     public class UserMappingController : BaseController
     {
         private readonly IUserMappingService userMappingService;
@@ -25,7 +23,7 @@
         [Route("api/UserMapping/GetBySiteId")]
         public async Task<IActionResult> GetBySiteId(DateTime? lastModifiedDate)
         {
-            IEnumerable<UserMapping> userMappings = await userMappingService.GetBySiteIdAsync(SiteId, lastModifiedDate);
+            IEnumerable<UserMapping> userMappings = await userMappingService.GetBySiteIdAsync(Site.SiteId, lastModifiedDate);
 
             return Json(userMappings);
         }

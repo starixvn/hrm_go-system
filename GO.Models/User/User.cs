@@ -12,9 +12,11 @@
         public string FullName { get; set; }
         public string Password { get; set; }
         public string OldPassword { get; set; }
+        public string BCryptPassword { get; set; }
         public string Email { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsResetPassword { get; set; }
+        public int? LinkToUserId { get; set; }
     }
 }

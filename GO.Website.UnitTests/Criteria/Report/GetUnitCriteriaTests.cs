@@ -19,9 +19,8 @@
             Assert.Equal(expected, actual);
         }
 
-        [Theory]
-        [InlineData(1, 1)]
-        public void IsValid_WhenCalledWithParamValid_ReturnTrue(int userId, short siteId)
+        [Fact]
+        public void IsValid_WhenCalled_ReturnTrue()
         {
             // Arrange
             var criteria = new GetUnitCriteria();

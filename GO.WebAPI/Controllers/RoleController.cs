@@ -9,7 +9,6 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
-    [Authorize]
     public class RoleController : BaseController
     {
         private readonly IBaseService baseService;
@@ -35,7 +34,7 @@
         {
             var criteria = new GetRoleByUserIdCriteria
             {
-                SiteId = SiteId,
+                SiteId = Site.SiteId,
                 UserId = userId
             };
             var roles = await baseService.GetDataAsync<Role>(criteria);
@@ -43,6 +42,7 @@
         }
 
         [HttpPost]
+        [Authorize]
         [Route("api/role/assignPermission")]
         public async Task<IActionResult> AssignPermission([FromBody] AssignFunctionToRoleCommand command)
         {

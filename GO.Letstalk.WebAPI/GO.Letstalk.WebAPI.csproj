@@ -2,12 +2,10 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
-
   <ItemGroup>
     <None Remove="App_Data\SpNames.xml" />
     <None Remove="logs\log.txt" />
   </ItemGroup>
-
   <ItemGroup>
     <Content Include="App_Data\SpNames.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -19,7 +17,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Fanex.Data" Version="4.2.5.3" />
     <PackageReference Include="Fanex.Data.Repository" Version="4.2.5.3" />
