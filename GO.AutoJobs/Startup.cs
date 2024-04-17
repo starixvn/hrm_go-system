@@ -6,9 +6,6 @@
     using Fanex.Data.Repository;
     using Fanex.Data.SqlServer;
     using Fanex.Logging;
-    using Fanex.Logging.Extensions;
-    using Fanex.Logging.Extensions.AspNetCore;
-    using Fanex.Logging.Extensions.Database;
     using Fanex.Logging.Sentry;
     using GO.AutoJobs.Middlewares;
     using GO.AutoJobs.Models;
@@ -90,10 +87,6 @@
                         Dsn = new Dsn(configuration.GetSection("Sentry:Dsn").Value)
                     })
                 });
-
-            ExceptionHandler
-                .UseConfig(new LoggingConfiguration())
-                .UseGetDbExceptionInfo(DatabaseInfoGetters.GetDbExceptionInfo);
 
             services.AddSingleton(configuration);
             services.AddHttpClient();

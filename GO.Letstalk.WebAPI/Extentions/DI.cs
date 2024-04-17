@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Net.Http;
     using GO.Letstalk.WebAPI.Models;
     using GO.Letstalk.WebAPI.Services;
@@ -27,7 +26,7 @@
 
             services.AddSingleton<Func<int, ILetstalkService>>(serviceProvider => botId =>
             {
-                var botConfig = botConfigs.FirstOrDefault(config => config.BotAccountId == botId);
+                var botConfig = botConfigs.Find(config => config.BotAccountId == botId);
 
                 if (botConfig == null)
                 {

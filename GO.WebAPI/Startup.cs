@@ -7,9 +7,6 @@ namespace GO.WebAPI
     using Fanex.Data.Repository;
     using Fanex.Data.SqlServer;
     using Fanex.Logging;
-    using Fanex.Logging.Extensions;
-    using Fanex.Logging.Extensions.AspNetCore;
-    using Fanex.Logging.Extensions.Database;
     using Fanex.Logging.Sentry;
     using GO.Core.Repository;
     using GO.Core.Services;
@@ -61,10 +58,6 @@ namespace GO.WebAPI
                         Dsn = new Dsn(Configuration.GetSection("Sentry:Dsn").Value)
                     })
                 });
-
-            ExceptionHandler
-                .UseConfig(new LoggingConfiguration())
-                .UseGetDbExceptionInfo(DatabaseInfoGetters.GetDbExceptionInfo);
 
             services.Configure<ForwardedHeadersOptions>(options =>
             {
