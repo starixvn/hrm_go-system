@@ -12,18 +12,13 @@
         public string UnitName { get; set; }
 
         public byte ProcessId { get; set; }
-        public short SiteId { get; set; }
-
-        [XmlIgnore]
-        public string SiteName { get; set; }
-
-        [XmlIgnore]
         public short CompanyId { get; set; }
 
         [XmlIgnore]
         public string CompanyName { get; set; }
 
         public int EmpId { get; set; }
+
         [XmlIgnore]
         public int UserId { get; set; }
 

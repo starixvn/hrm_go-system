@@ -11,9 +11,6 @@
         [XmlIgnore]
         public short CompanyId { get; set; }
 
-        [XmlIgnore]
-        public short SiteId { get; set; }
-
         public int EmpId { get; set; }
         public DateTime WorkDate { get; set; }
         public bool IsWorkDay { get; set; }

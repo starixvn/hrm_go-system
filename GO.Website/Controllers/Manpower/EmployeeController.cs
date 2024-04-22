@@ -85,13 +85,13 @@
         private static IEnumerable<MultiSelectViewModel> GetOrgChart(
             IList<Section> sections)
         {
-            var department = new List<Section>();
-            foreach (var item in sections.Where(item => department.All(x => !string.Equals(x.DepartmentName, item.DepartmentName, StringComparison.OrdinalIgnoreCase))))
+            var departments = new List<Section>();
+            foreach (var item in sections.Where(item => departments.All(x => !string.Equals(x.DepartmentName, item.DepartmentName, StringComparison.OrdinalIgnoreCase))))
             {
-                department.Add(item);
+                departments.Add(item);
             }
 
-            var multiSelectViewModel = department.Select(d => new MultiSelectViewModel
+            var multiSelectViewModel = departments.Select(d => new MultiSelectViewModel
             {
                 Id = d.DepartmentId.ToString(),
                 Text = d.DepartmentName,

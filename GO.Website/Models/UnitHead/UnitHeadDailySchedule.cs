@@ -6,7 +6,6 @@
     public class UnitHeadDailySchedule
     {
         public short CompanyId { get; set; }
-        public short SiteId { get; set; }
 
         public int EmpId { get; set; }
         public DateTime WorkDate { get; set; }

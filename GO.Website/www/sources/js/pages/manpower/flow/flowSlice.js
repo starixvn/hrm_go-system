@@ -23,8 +23,6 @@ const siteSlice = createSlice({
             const { processId, employee } = action.payload;
             const flow = {
                 processId,
-                siteId: employee.siteId,
-                siteName: employee.siteName,
                 companyId: employee.companyId,
                 companyName: employee.companyName,
                 empId: employee.empId,
@@ -36,7 +34,7 @@ const siteSlice = createSlice({
             };
 
             if (flow.processId === ManpowerFlow.UnitHead) {
-                const index = state.flows.findIndex(x => x.siteId === employee.siteId && x.empId === employee.empId);
+                const index = state.flows.findIndex(x => x.companyId === employee.companyId && x.empId === employee.empId);
                 if (index < 0) {
                     state.flows.push(flow);
                 }
@@ -45,7 +43,7 @@ const siteSlice = createSlice({
                 if (index < 0) {
                     state.flows.push(flow);
                 } else {
-                    if (state.flows[index].siteId !== employee.siteId || state.flows[index].empId !== employee.empId) {
+                    if (state.flows[index].companyId !== employee.companyId || state.flows[index].empId !== employee.empId) {
                         state.flows[index] = flow;
                     }
                 }
@@ -53,7 +51,7 @@ const siteSlice = createSlice({
         },
         removeFlowItem: (state, action) => {
             const { processId, employee } = action.payload;
-            const index = state.flows.findIndex(x => x.processId === processId && x.siteId === employee.siteId && x.empId === employee.empId);
+            const index = state.flows.findIndex(x => x.processId === processId && x.companyId === employee.companyId && x.empId === employee.empId);
             state.flows.splice(index, 1);
         },
         setShowDeleteModalDialog: (state, action) => {

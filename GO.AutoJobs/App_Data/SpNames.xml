@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Functions>
     <Function Name="Employee">
-        <Setting Key="AutoJob_Employee_GetLastModifiedDateBySiteId" SpName="AutoJob_Employee_GetLastModifiedDateBySiteId" DbName="bodb_IUC" Plain="0" />
+        <Setting Key="AutoJob_Employee_GetLastModifiedDateByCompanyId" SpName="AutoJob_Employee_GetLastModifiedDateByCompanyId" DbName="bodb_IUC" Plain="0" />
         <Setting Key="AutoJob_Employee_Import" SpName="AutoJob_Employee_Import" DbName="bodb_IUC" Plain="0" />
         <Setting Key="AutoJob_Employee_ImportFromDB" SpName="AutoJob_Employee_ImportFromDB" DbName="bodb_IUC" Plain="0" />
     </Function>
     <Function Name="Team">
-        <Setting Key="AutoJob_Team_GetLastModifiedDateBySiteId" SpName="AutoJob_Team_GetLastModifiedDateBySiteId" DbName="bodb_IUC" Plain="0" />
+        <Setting Key="AutoJob_Team_GetLastModifiedDateByCompanyId" SpName="AutoJob_Team_GetLastModifiedDateByCompanyId" DbName="bodb_IUC" Plain="0" />
         <Setting Key="AutoJob_Team_Import" SpName="AutoJob_Team_Import" DbName="bodb_IUC" Plain="0" />
         <Setting Key="AutoJob_Team_ImportFromDB" SpName="AutoJob_Team_ImportFromDB" DbName="bodb_IUC" Plain="0" />
     </Function>
     <Function Name="Section">
-        <Setting Key="AutoJob_Section_GetLastModifiedDateBySiteId" SpName="AutoJob_Section_GetLastModifiedDateBySiteId" DbName="bodb_IUC" Plain="0" />
+        <Setting Key="AutoJob_Section_GetLastModifiedDateByCompanyId" SpName="AutoJob_Section_GetLastModifiedDateByCompanyId" DbName="bodb_IUC" Plain="0" />
         <Setting Key="AutoJob_Section_Import" SpName="AutoJob_Section_Import" DbName="bodb_IUC" Plain="0" />
         <Setting Key="AutoJob_Section_ImportFromDB" SpName="AutoJob_Section_ImportFromDB" DbName="bodb_IUC" Plain="0" />
     </Function>

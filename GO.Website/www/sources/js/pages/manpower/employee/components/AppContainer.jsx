@@ -52,10 +52,10 @@ const AppContainer = () => {
         setFilter(value);
     };
 
-    const updateExclude = async (siteId, empId, isExcluded) => {
+    const updateExclude = async (companyId, empId, isExcluded) => {
         Site.blockUI();
         const url = Site.resolveClientUrl('Manpower/Employee/UpdateExclude');
-        const params = { siteId, empId, isExcluded };
+        const params = { companyId, empId, isExcluded };
         await DataService.postDataAsync(url, params).then(response => {
             if (response.data.isSuccessful) {
                 toast.success('Update successfully!');

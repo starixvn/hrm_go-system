@@ -67,7 +67,7 @@
                 IEnumerable<AnnualManpowerForecastRequestDetail> prevforecasts = await GetPreviousApprovedManpowerForecastAsync(period.PeriodId);
                 foreach (var item in details)
                 {
-                    var prevforecast = prevforecasts.FirstOrDefault(x => x.SiteId == item.SiteId && x.SectionId == item.SectionId && x.JobLevel == item.JobLevel);
+                    var prevforecast = prevforecasts.FirstOrDefault(x => x.CompanyId == item.CompanyId && x.SectionId == item.SectionId && x.JobLevel == item.JobLevel);
                     if (prevforecast != null)
                     {
                         item.LocalCurrentHeadcount = prevforecast.LocalCurrentHeadcount;
@@ -107,7 +107,7 @@
                 IEnumerable<AnnualManpowerForecastRequestDetail> prevForecasts = await GetPreviousApprovedManpowerForecastAsync(request.Period.PeriodId);
                 foreach (var item in request.Details)
                 {
-                    var prevForecast = prevForecasts.FirstOrDefault(x => x.SiteId == item.SiteId && x.SectionId == item.SectionId && x.JobLevel == item.JobLevel);
+                    var prevForecast = prevForecasts.FirstOrDefault(x => x.CompanyId == item.CompanyId && x.SectionId == item.SectionId && x.JobLevel == item.JobLevel);
                     if (prevForecast != null)
                     {
                         item.LocalCurrentHeadcount = prevForecast.LocalCurrentHeadcount;
@@ -129,7 +129,7 @@
                 IEnumerable<AnnualManpowerForecastRequestDetail> prevforecasts = await GetPreviousApprovedManpowerForecastAsync(criteria.PeriodId);
                 foreach (var detail in request.Details)
                 {
-                    var prevforecast = prevforecasts.Where(x => x.SiteId == detail.SiteId && IsEqual(x.UnitName, detail.UnitName)
+                    var prevforecast = prevforecasts.Where(x => x.CompanyId == detail.CompanyId && IsEqual(x.UnitName, detail.UnitName)
                         && IsEqual(x.DepartmentName, detail.DepartmentName) && IsEqual(x.SectionName, detail.SectionName)).ToList();
                     if (prevforecast != null)
                     {
@@ -152,7 +152,7 @@
                 IEnumerable<AnnualManpowerForecastRequestDetail> prevforecasts = await GetPreviousApprovedManpowerForecastAsync(criteria.PeriodId);
                 foreach (var detail in request.Details)
                 {
-                    var prevforecast = prevforecasts.Where(x => x.SiteId == detail.SiteId && IsEqual(x.UnitName, detail.UnitName)
+                    var prevforecast = prevforecasts.Where(x => x.CompanyId == detail.CompanyId && IsEqual(x.UnitName, detail.UnitName)
                         && IsEqual(x.DepartmentName, detail.DepartmentName) && IsEqual(x.SectionName, detail.SectionName)).ToList();
                     if (prevforecast != null)
                     {

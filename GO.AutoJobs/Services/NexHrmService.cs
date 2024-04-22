@@ -41,16 +41,16 @@
 
         public async Task<CommandResult> SyncEmployeeInfoAsync(bool isNexcel = true)
         {
-            var siteId = isNexcel ? apiConfig.NexHrmSiteId : apiConfig.LumiHrmSiteId;
+            var companyId = isNexcel ? apiConfig.NexCompanyId : apiConfig.LumiCompanyId;
             var commandResult = new CommandResult { Code = 0 };
-            var criteria = new GetEmployeeLastModifiedDateBySiteIdCriteria { SiteId = siteId };
+            var criteria = new GetEmployeeLastModifiedDateByCompanyIdCriteria { CompanyId = companyId };
             var lastModifiedDate = await baseService.GetDataEntityAsync<DateTime?>(criteria);
             var employees = await GetDataFromApiAsync<IEnumerable<Employee>>(apiConfig.EmployeeUrl, isNexcel, lastModifiedDate);
             if (employees != null && employees.Any())
             {
                 var command = new ImportEmployeeCommand
                 {
-                    SiteId = siteId,
+                    CompanyId = companyId,
                     Value = employees.ToXML().ToString()
                 };
                 commandResult = await baseService.ExecuteNonQueryAsync(command);
@@ -61,16 +61,16 @@
 
         public async Task<CommandResult> SyncTeamAsync(bool isNexcel = true)
         {
-            var siteId = isNexcel ? apiConfig.NexHrmSiteId : apiConfig.LumiHrmSiteId;
+            var companyId = isNexcel ? apiConfig.NexCompanyId : apiConfig.LumiCompanyId;
             var commandResult = new CommandResult { Code = 0 };
-            var criteria = new GetTeamLastModifiedDateBySiteIdCriteria { SiteId = siteId };
+            var criteria = new GetTeamLastModifiedDateByCompanyIdCriteria { CompanyId = companyId };
             var lastModifiedDate = await baseService.GetDataEntityAsync<DateTime?>(criteria);
             var teams = await GetDataFromApiAsync<IEnumerable<Team>>(apiConfig.TeamUrl, isNexcel, lastModifiedDate ?? DefaultLastModifiedDate);
             if (teams != null && teams.Any())
             {
                 var command = new ImportTeamCommand
                 {
-                    SiteId = siteId,
+                    CompanyId = companyId,
                     Value = teams.ToXML().ToString()
                 };
                 commandResult = await baseService.ExecuteNonQueryAsync(command);
@@ -81,16 +81,16 @@
 
         public async Task<CommandResult> SyncSectionAsync(bool isNexcel = true)
         {
-            var siteId = isNexcel ? apiConfig.NexHrmSiteId : apiConfig.LumiHrmSiteId;
+            var companyId = isNexcel ? apiConfig.NexCompanyId : apiConfig.LumiCompanyId;
             var commandResult = new CommandResult { Code = 0 };
-            var criteria = new GetSectionLastModifiedDateBySiteIdCriteria { SiteId = siteId };
+            var criteria = new GetSectionLastModifiedDateByCompanyIdCriteria { CompanyId = companyId };
             var lastModifiedDate = await baseService.GetDataEntityAsync<DateTime?>(criteria);
             var sections = await GetDataFromApiAsync<IEnumerable<Section>>(apiConfig.SectionUrl, isNexcel, lastModifiedDate ?? DefaultLastModifiedDate);
             if (sections != null && sections.Any())
             {
                 var command = new ImportSectionCommand
                 {
-                    SiteId = siteId,
+                    CompanyId = companyId,
                     Value = sections.ToXML().ToString()
                 };
                 commandResult = await baseService.ExecuteNonQueryAsync(command);
@@ -101,14 +101,14 @@
 
         public async Task<CommandResult> SyncJobTitleAsync(bool isNexcel = true)
         {
-            var siteId = isNexcel ? apiConfig.NexHrmSiteId : apiConfig.LumiHrmSiteId;
+            var companyId = isNexcel ? apiConfig.NexCompanyId : apiConfig.LumiCompanyId;
             var commandResult = new CommandResult { Code = 0 };
             var jobTitles = await GetDataFromApiAsync<IEnumerable<JobTitle>>(apiConfig.JobTitleUrl, isNexcel);
             if (jobTitles != null && jobTitles.Any())
             {
                 var command = new ImportJobTitleCommand
                 {
-                    SiteId = siteId,
+                    CompanyId = companyId,
                     Value = jobTitles.ToXML().ToString()
                 };
                 commandResult = await baseService.ExecuteNonQueryAsync(command);
@@ -125,7 +125,7 @@
             {
                 foreach(var info in infos)
                 {
-                    info.SiteId = apiConfig.NexHrmSiteId;
+                    info.CompanyId = apiConfig.NexCompanyId;
                 }
 
                 var command = new UpdateUnitHeadInfoCommand
@@ -146,7 +146,7 @@
             {
                 foreach (var schedule in schedules)
                 {
-                    schedule.SiteId = apiConfig.NexHrmSiteId;
+                    schedule.CompanyId = apiConfig.NexCompanyId;
                 }
 
                 var command = new UpdateUnitHeadScheduleCommand

@@ -43,7 +43,7 @@ const DataGrid = ({ filter, gridData, getEmployeeInfos, onFilterChange, onChange
             const startIndex = (pageIndex - 1) * pageSize + 1;
             return data.map((item, index) =>
                 <RowItem
-                    key={`row-${item.siteId}-${item.empId}`}
+                    key={`row-${item.companyId}-${item.empId}`}
                     employee={item} index={startIndex + index}
                     onChangeStatus={onChangeStatus}
                 />

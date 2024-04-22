@@ -23,7 +23,7 @@ const Table = ({ isMobile, filter, data, onPrev, onNext, onToday, onChangeCompan
                 {
                     data.length > 0 &&
                     data.map(item => <Row
-                        key={`unit-head-${item.siteId}-${item.empId}`}
+                        key={`unit-head-${item.companyId}-${item.empId}`}
                         isMobile={isMobile} data={item}
                     />)
                 }

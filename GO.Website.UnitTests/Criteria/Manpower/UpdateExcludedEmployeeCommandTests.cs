@@ -21,12 +21,12 @@
 
         [Theory]
         [InlineData(1, 1,true, 1)]
-        public void IsValid_WhenCalledWithParamValid_ReturnTrue(short siteId, int empId, bool isExcluded , int modifiedBy)
+        public void IsValid_WhenCalledWithParamValid_ReturnTrue(short companyId, int empId, bool isExcluded , int modifiedBy)
         {
             // Arrange
             var criteria = new UpdateExcludedEmployeeCommand()
             {
-                SiteId = siteId,
+                CompanyId = companyId,
                 EmpId = empId,
                 IsExcluded = isExcluded,
                 ModifiedBy = modifiedBy

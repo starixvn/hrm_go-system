@@ -80,11 +80,11 @@
             var unitName = fixture.Create<string>();
             var expectedPeriod = fixture.Create<IEnumerable<ManpowerPeriod>>();
             var expectedDetails = fixture.Create<IEnumerable<AnnualManpowerForecastRequestDetail>>();
-            expectedDetails.First().SiteId = 1;
+            expectedDetails.First().CompanyId = 1;
             expectedDetails.First().SectionId = 1;
             expectedDetails.First().JobLevel = "test";
             var expectedPrevforecasts = fixture.Create<IEnumerable<AnnualManpowerForecastRequestDetail>>();
-            expectedPrevforecasts.First().SiteId = 1;
+            expectedPrevforecasts.First().CompanyId = 1;
             expectedPrevforecasts.First().SectionId = 1;
             expectedPrevforecasts.First().JobLevel = "test";
 
@@ -168,11 +168,11 @@
             var service = GetManpowerForecastService();
             var requestId = fixture.Create<int>();
             var expectedAnnualManpowerForecastRequest = fixture.Create<AnnualManpowerForecastRequest>();
-            expectedAnnualManpowerForecastRequest.Details.First().SiteId = 1;
-            expectedAnnualManpowerForecastRequest.Details.First().SectionId = 1;
-            expectedAnnualManpowerForecastRequest.Details.First().JobLevel = "test";
+            expectedAnnualManpowerForecastRequest.Details[0].CompanyId = 1;
+            expectedAnnualManpowerForecastRequest.Details[0].SectionId = 1;
+            expectedAnnualManpowerForecastRequest.Details[0].JobLevel = "test";
             var expectedPrevforecasts = fixture.Create<IEnumerable<AnnualManpowerForecastRequestDetail>>();
-            expectedPrevforecasts.First().SiteId = 1;
+            expectedPrevforecasts.First().CompanyId = 1;
             expectedPrevforecasts.First().SectionId = 1;
             expectedPrevforecasts.First().JobLevel = "test";
 
@@ -307,22 +307,22 @@
             var service = GetManpowerForecastService();
             var expectedRequest = fixture.Create<IEnumerable<AnnualManpowerForecastRequest>>();
             expectedRequest.First().RequestId = 1;
-            expectedRequest.First().Details.First().RequestId = 1;
-            expectedRequest.First().Details.First().SiteId = 1;
-            expectedRequest.First().Details.First().UnitName = "test";
-            expectedRequest.First().Details.First().DepartmentName = "test";
-            expectedRequest.First().Details.First().SectionName = "test";
+            expectedRequest.First().Details[0].RequestId = 1;
+            expectedRequest.First().Details[0].CompanyId = 1;
+            expectedRequest.First().Details[0].UnitName = "test";
+            expectedRequest.First().Details[0].DepartmentName = "test";
+            expectedRequest.First().Details[0].SectionName = "test";
 
             var expectedDetail = fixture.Create<IEnumerable<AnnualManpowerForecastRequestDetail>>();
             expectedDetail.First().RequestId = 1;
-            expectedDetail.First().SiteId = 1;
+            expectedDetail.First().CompanyId = 1;
             expectedDetail.First().UnitName = "test";
             expectedDetail.First().DepartmentName = "test";
             expectedDetail.First().SectionName = "test";
 
             var expectedPrevforecasts = fixture.Create<IEnumerable<AnnualManpowerForecastRequestDetail>>();
             expectedPrevforecasts.First().RequestId = 1;
-            expectedPrevforecasts.First().SiteId = 1;
+            expectedPrevforecasts.First().CompanyId = 1;
             expectedPrevforecasts.First().UnitName = "test";
             expectedPrevforecasts.First().DepartmentName = "test";
             expectedPrevforecasts.First().SectionName = "test";
@@ -378,14 +378,14 @@
 
             var expectedDetail = fixture.Create<IEnumerable<AnnualManpowerForecastRequestDetail>>();
             expectedDetail.First().RequestId = 1;
-            expectedDetail.First().SiteId = 1;
+            expectedDetail.First().CompanyId = 1;
             expectedDetail.First().UnitName = "test";
             expectedDetail.First().DepartmentName = "test";
             expectedDetail.First().SectionName = "test";
 
             var expectedPrevforecasts = fixture.Create<IEnumerable<AnnualManpowerForecastRequestDetail>>();
             expectedPrevforecasts.First().RequestId = 1;
-            expectedPrevforecasts.First().SiteId = 1;
+            expectedPrevforecasts.First().CompanyId = 1;
             expectedPrevforecasts.First().UnitName = "test";
             expectedPrevforecasts.First().DepartmentName = "test";
             expectedPrevforecasts.First().SectionName = "test";
@@ -439,11 +439,11 @@
             expected.Code = 0;
 
             var expectedAnnualManpowerForecastRequest = fixture.Create<AnnualManpowerForecastRequest>();
-            expectedAnnualManpowerForecastRequest.Details.First().SiteId = 1;
-            expectedAnnualManpowerForecastRequest.Details.First().SectionId = 1;
-            expectedAnnualManpowerForecastRequest.Details.First().JobLevel = "test";
+            expectedAnnualManpowerForecastRequest.Details[0].CompanyId = 1;
+            expectedAnnualManpowerForecastRequest.Details[0].SectionId = 1;
+            expectedAnnualManpowerForecastRequest.Details[0].JobLevel = "test";
             var expectedPrevforecasts = fixture.Create<IEnumerable<AnnualManpowerForecastRequestDetail>>();
-            expectedPrevforecasts.First().SiteId = 1;
+            expectedPrevforecasts.First().CompanyId = 1;
             expectedPrevforecasts.First().SectionId = 1;
             expectedPrevforecasts.First().JobLevel = "test";
 

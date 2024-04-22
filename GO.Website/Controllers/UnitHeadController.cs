@@ -7,15 +7,8 @@
     using GO.Website.Services;
     using Microsoft.AspNetCore.Mvc;
 
-    public class UnitHeadController : Controller
+    public class UnitHeadController(IUnitHeadService unitHeadService) : Controller
     {
-        private readonly IUnitHeadService unitHeadService;
-
-        public UnitHeadController(IUnitHeadService unitHeadService)
-        {
-            this.unitHeadService = unitHeadService;
-        }
-
         public IActionResult Schedule()
         {
             return View();

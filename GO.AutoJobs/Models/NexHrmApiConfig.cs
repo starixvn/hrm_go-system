@@ -2,8 +2,8 @@
 {
     public class NexHrmApiConfig
     {
-        public short NexHrmSiteId { get; set; }
-        public short LumiHrmSiteId { get; set; }
+        public short NexCompanyId { get; set; }
+        public short LumiCompanyId { get; set; }
         public string BaseUrl { get; set; }
         public string AuthenticateUrl { get; set; }
         public string AppCredentialId { get; set; }

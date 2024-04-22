@@ -1,62 +1,59 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-    <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <None Remove="App_Data\SpNames.xml" />
-        <None Remove="EmailTemplates\ManpowerForecast\NotiEditToUnitHead.txt" />
-        <None Remove="ExcelTemplates\AnnualManpowerForecastRequestForm.xlsx" />
-        <None Remove="ExcelTemplates\EmployeeInfo.xlsx" />
-        <None Remove="ExcelTemplates\JobLevelSummaryReportByUnitAndCountry.xlsx" />
-        <None Remove="ExcelTemplates\ManpowerForecast.xlsx" />
-        <None Remove="logs\log.txt" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Content Include="App_Data\SpNames.xml">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="EmailTemplates\ManpowerForecast\NotiEditToUnitHead.txt">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="ExcelTemplates\AnnualManpowerForecastRequestForm.xlsx">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="ExcelTemplates\JobLevelSummaryReportByUnitAndCountry.xlsx">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="ExcelTemplates\EmployeeInfo.xlsx">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="ExcelTemplates\ManpowerForecast.xlsx">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="logs\log.txt">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
-        <PackageReference Include="EPPlus" Version="4.5.3.3" />
-        <PackageReference Include="Fanex.Data" Version="4.2.5.3" />
-        <PackageReference Include="Fanex.Data.Repository" Version="4.2.5.3" />
-        <PackageReference Include="Fanex.Data.SqlServer" Version="4.2.5.3" />
-        <PackageReference Include="Fanex.Logging.Extensions.AspNetCore" Version="1.0.1" />
-        <PackageReference Include="Fanex.Logging.Extensions.Database" Version="1.0.8" />
-        <PackageReference Include="Fanex.Logging.Sentry" Version="1.0.6" />
-        <PackageReference Include="GoogleAuthenticator" Version="3.2.0" />
-        <PackageReference Include="HRM.UserControl.Client.AspNetCore" Version="1.0.5" />
-        <PackageReference Include="MailKit" Version="4.5.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
-        <PackageReference Include="Serilog.Enrichers.Thread" Version="3.1.0" />
-        <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\GO.Core\GO.Core.csproj" />
-    </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="App_Data\SpNames.xml" />
+    <None Remove="EmailTemplates\ManpowerForecast\NotiEditToUnitHead.txt" />
+    <None Remove="ExcelTemplates\AnnualManpowerForecastRequestForm.xlsx" />
+    <None Remove="ExcelTemplates\EmployeeInfo.xlsx" />
+    <None Remove="ExcelTemplates\JobLevelSummaryReportByUnitAndCountry.xlsx" />
+    <None Remove="ExcelTemplates\ManpowerForecast.xlsx" />
+    <None Remove="logs\log.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\SpNames.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="EmailTemplates\ManpowerForecast\NotiEditToUnitHead.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ExcelTemplates\AnnualManpowerForecastRequestForm.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ExcelTemplates\JobLevelSummaryReportByUnitAndCountry.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ExcelTemplates\EmployeeInfo.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ExcelTemplates\ManpowerForecast.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="logs\log.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="nlog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="EPPlus" Version="4.5.3.3" />
+    <PackageReference Include="Fanex.Data" Version="4.2.5.3" />
+    <PackageReference Include="Fanex.Data.Repository" Version="4.2.5.3" />
+    <PackageReference Include="Fanex.Data.SqlServer" Version="4.2.5.3" />
+    <PackageReference Include="Fanex.Logging.Extensions.AspNetCore" Version="1.0.1" />
+    <PackageReference Include="Fanex.Logging.Extensions.Database" Version="1.0.8" />
+    <PackageReference Include="Fanex.Logging.Sentry" Version="1.0.6" />
+    <PackageReference Include="GoogleAuthenticator" Version="3.2.0" />
+    <PackageReference Include="HRM.UserControl.Client.AspNetCore" Version="1.0.5" />
+    <PackageReference Include="MailKit" Version="4.5.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="5.3.8" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GO.Core\GO.Core.csproj" />
+  </ItemGroup>
 </Project>

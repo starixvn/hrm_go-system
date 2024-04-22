@@ -15,12 +15,6 @@
         [XmlIgnore]
         public short RequestId { get; set; }
 
-        public short SiteId { get; set; }
-
-        [XmlIgnore]
-        public string SiteName { get; set; }
-
-        [XmlIgnore]
         public short CompanyId { get; set; }
 
         [XmlIgnore]

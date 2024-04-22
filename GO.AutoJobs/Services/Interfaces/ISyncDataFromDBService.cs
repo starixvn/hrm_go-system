@@ -5,18 +5,18 @@
 
     public interface ISyncDataFromDBService
     {
-        Task<CommandResult> SyncEmployeeInfoAsync(short siteId, string dbName);
+        Task<CommandResult> SyncEmployeeInfoAsync(short companyId, string dbName);
 
-        Task<CommandResult> SyncTeamAsync(short siteId, string dbName);
+        Task<CommandResult> SyncTeamAsync(short companyId, string dbName);
 
-        Task<CommandResult> SyncSectionAsync(short siteId, string dbName);
+        Task<CommandResult> SyncSectionAsync(short companyId, string dbName);
 
-        Task<CommandResult> SyncDepartmentAsync(short siteId, string dbName);
+        Task<CommandResult> SyncDepartmentAsync(short companyId, string dbName);
 
-        Task<CommandResult> SyncUnitAsync(short siteId, string dbName);
+        Task<CommandResult> SyncUnitAsync(short companyId, string dbName);
 
-        Task<CommandResult> SyncJobTitleAsync(short siteId, string dbName);
+        Task<CommandResult> SyncJobTitleAsync(short companyId, string dbName);
 
-        Task<CommandResult> SyncJobLevelAsync(short siteId, string dbName);
+        Task<CommandResult> SyncJobLevelAsync(short companyId, string dbName);
     }
 }

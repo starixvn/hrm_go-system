@@ -19,7 +19,7 @@ const FlowItem = ({ flows, processId, addFlowItem, removeFlowItem }) => {
                 const emps = response.data.map(item => {
                     return {
                         ...item,
-                        value: `${item.siteId}-${item.empId}`,
+                        value: `${item.companyId}-${item.empId}`,
                         label: `${item.fullName} (${item.nickname})`
                     };
                 });
@@ -78,7 +78,7 @@ const FlowItem = ({ flows, processId, addFlowItem, removeFlowItem }) => {
             {
                 flowItems.map(item => {
                     return (
-                        <div key={`process${item.processId}-site${item.siteId}-emp${item.empId}`}
+                        <div key={`process${item.processId}-company${item.companyId}-emp${item.empId}`}
                             className={`flow-item mt-2 ${!item.isActive || item.isDeleted ? 'danger' : ''}`}
                         >
                             <div className="personal-info">

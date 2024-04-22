@@ -8,15 +8,8 @@
     using GO.Website.Criteria.UnitHead;
     using GO.Website.Models.UnitHead;
 
-    public class UnitHeadService : IUnitHeadService
+    public class UnitHeadService(IBaseService baseService) : IUnitHeadService
     {
-        private readonly IBaseService baseService;
-
-        public UnitHeadService(IBaseService baseService)
-        {
-            this.baseService = baseService;
-        }
-
         public async Task<IEnumerable<UnitHeadWeeklySchedule>> GetWeeklyScheduleAsync(GetUnitHeadWeeklyScheduleCriteria criteria)
         {
             (var infos, var schedules) = await baseService.FetchMultipleAsync<UnitHeadWeeklySchedule, UnitHeadDailySchedule>(criteria);
@@ -29,10 +22,10 @@
             IEnumerable<UnitHeadWeeklySchedule> infos,
             IEnumerable<UnitHeadDailySchedule> schedules)
         {
-            foreach (UnitHeadWeeklySchedule info in infos)
+            foreach (var info in infos)
             {
-                IEnumerable<UnitHeadDailySchedule> dailySchedules = schedules.Where(x => x.EmpId == info.EmpId).ToList();
-                foreach (UnitHeadDailySchedule dailySchedule in dailySchedules)
+                var dailySchedules = schedules.Where(x => x.CompanyId == info.CompanyId && x.EmpId == info.EmpId).ToList();
+                foreach (var dailySchedule in dailySchedules)
                 {
                     switch (dailySchedule.WorkDate.DayOfWeek)
                     {

@@ -5,7 +5,7 @@
     [Serializable]
     public class JobSettings
     {
-        public short SiteId { get; set; }
+        public short CompanyId { get; set; }
         public string DbName { get; set; }
         public string JobName { get; set; }
         public string CronExpression { get; set; }

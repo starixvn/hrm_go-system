@@ -14,71 +14,71 @@
             this.baseService = baseService;
         }
 
-        public async Task<CommandResult> SyncEmployeeInfoAsync(short siteId, string dbName)
+        public async Task<CommandResult> SyncEmployeeInfoAsync(short companyId, string dbName)
         {
             var command = new ImportEmployeeFromDBCommand
             {
-                SiteId = siteId,
+                CompanyId = companyId,
                 DbName = dbName
             };
             return await baseService.ExecuteNonQueryAsync(command);
         }
 
-        public async Task<CommandResult> SyncTeamAsync(short siteId, string dbName)
+        public async Task<CommandResult> SyncTeamAsync(short companyId, string dbName)
         {
             var command = new ImportTeamFromDBCommand
             {
-                SiteId = siteId,
+                CompanyId = companyId,
                 DbName = dbName
             };
             return await baseService.ExecuteNonQueryAsync(command);
         }
 
-        public async Task<CommandResult> SyncSectionAsync(short siteId, string dbName)
+        public async Task<CommandResult> SyncSectionAsync(short companyId, string dbName)
         {
             var command = new ImportSectionFromDBCommand
             {
-                SiteId = siteId,
+                CompanyId = companyId,
                 DbName = dbName
             };
             return await baseService.ExecuteNonQueryAsync(command);
         }
 
-        public async Task<CommandResult> SyncDepartmentAsync(short siteId, string dbName)
+        public async Task<CommandResult> SyncDepartmentAsync(short companyId, string dbName)
         {
             var command = new ImportDepartmentFromDBCommand
             {
-                SiteId = siteId,
+                CompanyId = companyId,
                 DbName = dbName
             };
             return await baseService.ExecuteNonQueryAsync(command);
         }
 
-        public async Task<CommandResult> SyncUnitAsync(short siteId, string dbName)
+        public async Task<CommandResult> SyncUnitAsync(short companyId, string dbName)
         {
             var command = new ImportUnitFromDBCommand
             {
-                SiteId = siteId,
+                CompanyId = companyId,
                 DbName = dbName
             };
             return await baseService.ExecuteNonQueryAsync(command);
         }
 
-        public async Task<CommandResult> SyncJobTitleAsync(short siteId, string dbName)
+        public async Task<CommandResult> SyncJobTitleAsync(short companyId, string dbName)
         {
             var command = new ImportJobTitleFromDBCommand
             {
-                SiteId = siteId,
+                CompanyId = companyId,
                 DbName = dbName
             };
             return await baseService.ExecuteNonQueryAsync(command);
         }
 
-        public async Task<CommandResult> SyncJobLevelAsync(short siteId, string dbName)
+        public async Task<CommandResult> SyncJobLevelAsync(short companyId, string dbName)
         {
             var command = new ImportJobLevelFromDBCommand
             {
-                SiteId = siteId,
+                CompanyId = companyId,
                 DbName = dbName
             };
             return await baseService.ExecuteNonQueryAsync(command);

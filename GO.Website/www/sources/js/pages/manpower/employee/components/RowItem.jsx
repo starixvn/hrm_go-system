@@ -8,7 +8,7 @@ const RowItem = ({ employee, index, onChangeStatus }) => {
     const handleChangeStatus = () => {
         if (window.hasHostPermissionOnEmployee) {
             setStatus(!excluded);
-            onChangeStatus(employee.siteId, employee.empId, !excluded);
+            onChangeStatus(employee.companyId, employee.empId, !excluded);
         }
     };
 

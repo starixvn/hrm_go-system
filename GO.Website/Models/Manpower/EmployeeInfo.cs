@@ -5,9 +5,8 @@
     [Serializable]
     public class EmployeeInfo
     {
+        public short CompanyId { get; set; }
         public string CompanyName { get; set; }
-        public short SiteId { get; set; }
-        public string SiteName { get; set; }
         public string Country { get; set; }
         public int EmpId { get; set; }
         public string Email { get; set; }

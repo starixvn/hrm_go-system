@@ -24,13 +24,13 @@
 
         public override async Task DoWorkAsync()
         {
-            await syncDataService.SyncUnitAsync(jobSetting.SiteId, jobSetting.DbName);
-            await syncDataService.SyncDepartmentAsync(jobSetting.SiteId, jobSetting.DbName);
-            await syncDataService.SyncSectionAsync(jobSetting.SiteId, jobSetting.DbName);
-            await syncDataService.SyncTeamAsync(jobSetting.SiteId, jobSetting.DbName);
-            await syncDataService.SyncJobTitleAsync(jobSetting.SiteId, jobSetting.DbName);
-            await syncDataService.SyncJobLevelAsync(jobSetting.SiteId, jobSetting.DbName);
-            await syncDataService.SyncEmployeeInfoAsync(jobSetting.SiteId, jobSetting.DbName);
+            await syncDataService.SyncUnitAsync(jobSetting.CompanyId, jobSetting.DbName);
+            await syncDataService.SyncDepartmentAsync(jobSetting.CompanyId, jobSetting.DbName);
+            await syncDataService.SyncSectionAsync(jobSetting.CompanyId, jobSetting.DbName);
+            await syncDataService.SyncTeamAsync(jobSetting.CompanyId, jobSetting.DbName);
+            await syncDataService.SyncJobTitleAsync(jobSetting.CompanyId, jobSetting.DbName);
+            await syncDataService.SyncJobLevelAsync(jobSetting.CompanyId, jobSetting.DbName);
+            await syncDataService.SyncEmployeeInfoAsync(jobSetting.CompanyId, jobSetting.DbName);
         }
     }
 }
