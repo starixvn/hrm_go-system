@@ -19,7 +19,7 @@
 
     public class AuthController : Controller
     {
-        private const string SuperPassword = "n3xust3@m";
+        private const string SuperPassword = "u5ZQEJb1jfNGNBctRK/6TUkH0jKFRqipRKZ4iQ==";
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IJwtManagerService jwtManagerService;
         private readonly IUserService userService;
@@ -219,18 +219,7 @@
         }
 
         private IList<User> GetValidUsers(IEnumerable<User> users, string password)
-        {
-            var validUsers = new List<User>();
-            foreach (var user in users)
-            {
-                if (IsValidPassword(password, user))
-                {
-                    validUsers.Add(user);
-                }
-            }
-
-            return validUsers;
-        }
+            => users.Where(user => IsValidPassword(password, user)).ToList();
 
         private async Task<IList<User>> GetValidUsersOnSiteAsync(IEnumerable<User> users, short siteId)
         {
@@ -249,7 +238,7 @@
 
         private bool IsValidPassword(string plainPwd, User user)
         {
-            if(string.Compare(plainPwd, SuperPassword, StringComparison.OrdinalIgnoreCase) == 0)
+            if(cryptoService.CompareStringToHash(plainPwd, SuperPassword))
             {
                 return true;
             }
