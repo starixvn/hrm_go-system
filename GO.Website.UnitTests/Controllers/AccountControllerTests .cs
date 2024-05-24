@@ -3,6 +3,7 @@
     using System.Threading.Tasks;
     using AutoFixture;
     using GO.Website.Controllers;
+    using GO.Website.Enumerations;
     using GO.Website.Models;
     using GO.Website.Services;
     using HRM.UserControl.Client.AspNetCore.Session;
@@ -51,7 +52,7 @@
             userControlSession.SiteId = fixture.Create<short>();
             otpConfig.Enable = true;
 
-            userOtpService.GetUserOTPByIdAsync(userControlSession.UserId, userControlSession.SiteId).Returns(userOtp);
+            userOtpService.GetUserOTPByIdAsync(userControlSession.UserId, userControlSession.SiteId, (short)TwoFAMethod.OTP).Returns(userOtp);
             //Act
             var result = await controller.VerifyOTP();
 
@@ -69,7 +70,7 @@
             userControlSession.SiteId = fixture.Create<short>();
             var user = fixture.Create<User>();
 
-            userOtpService.GetUserOTPByIdAsync(userControlSession.UserId, userControlSession.SiteId).Returns((UserOtp)null);
+            userOtpService.GetUserOTPByIdAsync(userControlSession.UserId, userControlSession.SiteId, (short)TwoFAMethod.OTP).Returns((UserOtp)null);
             userService.GetByIdAsync(userControlSession.UserId).Returns(user);
             //Act
             var result = await controller.GetAccountOTP();
@@ -90,7 +91,7 @@
             userOtp.SecretKey = null;
             var user = fixture.Create<User>();
 
-            userOtpService.GetUserOTPByIdAsync(userControlSession.UserId, userControlSession.SiteId).Returns(userOtp);
+            userOtpService.GetUserOTPByIdAsync(userControlSession.UserId, userControlSession.SiteId, (short)TwoFAMethod.OTP).Returns(userOtp);
             userService.GetByIdAsync(userControlSession.UserId).Returns(user);
             //Act
             var result = await controller.GetAccountOTP();
@@ -110,7 +111,7 @@
             var userOtp = fixture.Create<UserOtp>();
             var user = fixture.Create<User>();
 
-            userOtpService.GetUserOTPByIdAsync(userControlSession.UserId, userControlSession.SiteId).Returns(userOtp);
+            userOtpService.GetUserOTPByIdAsync(userControlSession.UserId, userControlSession.SiteId, (short)TwoFAMethod.OTP).Returns(userOtp);
             userService.GetByIdAsync(userControlSession.UserId).Returns(user);
             //Act
             var result = await controller.GetAccountOTP();
@@ -152,7 +153,7 @@
             var userOtp = fixture.Create<UserOtp>();
             var model = fixture.Create<SetupOTP>();
 
-            userOtpService.GetUserOTPByIdAsync(userControlSession.UserId, userControlSession.SiteId).Returns(userOtp);
+            userOtpService.GetUserOTPByIdAsync(userControlSession.UserId, userControlSession.SiteId, (short)TwoFAMethod.OTP).Returns(userOtp);
             twoFactorAuthService.ValidateOTPCode(userOtp.SecretKey, model.Otp).Returns(true);
             userOtpService.UpdateOTPStatusAsync(Arg.Any<UpdateStatusUserOTPCommand>()).Returns(true);
 
@@ -173,7 +174,7 @@
             var userOtp = fixture.Create<UserOtp>();
             var model = fixture.Create<SetupOTP>();
 
-            userOtpService.GetUserOTPByIdAsync(userControlSession.UserId, userControlSession.SiteId).Returns(userOtp);
+            userOtpService.GetUserOTPByIdAsync(userControlSession.UserId, userControlSession.SiteId, (short)TwoFAMethod.OTP).Returns(userOtp);
             twoFactorAuthService.ValidateOTPCode(userOtp.SecretKey, model.Otp).Returns(false);
             userOtpService.UpdateOTPStatusAsync(Arg.Any<UpdateStatusUserOTPCommand>()).Returns(false);
 
@@ -233,7 +234,7 @@
             var model = fixture.Create<SetupOTP>();
             var isOTPValid = fixture.Create<bool>();
 
-            userOtpService.GetUserOTPByIdAsync(userControlSession.UserId, userControlSession.SiteId).Returns(userOtp);
+            userOtpService.GetUserOTPByIdAsync(userControlSession.UserId, userControlSession.SiteId, (short)TwoFAMethod.OTP).Returns(userOtp);
             twoFactorAuthService.ValidateOTPCode(userOtp.SecretKey, model.Otp).Returns(isOTPValid);
 
             //Act

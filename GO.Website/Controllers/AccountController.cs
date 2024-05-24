@@ -5,6 +5,7 @@
     using System.Security.Claims;
     using System.Threading.Tasks;
     using GO.Website.Criteria.Account;
+    using GO.Website.Enumerations;
     using GO.Website.Filters;
     using GO.Website.Models;
     using GO.Website.Models.Account;
@@ -49,7 +50,7 @@
 
         public async Task<IActionResult> VerifyOTP()
         {
-            var userOtp = await userOtpService.GetUserOTPByIdAsync(userControlSession.UserId, userControlSession.SiteId);
+            var userOtp = await userOtpService.GetUserOTPByIdAsync(userControlSession.UserId, userControlSession.SiteId, (short)TwoFAMethod.OTP);
             if (!otpConfig.Enable || userOtp is not { Enabled: true })
             {
                 await DoLoginAsync(userControlSession.UserId);
@@ -61,7 +62,7 @@
         [GOAuthorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetAccountOTP()
         {
-            var userOtp = await userOtpService.GetUserOTPByIdAsync(userControlSession.UserId, userControlSession.SiteId);
+            var userOtp = await userOtpService.GetUserOTPByIdAsync(userControlSession.UserId, userControlSession.SiteId, (short)TwoFAMethod.OTP);
             var user = await userService.GetByIdAsync(userControlSession.UserId);
             if (userOtp != null && !string.IsNullOrWhiteSpace(userOtp.SecretKey))
             {
@@ -88,7 +89,7 @@
         [GOAuthorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> VerifySetupOTP([FromBody] SetupOTP model)
         {
-            var userOtp = await userOtpService.GetUserOTPByIdAsync(userControlSession.UserId, userControlSession.SiteId);
+            var userOtp = await userOtpService.GetUserOTPByIdAsync(userControlSession.UserId, userControlSession.SiteId, (short)TwoFAMethod.OTP);
             var isOTPValid = twoFactorAuthService.ValidateOTPCode(userOtp.SecretKey, model.Otp);
 
             if (isOTPValid)
@@ -97,6 +98,7 @@
                 {
                     UserId = userControlSession.UserId,
                     SiteId = userControlSession.SiteId,
+                    MethodId = (short)TwoFAMethod.OTP,
                     IsRegistered = true,
                     Enabled = true
                 });
@@ -112,6 +114,7 @@
             {
                 UserId = userControlSession.UserId,
                 SiteId = userControlSession.SiteId,
+                MethodId = (short)TwoFAMethod.OTP,
                 IsRegistered = !userOtp.IsRegistered,
                 Enabled = !userOtp.Enabled
             });
@@ -125,6 +128,7 @@
             {
                 UserId = userControlSession.UserId,
                 SiteId = userControlSession.SiteId,
+                MethodId = (short)TwoFAMethod.OTP,
                 IsRegistered = userOtp.IsRegistered,
                 Enabled = !userOtp.Enabled
             });
@@ -134,7 +138,7 @@
         [HttpPost]
         public async Task<IActionResult> VerifyOTP([FromBody] SetupOTP model)
         {
-            var userOtp = await userOtpService.GetUserOTPByIdAsync(userControlSession.UserId, userControlSession.SiteId);
+            var userOtp = await userOtpService.GetUserOTPByIdAsync(userControlSession.UserId, userControlSession.SiteId, (short)TwoFAMethod.OTP);
             var isOTPValid = twoFactorAuthService.ValidateOTPCode(userOtp.SecretKey, model.Otp);
 
             if (isOTPValid)

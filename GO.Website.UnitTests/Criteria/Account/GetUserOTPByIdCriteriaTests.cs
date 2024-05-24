@@ -10,7 +10,7 @@
         {
             // Arrange
             var criteria = new GetUserOTPByIdCriteria();
-            var expected = "UserOTP_GetById";
+            var expected = "UserTwoFA_GetById";
 
             // Act
             var actual = criteria.GetSettingKey();

@@ -35,9 +35,9 @@
             return result.IsSuccessful;
         }
 
-        public async Task<UserOtp> GetUserOTPByIdAsync(int userId, short siteId)
+        public async Task<UserOtp> GetUserOTPByIdAsync(int userId, short siteId, short methodId)
         {
-            var criteria = new GetUserOTPByIdCriteria { UserId = userId, SiteId = siteId };
+            var criteria = new GetUserOTPByIdCriteria { UserId = userId, SiteId = siteId, MethodId = methodId };
 
             return await baseService.GetDataEntityAsync<UserOtp>(criteria);
         }

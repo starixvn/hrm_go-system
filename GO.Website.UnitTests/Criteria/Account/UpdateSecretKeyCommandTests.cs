@@ -10,7 +10,7 @@
         {
             // Arrange
             var criteria = new UpdateSecretKeyCommand();
-            var expected = "UserOTP_UpdateSecretKey";
+            var expected = "TwoFASetting_UpdateSecretKey";
 
             // Act
             var actual = criteria.GetSettingKey();

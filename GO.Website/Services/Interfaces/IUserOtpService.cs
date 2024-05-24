@@ -10,6 +10,6 @@
 
         Task<bool> UpdateOTPStatusAsync(UpdateStatusUserOTPCommand command);
 
-        Task<UserOtp> GetUserOTPByIdAsync(int userId, short siteId);
+        Task<UserOtp> GetUserOTPByIdAsync(int userId, short siteId, short methodId);
     }
 }

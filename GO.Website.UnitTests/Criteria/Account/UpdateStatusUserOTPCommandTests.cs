@@ -10,7 +10,7 @@
         {
             // Arrange
             var criteria = new UpdateStatusUserOTPCommand();
-            var expected = "UserOTP_UpdateStatus";
+            var expected = "TwoFASetting_UpdateStatus";
 
             // Act
             var actual = criteria.GetSettingKey();

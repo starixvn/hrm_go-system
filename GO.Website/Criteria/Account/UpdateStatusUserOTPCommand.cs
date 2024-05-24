@@ -6,10 +6,11 @@
     {
         public short SiteId { get; set; }
         public int UserId { get; set; }
+        public short MethodId { get; set; }
         public bool IsRegistered { get; set; }
         public bool Enabled { get; set; }
 
-        public override string GetSettingKey() => "UserOTP_UpdateStatus";
+        public override string GetSettingKey() => "TwoFASetting_UpdateStatus";
 
         public override bool IsValid() => SiteId > 0 && UserId > 0;
     }

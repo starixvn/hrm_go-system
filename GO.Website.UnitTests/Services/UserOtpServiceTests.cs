@@ -58,11 +58,12 @@
             var service = GetUserOtpService();
             var userId = fixture.Create<int>();
             var siteId = fixture.Create<short>();
+            var methodId = fixture.Create<short>();
             var expected = fixture.Create<UserOtp>();
 
             baseService.GetDataEntityAsync<UserOtp>(Arg.Any<GetUserOTPByIdCriteria>()).Returns(expected);
             //Act
-            var actual = await service.GetUserOTPByIdAsync(userId, siteId);
+            var actual = await service.GetUserOTPByIdAsync(userId, siteId, methodId);
 
             //Assert
             Assert.Equal(expected, actual);

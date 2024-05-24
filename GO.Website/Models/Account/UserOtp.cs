@@ -4,6 +4,7 @@
     {
         public int UserId { get; set; }
         public short SiteId { get; set; }
+        public short MethodId { get; set; }
         public string SecretKey { get; set; }
         public string RecoveryCode { get; set; }
         public bool Enabled { get; set; }
