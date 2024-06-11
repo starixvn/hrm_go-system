@@ -65,7 +65,7 @@ const FlowItem = ({ flows, processId, addFlowItem, removeFlowItem }) => {
 
     return (
         <div className="flow-setting">
-            <Select className={`react-select-container`}
+            <Select className='react-select-container'
                 classNamePrefix="react-select"
                 value={null} options={employeeOptions}
                 formatOptionLabel={formatOptionLabel}

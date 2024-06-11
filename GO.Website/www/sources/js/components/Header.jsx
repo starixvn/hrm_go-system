@@ -11,7 +11,7 @@ export default class Header extends Component {
             user: null,
             sites: [],
             menus: [],
-            otpConfig: null,
+            isEnable2FA: false,
             expended: false,
             showSideMenu: false
         };
@@ -33,9 +33,9 @@ export default class Header extends Component {
             this.setState({ menus: response.data });
         });
 
-        url = Site.resolveClientUrl('home/GetOtpConfig');
+        url = Site.resolveClientUrl('home/CheckEnable2FA');
         await this.getDataAsync(url).then(response => {
-            this.setState({ otpConfig: response.data });
+            this.setState({ isEnable2FA: response.data });
         });
     }
 
@@ -88,7 +88,7 @@ export default class Header extends Component {
         || menuItem.childs.filter(child => child.url.toLowerCase().localeCompare(currentUrl) === 0).length > 0;
 
     render() {
-        const { user, sites, menus, expended, showSideMenu, otpConfig } = this.state;
+        const { user, sites, menus, expended, showSideMenu, isEnable2FA } = this.state;
         const currentUrl = window.location.pathname.toLowerCase();
 
         let nickname = '';
@@ -157,8 +157,8 @@ export default class Header extends Component {
                                 <Dropdown.Menu>
                                     <Dropdown.Item href={Site.resolveClientUrl('auth/logout')}><i className="fa fa-power-off" /> Sign Out</Dropdown.Item>
                                     {
-                                        otpConfig !== null && otpConfig.enable &&
-                                        <Dropdown.Item href={Site.resolveClientUrl('Account/Setup2FA')}><i className="fa fa-shield" /> Two-factor Authentication</Dropdown.Item>
+                                        isEnable2FA &&
+                                        <Dropdown.Item href={Site.resolveClientUrl('Account/Setup2FA')}><i className="fa fa-shield" /> Two-Factor Authentication</Dropdown.Item>
                                     }
                                 </Dropdown.Menu>
                             </Dropdown>

@@ -2,7 +2,6 @@
 {
     using System;
     using System.Linq;
-    using System.Net;
     using HRM.UserControl.Client.Core;
     using HRM.UserControl.Client.Core.Enumerables;
     using HRM.UserControl.Client.Core.Session;
@@ -10,7 +9,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
 
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class GOPermissionAttribute : Attribute, IAuthorizationFilter
     {
         private readonly IUserControlSession session;
@@ -48,23 +47,14 @@
 
         private void CheckUserPermission(AuthorizationFilterContext context)
         {
-            var attributes = context.ActionDescriptor.FilterDescriptors.Where(x => x.Filter is GOPermissionAttribute)
-                    .Select(x => x.Filter as GOPermissionAttribute).ToList();
-            bool hasPermission = false;
-
-            foreach (var attribute in attributes)
-            {
-                if (session.HasPermissionOnFunction(attribute.FunctionKey, attribute.Policy))
-                {
-                    hasPermission = true;
-                }
-            }
+            var functionKeys = FunctionKey.Split(',').Where(x => session.HasPermissionOnFunction(x, Policy));
+            var hasPermission = functionKeys.Any();
 
             if (!hasPermission)
             {
                 if (IsAjaxRequest(context.HttpContext.Request))
                 {
-                    context.Result = new StatusCodeResult((int)HttpStatusCode.MethodNotAllowed);
+                    context.Result = new ForbidResult();
                 }
                 else
                 {

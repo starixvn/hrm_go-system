@@ -1,0 +1,57 @@
+@import "~react-toastify/dist/ReactToastify.css";
+@import '../../abstracts/mixins';
+@import '../../components/buttons';
+@import '../../components/react-grid/react-grid';
+@import '../../components/form-filter';
+@import '../../components/forms';
+@import '../../components/messages';
+@import '../../components/icons';
+@import '../../components/tables';
+@import '../../components/react-select';
+@import "../../components/modal";
+
+.form-filter {
+    .form-row {
+        .form-btn-group {
+            width: auto;
+        }
+    }
+}
+
+.table {
+    tbody {
+        tr {
+            &.main-user {
+                height: 35px;
+
+                td {
+                    background-color: #f2f2c2 !important;
+
+                    &:first-child {
+                        cursor: pointer;
+                    }
+                }
+            }
+
+            &:last-child {
+                td {
+                    border-bottom: none;
+                }
+            }
+        }
+    }
+}
+
+.user-mapping-form {
+    .form-group {
+        margin-bottom: 0;
+
+        .font-weight-bold {
+            font-weight: 600 !important;
+        }
+    }
+
+    .react-select-container {
+        margin-bottom: 0.5rem;
+    }
+}

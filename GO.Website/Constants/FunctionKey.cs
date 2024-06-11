@@ -12,5 +12,6 @@
         public const string MemberAnnualManpowerForecastRequestSummary = "MemberAnnualManpowerForecastRequestSummary";
         public const string AdminPageRolePermission = "RolePermission";
         public const string RoleAssignment = "RoleAssignment";
+        public const string UserMapping = "UserMapping";
     }
 }

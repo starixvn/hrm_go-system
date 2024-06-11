@@ -81,9 +81,9 @@
             return Json(user);
         }
 
-        public IActionResult GetOtpConfig()
+        public IActionResult CheckEnable2FA()
         {
-            return Json(otpConfig);
+            return Json(otpConfig.Enable);
         }
 
         public IActionResult GetMenus()
@@ -94,8 +94,8 @@
 
         private IList<MenuItem> GetMenuTrees(IList<MenuItem> menus)
         {
-            IList<MenuItem> menuTrees = menus.Where(menu => !menu.ParentId.HasValue).ToList();
-            foreach (MenuItem menu in menuTrees)
+            var menuTrees = menus.Where(menu => !menu.ParentId.HasValue).ToList();
+            foreach (var menu in menuTrees)
             {
                 menu.Childs = new List<MenuItem>();
                 GetChildMenus(menu, menus);
@@ -105,10 +105,10 @@
 
         private void GetChildMenus(MenuItem menu, IList<MenuItem> menus)
         {
-            IList<MenuItem> menuItems = menus.Where(x => x.ParentId == menu.MenuItemId).ToList();
+            var menuItems = menus.Where(x => x.ParentId == menu.MenuItemId).ToList();
             if (menuItems.Any())
             {
-                foreach (MenuItem item in menuItems)
+                foreach (var item in menuItems)
                 {
                     menu.Childs.Add(item);
                     GetChildMenus(item, menus);

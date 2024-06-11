@@ -11,6 +11,9 @@ const cssPaths = {
     home: ['./www/sources/css/pages/home.scss'],
     account_setup2fa: ['./www/sources/css/pages/account/setup2fa.scss'],
     account_verifyotp: ['./www/sources/css/pages/account/verify-otp.scss'],
+    role_permission: ['./www/sources/css/pages/admin/role-permission.scss'],
+    role_assignment: ['./www/sources/css/pages/admin/role-assignment.scss'],
+    user_mapping: ['./www/sources/css/pages/admin/user-mapping.scss'],
     unit_head_weekly_schedule: ['./www/sources/css/pages/unit-head/weekly-schedule.scss'],
     report_job_level_summary: ['./www/sources/css/pages/report/job-level-summary.scss'],
     manpower_employee_index: ['./www/sources/css/pages/manpower/employee.scss'],
@@ -21,8 +24,6 @@ const cssPaths = {
     annual_manpower_forecast_request_memberpage: ['./www/sources/css/pages/manpower/annual-request/member-request.scss'],
     annual_manpower_forecast_request_create: ['./www/sources/css/pages/manpower/annual-request/create.scss'],
     annual_manpower_forecast_request_summary: ['./www/sources/css/pages/manpower/annual-request/summary.scss'],
-    role_permission: ['./www/sources/css/pages/admin/role-permission.scss'],
-    role_assignment: ['./www/sources/css/pages/admin/role-assignment.scss'],
     report_manpower: ['./www/sources/css/pages/report/manpower.scss']
 };
 
@@ -35,6 +36,9 @@ const scriptPaths = {
     home: ['./www/sources/js/pages/home/index.js'],
     account_setup2fa: ['./www/sources/js/pages/account/setup2fa/index.js'],
     account_verifyotp: ['./www/sources/js/pages/account/verify-otp/index.js'],
+    role_permission: ['./www/sources/js/pages/admin/role-permission/index.js'],
+    role_assignment: ['./www/sources/js/pages/admin/role-assignment/index.js'],
+    user_mapping: ['./www/sources/js/pages/admin/user-mapping/index.js'],
     unit_head_weekly_schedule: ['./www/sources/js/pages/unit-head/index.js'],
     report_job_level_summary: ['./www/sources/js/pages/report/job-level-summary/index.js'],
     manpower_employee_index: ['./www/sources/js/pages/manpower/employee/index.js'],
@@ -46,8 +50,6 @@ const scriptPaths = {
     annual_manpower_forecast_request_create: ['./www/sources/js/pages/manpower/annual-request/create/index.js'],
     annual_manpower_forecast_request_detail: ['./www/sources/js/pages/manpower/annual-request/detail/index.js'],
     annual_manpower_forecast_request_summary: ['./www/sources/js/pages/manpower/annual-request/summary/index.js'],
-    role_permission: ['./www/sources/js/pages/admin/role-permission/index.js'],
-    role_assignment: ['./www/sources/js/pages/admin/role-assignment/index.js'],
     report_manpower: ['./www/sources/js/pages/report/manpower/index.js']
 
 };

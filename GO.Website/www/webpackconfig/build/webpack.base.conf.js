@@ -20,6 +20,9 @@ function generateConfig(environment) {
             [`${jsPath}/pages/home`]: pathConfig.scriptPaths.home,
             [`${jsPath}/pages/account/setup-2fa`]: pathConfig.scriptPaths.account_setup2fa,
             [`${jsPath}/pages/account/verify-otp`]: pathConfig.scriptPaths.account_verifyotp,
+            [`${jsPath}/pages/admin/role-permission`]: pathConfig.scriptPaths.role_permission,
+            [`${jsPath}/pages/admin/role-assignment`]: pathConfig.scriptPaths.role_assignment,
+            [`${jsPath}/pages/admin/user-mapping`]: pathConfig.scriptPaths.user_mapping,
             [`${jsPath}/pages/unit-head/weekly-schedule`]: pathConfig.scriptPaths.unit_head_weekly_schedule,
             [`${jsPath}/pages/report/job-level-summary/index`]: pathConfig.scriptPaths.report_job_level_summary,
             [`${jsPath}/pages/manpower/employee/index`]: pathConfig.scriptPaths.manpower_employee_index,
@@ -31,8 +34,6 @@ function generateConfig(environment) {
             [`${jsPath}/pages/manpower/annual-request/create`]: pathConfig.scriptPaths.annual_manpower_forecast_request_create,
             [`${jsPath}/pages/manpower/annual-request/detail`]: pathConfig.scriptPaths.annual_manpower_forecast_request_detail,
             [`${jsPath}/pages/manpower/annual-request/summary`]: pathConfig.scriptPaths.annual_manpower_forecast_request_summary,
-            [`${jsPath}/pages/admin/role-permission`]: pathConfig.scriptPaths.role_permission,
-            [`${jsPath}/pages/admin/role-assignment`]: pathConfig.scriptPaths.role_assignment,
             [`${jsPath}/pages/report/manpower/index`]: pathConfig.scriptPaths.report_manpower,
 
             /*css*/
@@ -42,6 +43,9 @@ function generateConfig(environment) {
             [`${cssPath}/pages/home`]: pathConfig.cssPaths.home,
             [`${cssPath}/pages/account/setup-2fa`]: pathConfig.cssPaths.account_setup2fa,
             [`${cssPath}/pages/account/verify-otp`]: pathConfig.cssPaths.account_verifyotp,
+            [`${cssPath}/pages/admin/role-permission`]: pathConfig.cssPaths.role_permission,
+            [`${cssPath}/pages/admin/role-assignment`]: pathConfig.cssPaths.role_assignment,
+            [`${cssPath}/pages/admin/user-mapping`]: pathConfig.cssPaths.user_mapping,
             [`${cssPath}/pages/unit-head/weekly-schedule`]: pathConfig.cssPaths.unit_head_weekly_schedule,
             [`${cssPath}/pages/report/job-level-summary/index`]: pathConfig.cssPaths.report_job_level_summary,
             [`${cssPath}/pages/manpower/employee/index`]: pathConfig.cssPaths.manpower_employee_index,
@@ -52,8 +56,6 @@ function generateConfig(environment) {
             [`${cssPath}/pages/manpower/annual-request/member-request`]: pathConfig.cssPaths.annual_manpower_forecast_request_memberpage,
             [`${cssPath}/pages/manpower/annual-request/create`]: pathConfig.cssPaths.annual_manpower_forecast_request_create,
             [`${cssPath}/pages/manpower/annual-request/summary`]: pathConfig.cssPaths.annual_manpower_forecast_request_summary,
-            [`${cssPath}/pages/admin/role-permission`]: pathConfig.cssPaths.role_permission,
-            [`${cssPath}/pages/admin/role-assignment`]: pathConfig.cssPaths.role_assignment,
             [`${cssPath}/pages/report/manpower/index`]: pathConfig.cssPaths.report_manpower,
 
         },

@@ -81,4 +81,10 @@
         <Setting Key="UserTwoFA_GetById" SpName="UserTwoFA_GetById" DbName="bodb_IUC" Plain="0" />
         <Setting Key="TwoFASetting_UpdateStatus" SpName="TwoFASetting_UpdateStatus" DbName="bodb_IUC" Plain="0" />
     </Function>
+    <Function Name="User Mapping">
+        <Setting Key="UserMapping_Get" SpName="UserMapping_Get" DbName="bodb_IUC" Plain="0" />
+        <Setting Key="UserMapping_Search" SpName="UserMapping_Search" DbName="bodb_IUC" Plain="0" />
+        <Setting Key="UserMapping_Insert" SpName="UserMapping_Insert" DbName="bodb_IUC" Plain="0" />
+        <Setting Key="UserMapping_Delete" SpName="UserMapping_Delete" DbName="bodb_IUC" Plain="0" />
+    </Function>
 </Functions>
