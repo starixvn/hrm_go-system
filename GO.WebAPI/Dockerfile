@@ -2,9 +2,9 @@ FROM hub.nexdev.net/base/dotnet/core/sdk:8.0-alpine AS builder
 
 WORKDIR /src
 
-COPY ["GO.Core.csproj", "GO.Core/"]
-COPY ["GO.Models.csproj", "GO.Models/"]
-COPY ["GO.WebAPI.csproj", "GO.WebAPI/"]
+COPY ["GO.Core/GO.Core.csproj", "GO.Core/"]
+COPY ["GO.Models/GO.Models.csproj", "GO.Models/"]
+COPY ["GO.WebAPI/GO.WebAPI.csproj", "GO.WebAPI/"]
 
 RUN dotnet nuget add source https://nuget.nexdev.net/api/v2
 RUN --mount=type=cache,target=/root/.nuget/packages \
