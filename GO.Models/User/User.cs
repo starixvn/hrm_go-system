@@ -18,5 +18,9 @@
         public bool IsDeleted { get; set; }
         public bool IsResetPassword { get; set; }
         public int? LinkToUserId { get; set; }
+
+        public int EmpId { get; set; }
+        public short CompanyId { get; set; }
+        public string CompanyName { get; set; }
     }
 }

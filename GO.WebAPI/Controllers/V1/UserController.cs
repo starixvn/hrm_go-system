@@ -109,12 +109,12 @@ namespace GO.WebAPI.Controllers.V1
 
         private bool IsValidPassword(string plainPwd, User user)
         {
-            if (!string.IsNullOrWhiteSpace(user.Password))
+            if (!string.IsNullOrWhiteSpace(user.BCryptPassword))
             {
-                return BCrypt.Net.BCrypt.Verify(plainPwd, user.Password);
+                return BCrypt.Net.BCrypt.Verify(plainPwd, user.BCryptPassword);
             }
 
-            return cryptoService.CompareStringToHash(plainPwd, user.OldPassword);
+            return cryptoService.CompareStringToHash(plainPwd, user.Password);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿namespace GO.WebAPI.Services
 {
-    using System;
     using System.Threading.Tasks;
     using GO.Core.Models;
     using GO.Core.Services;

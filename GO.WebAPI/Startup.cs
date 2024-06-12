@@ -1,9 +1,7 @@
 namespace GO.WebAPI
 {
     using System.Collections.Generic;
-    using System.Linq;
     using System.Text;
-    using Fanex.Data;
     using Fanex.Data.Repository;
     using Fanex.Data.SqlServer;
     using Fanex.Logging;
@@ -35,19 +33,7 @@ namespace GO.WebAPI
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var connections = Configuration.GetSection("ConnectionStrings")
-                .GetChildren()
-                .AsEnumerable()
-                .Where(x => !string.IsNullOrWhiteSpace(x.GetValue<string>("Name")))
-                .ToDictionary(x => x.GetValue<string>("Name"),
-                    y => new ConnectionConfiguration(y.GetValue<string>("Name"), y.GetValue<string>("ConnectionString"), y.GetValue<string>("ProviderName")));
-
-            DbSettingProviderManager
-               .StartNewSession()
-               .Use(connections)
-               .WithSqlServer()
-               .UseDefaultDbSettingProvider(resourcePath: $"~/App_Data/SpNames.xml")
-               .Run();
+            services.AddFanexSql(Configuration);
 
             LogManager
                 .SetDefaultLogCategory(Configuration.GetSection("Sentry:LogCategory").Value)

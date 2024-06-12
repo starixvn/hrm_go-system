@@ -26,7 +26,7 @@
 
             string plaintext = null;
 
-            using (var rijAlg = new RijndaelManaged())
+            using (var rijAlg = Aes.Create())
             {
                 rijAlg.Key = ConvertHexStringToByte(key);
                 rijAlg.IV = ComputeSalt(salt);
@@ -65,7 +65,7 @@
 
             byte[] encrypted;
 
-            using (var rijAlg = new RijndaelManaged())
+            using (var rijAlg = Aes.Create())
             {
                 rijAlg.Key = ConvertHexStringToByte(key);
                 rijAlg.IV = ComputeSalt(salt);
@@ -92,7 +92,7 @@
         public string Hash(string message)
         {
             var messageBytes = Encoding.UTF8.GetBytes(message);
-            var sha = new SHA1CryptoServiceProvider();
+            var sha = SHA1.Create();
             var result = sha.ComputeHash(messageBytes);
 
             return ConvertHexByteToString(result);

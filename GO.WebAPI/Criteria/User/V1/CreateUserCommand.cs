@@ -16,7 +16,6 @@ namespace GO.WebAPI.Criteria.User.V1
         public string BCryptPassword { get; set; }
 
         public int CreatedBy { get; set; }
-        public int? RefId { get; set; }
 
         [SpParam(Ignored = true)]
         public string Token { get; set; }

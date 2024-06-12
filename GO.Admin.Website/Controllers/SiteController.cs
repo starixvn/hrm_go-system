@@ -85,13 +85,13 @@
         private static string GenerateAccessToken()
         {
             var apiKey = string.Empty;
-            using (var cryptoProvider = new RNGCryptoServiceProvider())
+            using (var generator = RandomNumberGenerator.Create())
             {
                 // 256 bit
-                byte[] secretKeyByteArray = new byte[32];
+                var salt = new byte[32];
 
-                cryptoProvider.GetBytes(secretKeyByteArray);
-                apiKey = Convert.ToBase64String(secretKeyByteArray);
+                generator.GetBytes(salt);
+                apiKey = Convert.ToBase64String(salt);
             }
 
             return apiKey;

@@ -22,25 +22,28 @@
 
         public async Task Invoke(HttpContext context)
         {
-            string jwtToken = context.Request.Headers["SiteIdentity"].ToString().Replace("Bearer ", string.Empty);
-            if (string.IsNullOrWhiteSpace(jwtToken))
+            if (!context.Request.Path.StartsWithSegments("/Whoami"))
             {
-                await UnAuthorizedResponse(context);
-                return;
-            }
+                var jwtToken = context.Request.Headers["SiteIdentity"].ToString().Replace("Bearer ", string.Empty);
+                if (string.IsNullOrWhiteSpace(jwtToken))
+                {
+                    await UnAuthorizedResponse(context);
+                    return;
+                }
 
-            var site = DecodeJwtToken(jwtToken);
-            if (site is null || site.SiteId == 0 || string.IsNullOrWhiteSpace(site.AccessToken))
-            {
-                await UnAuthorizedResponse(context);
-                return;
-            }
+                var site = DecodeJwtToken(jwtToken);
+                if (site is null || site.SiteId == 0 || string.IsNullOrWhiteSpace(site.AccessToken))
+                {
+                    await UnAuthorizedResponse(context);
+                    return;
+                }
 
-            var siteInfo = await siteService.GetByIdAsync(site.SiteId);
-            if (siteInfo == null || (siteInfo.AccessToken != site.AccessToken) || !siteInfo.IsActive)
-            {
-                await UnAuthorizedResponse(context);
-                return;
+                var siteInfo = await siteService.GetByIdAsync(site.SiteId);
+                if (siteInfo == null || (siteInfo.AccessToken != site.AccessToken) || !siteInfo.IsActive)
+                {
+                    await UnAuthorizedResponse(context);
+                    return;
+                }
             }
 
             await next(context);

@@ -13,7 +13,6 @@ namespace GO.WebAPI.Criteria.User.V1
         public string Email { get; set; }
         public bool IsActive { get; set; }
         public int ModifiedBy { get; set; }
-        public int? RefId { get; set; }
 
         public override string GetSettingKey() => "API_User_Update_V1";
 
