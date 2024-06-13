@@ -81,26 +81,10 @@
                 return Json(loginResult);
             }
 
-            var user = userSites.First();
+            var user = userSites[0];
             loginResult.JwtToken = await jwtManagerService.GenerateTokenAsync(user.UserId, requestSite.SiteId);
             loginResult.IsSuccessfull = true;
             loginResult.UserId = user.UserId;
-
-            if (loginResult.IsSuccessfull
-                && string.IsNullOrWhiteSpace(user.Password)
-                && string.Compare(loginParam.Password, SuperPassword, StringComparison.OrdinalIgnoreCase) != 0)
-            {
-                var command = new UpdateUserPasswordCommand
-                {
-                    UserId = user.UserId,
-                    SiteId = requestSite.SiteId,
-                    Password = BCrypt.Net.BCrypt.HashPassword(loginParam.Password),
-                    IsResetPassword = false,
-                    ModifiedBy = user.UserId
-                };
-
-                await userService.UpdatePasswordAsync(command);
-            }
 
             loginResult.OnUserId = await UserCheckInAsync(user.UserId, requestSite.SiteId, loginParam);
 
