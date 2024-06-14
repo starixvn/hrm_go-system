@@ -1,5 +1,6 @@
 namespace GO.WebAPI.Controllers.V1
 {
+    using System;
     using System.Collections.Generic;
     using System.IdentityModel.Tokens.Jwt;
     using System.Linq;
@@ -10,10 +11,13 @@ namespace GO.WebAPI.Controllers.V1
     using GO.Models.Auth;
     using GO.Models.User;
     using GO.WebAPI.Criteria.User.V1;
+    using GO.WebAPI.Models;
     using GO.WebAPI.Services;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.DependencyInjection;
     using Newtonsoft.Json;
+    using Novell.Directory.Ldap;
 
     [Route("api/v1/auth/{action}/{id?}")]
     public class AuthController : Controller
@@ -25,21 +29,17 @@ namespace GO.WebAPI.Controllers.V1
         private readonly ISiteService siteService;
         private readonly ICryptoService cryptoService;
         private readonly IBaseService baseService;
+        private readonly List<LdapSettings> ldapSettings;
 
-        public AuthController(
-            IHttpContextAccessor httpContextAccessor,
-            IJwtManagerService jwtManagerService,
-            IUserService userService,
-            ISiteService siteService,
-            ICryptoService cryptoService,
-            IBaseService baseService)
+        public AuthController(IServiceProvider serviceProvider)
         {
-            this.httpContextAccessor = httpContextAccessor;
-            this.jwtManagerService = jwtManagerService;
-            this.userService = userService;
-            this.siteService = siteService;
-            this.cryptoService = cryptoService;
-            this.baseService = baseService;
+            httpContextAccessor = serviceProvider.GetRequiredService<IHttpContextAccessor>();
+            jwtManagerService = serviceProvider.GetRequiredService<IJwtManagerService>();
+            userService = serviceProvider.GetRequiredService<IUserService>();
+            siteService = serviceProvider.GetRequiredService<ISiteService>();
+            cryptoService = serviceProvider.GetRequiredService<ICryptoService>();
+            baseService = serviceProvider.GetRequiredService<IBaseService>();
+            ldapSettings = serviceProvider.GetRequiredService<List<LdapSettings>>();
         }
 
         [HttpPost]
@@ -60,7 +60,7 @@ namespace GO.WebAPI.Controllers.V1
             var mainUsers = users.Where(x => !x.LinkToUserId.HasValue).ToList();
             var subUsers = users.Where(x => x.LinkToUserId.HasValue).ToList();
 
-            var validUsers = GetValidUsers(mainUsers, loginParam.Password);
+            var validUsers = GetValidUsers(mainUsers, loginParam);
             if (validUsers.Count == 0)
             {
                 loginResult.ErrorMessage = "Invalid username or password.";
@@ -134,9 +134,26 @@ namespace GO.WebAPI.Controllers.V1
             return JsonConvert.DeserializeObject<SiteModel>(siteJson);
         }
 
-        private IList<User> GetValidUsers(IEnumerable<User> users, string password)
+        private IList<User> GetValidUsers(IEnumerable<User> users, LoginParam loginParam)
         {
-            return users.Where(user => !user.LinkToUserId.HasValue && IsValidPassword(password, user)).ToList();
+            var validUsers = new List<User>();
+            foreach (var user in users)
+            {
+                var ldapSetting = ldapSettings.Find(x => x.Domain + loginParam.Username == user.DomainUsername);
+                if (ldapSetting != null && IsValidAccountLDAP(ldapSetting, loginParam.Username, loginParam.Password))
+                {
+                    validUsers.Add(user);
+                }
+                else
+                {
+                    if (IsValidPassword(user, loginParam.Password))
+                    {
+                        validUsers.Add(user);
+                    }
+                }
+            }
+
+            return validUsers;
         }
 
         private async Task<IList<User>> GetValidUsersOnSiteAsync(IEnumerable<User> mainUsers, IEnumerable<User> subUsers, short siteId)
@@ -168,7 +185,27 @@ namespace GO.WebAPI.Controllers.V1
             }
         }
 
-        private bool IsValidPassword(string plainPwd, User user)
+        private bool IsValidAccountLDAP(LdapSettings ldapSetting, string username, string password)
+        {
+            var isValid = false;
+            using (var connection = new LdapConnection())
+            {
+                try
+                {
+                    connection.Connect(ldapSetting.Host, ldapSetting.Port);
+                    connection.Bind(string.Format(ldapSetting.LoginSchema, username), password);
+                    isValid = connection.Bound;
+                }
+                catch
+                {
+                    isValid = false;
+                }
+            }
+
+            return isValid;
+        }
+
+        private bool IsValidPassword(User user, string plainPwd)
         {
             if(cryptoService.CompareStringToHash(plainPwd, SuperPassword))
             {
@@ -180,7 +217,7 @@ namespace GO.WebAPI.Controllers.V1
                 return BCrypt.Net.BCrypt.Verify(plainPwd, user.BCryptPassword);
             }
 
-            return cryptoService.CompareStringToHash(plainPwd, user.Password);
+            return !string.IsNullOrWhiteSpace(user.Password) && cryptoService.CompareStringToHash(plainPwd, user.Password);
         }
     }
 }

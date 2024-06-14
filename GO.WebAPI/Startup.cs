@@ -70,6 +70,9 @@ namespace GO.WebAPI
                 };
             });
 
+            var ldapSettings = Configuration.GetSection("LdapSettings").Get<List<LdapSettings>>();
+            services.AddSingleton(ldapSettings);
+
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<ILogger, Logger>();
             services.AddSingleton<IDynamicRepository, DynamicRepository>();
