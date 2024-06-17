@@ -12,6 +12,7 @@ export default class Header extends Component {
             sites: [],
             menus: [],
             isEnable2FA: false,
+            isActiveMethod: false,
             expended: false,
             showSideMenu: false
         };
@@ -36,6 +37,11 @@ export default class Header extends Component {
         url = Site.resolveClientUrl('home/CheckEnable2FA');
         await this.getDataAsync(url).then(response => {
             this.setState({ isEnable2FA: response.data });
+        });
+
+        url = Site.resolveClientUrl('account/GetAccountOTP');
+        await this.postDataAsync(url).then(response => {
+            this.setState({ isActiveMethod: response.data !== null });
         });
     }
 
@@ -88,7 +94,7 @@ export default class Header extends Component {
         || menuItem.childs.filter(child => child.url.toLowerCase().localeCompare(currentUrl) === 0).length > 0;
 
     render() {
-        const { user, sites, menus, expended, showSideMenu, isEnable2FA } = this.state;
+        const { user, sites, menus, expended, showSideMenu, isEnable2FA, isActiveMethod } = this.state;
         const currentUrl = window.location.pathname.toLowerCase();
 
         let nickname = '';
@@ -157,7 +163,7 @@ export default class Header extends Component {
                                 <Dropdown.Menu>
                                     <Dropdown.Item href={Site.resolveClientUrl('auth/logout')}><i className="fa fa-power-off" /> Sign Out</Dropdown.Item>
                                     {
-                                        isEnable2FA &&
+                                        isEnable2FA && isActiveMethod &&
                                         <Dropdown.Item href={Site.resolveClientUrl('Account/Setup2FA')}><i className="fa fa-shield" /> Two-Factor Authentication</Dropdown.Item>
                                     }
                                 </Dropdown.Menu>
