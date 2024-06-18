@@ -14,6 +14,7 @@
     using Microsoft.AspNetCore.Mvc;
 
     [Authorize]
+    [Route("api/{controller}/{action}/{id?}")]
     public class UserController : BaseController
     {
         private readonly IBaseService baseService;
@@ -32,7 +33,6 @@
         }
 
         [HttpGet]
-        [Route("api/user/getMenuItem")]
         public async Task<IActionResult> GetMenuItem()
         {
             var criteria = new GetMenuItemByUserIdCriteria
@@ -45,7 +45,6 @@
         }
 
         [HttpGet]
-        [Route("api/user/getFunctionPermission")]
         public async Task<IActionResult> GetFunctionPermission(GetFunctionByUserIdCriteria criteria)
         {
             var functions = await baseService.GetDataAsync<FunctionPermission>(criteria);
@@ -53,7 +52,6 @@
         }
 
         [HttpGet]
-        [Route("api/user/getAll")]
         public async Task<IActionResult> GetBySiteId(GetUserBySiteIdCriteria criteria)
         {
             criteria.SiteId = Site.SiteId;
@@ -62,7 +60,6 @@
         }
 
         [HttpGet]
-        [Route("api/user/getById/{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
             User user = await userService.GetByIdAsync(id);
@@ -70,7 +67,6 @@
         }
 
         [HttpPost]
-        [Route("api/user/create")]
         public async Task<IActionResult> Create([FromBody] CreateUserCommand command)
         {
             command.SiteId = Site.SiteId;
@@ -90,7 +86,6 @@
         }
 
         [HttpPost]
-        [Route("api/user/update")]
         public async Task<IActionResult> Update([FromBody] UpdateUserInfoCommand command)
         {
             command.SiteId = Site.SiteId;
@@ -100,7 +95,6 @@
         }
 
         [HttpPost]
-        [Route("api/user/assignRole")]
         public async Task<IActionResult> AssignRole([FromBody] AssignRoleToUserCommand command)
         {
             command.SiteId = Site.SiteId;
@@ -110,7 +104,6 @@
         }
 
         [HttpPost]
-        [Route("api/user/updatePassword")]
         public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordParam param)
         {
             string[] keyiv = param.Token.Split(":");
@@ -130,18 +123,17 @@
                 {
                     UserId = UserId,
                     SiteId = Site.SiteId,
-                    Password = BCrypt.Net.BCrypt.HashPassword(param.Password),
+                    BCryptPassword = BCrypt.Net.BCrypt.HashPassword(param.Password),
                     IsResetPassword = false,
                     ModifiedBy = UserId
                 };
-                commandResult = await userService.UpdatePasswordAsync(command);
+                commandResult = await baseService.ExecuteNonQueryAsync(command);
             }
 
             return Json(commandResult);
         }
 
         [HttpPost]
-        [Route("api/user/resetPassword")]
         public async Task<IActionResult> ResetPassword([FromBody] UpdatePasswordParam param)
         {
             string[] keyiv = param.Token.Split(":");
@@ -152,7 +144,7 @@
             {
                 UserId = param.UserId,
                 SiteId = Site.SiteId,
-                Password = BCrypt.Net.BCrypt.HashPassword(param.Password),
+                BCryptPassword = BCrypt.Net.BCrypt.HashPassword(param.Password),
                 IsResetPassword = true,
                 ModifiedBy = UserId
             };
@@ -162,7 +154,6 @@
         }
 
         [HttpPost]
-        [Route("api/user/delete")]
         public async Task<IActionResult> Delete([FromBody] DeleteUserCommand command)
         {
             command.SiteId = Site.SiteId;
@@ -173,12 +164,12 @@
 
         private bool IsValidPassword(string plainPwd, User user)
         {
-            if (!string.IsNullOrWhiteSpace(user.Password))
+            if (!string.IsNullOrWhiteSpace(user.BCryptPassword))
             {
-                return BCrypt.Net.BCrypt.Verify(plainPwd, user.Password);
+                return BCrypt.Net.BCrypt.Verify(plainPwd, user.BCryptPassword);
             }
 
-            return cryptoService.CompareStringToHash(plainPwd, user.OldPassword);
+            return cryptoService.CompareStringToHash(plainPwd, user.Password);
         }
     }
 }

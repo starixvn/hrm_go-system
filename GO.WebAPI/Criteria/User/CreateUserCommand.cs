@@ -12,15 +12,10 @@
         public string Nickname { get; set; }
         public string FullName { get; set; }
         public string Email { get; set; }
-
-        [SpParam(SqlParamName = "OldPassword")]
         public string Password { get; set; }
-
-        [SpParam(SqlParamName = "Password")]
         public string BCryptPassword { get; set; }
 
         public int CreatedBy { get; set; }
-        public int? RefId { get; set; }
 
         [SpParam(Ignored = true)]
         public string Token { get; set; }

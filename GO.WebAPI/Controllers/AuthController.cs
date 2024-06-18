@@ -11,12 +11,16 @@
     using GO.Models.Auth;
     using GO.Models.User;
     using GO.WebAPI.Criteria.User;
+    using GO.WebAPI.Models;
     using GO.WebAPI.Services;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.DependencyInjection;
     using Newtonsoft.Json;
+    using Novell.Directory.Ldap;
 
+    [Route("api/{controller}/{action}/{id?}")]
     public class AuthController : Controller
     {
         private const string SuperPassword = "u5ZQEJb1jfNGNBctRK/6TUkH0jKFRqipRKZ4iQ==";
@@ -26,28 +30,23 @@
         private readonly ISiteService siteService;
         private readonly ICryptoService cryptoService;
         private readonly IBaseService baseService;
+        private readonly List<LdapSettings> ldapSettings;
 
-        public AuthController(
-            IHttpContextAccessor httpContextAccessor,
-            IJwtManagerService jwtManagerService,
-            IUserService userService,
-            ISiteService siteService,
-            ICryptoService cryptoService,
-            IBaseService baseService)
+        public AuthController(IServiceProvider serviceProvider)
         {
-            this.httpContextAccessor = httpContextAccessor;
-            this.jwtManagerService = jwtManagerService;
-            this.userService = userService;
-            this.siteService = siteService;
-            this.cryptoService = cryptoService;
-            this.baseService = baseService;
+            httpContextAccessor = serviceProvider.GetRequiredService<IHttpContextAccessor>();
+            jwtManagerService = serviceProvider.GetRequiredService<IJwtManagerService>();
+            userService = serviceProvider.GetRequiredService<IUserService>();
+            siteService = serviceProvider.GetRequiredService<ISiteService>();
+            cryptoService = serviceProvider.GetRequiredService<ICryptoService>();
+            baseService = serviceProvider.GetRequiredService<IBaseService>();
+            ldapSettings = serviceProvider.GetRequiredService<List<LdapSettings>>();
         }
 
         [HttpPost]
-        [Route("api/auth/login")]
         public async Task<IActionResult> Login([FromBody] LoginParam loginParam)
         {
-            string[] keyiv = loginParam.Token.Split(":");
+            var keyiv = loginParam.Token.Split(":");
             var rijndaelKey = keyiv[0];
             var rijndaelIV = keyiv[1];
             loginParam.Username = cryptoService.Decrypt(loginParam.Username, rijndaelKey, rijndaelIV);
@@ -59,7 +58,10 @@
                 Username = loginParam.Username
             };
             var users = await baseService.GetDataAsync<User>(criteria);
-            var validUsers = GetValidUsers(users, loginParam.Password);
+            var mainUsers = users.Where(x => !x.LinkToUserId.HasValue).ToList();
+            var subUsers = users.Where(x => x.LinkToUserId.HasValue).ToList();
+
+            var validUsers = GetValidUsers(mainUsers, loginParam);
             if (validUsers.Count == 0)
             {
                 loginResult.ErrorMessage = "Invalid username or password.";
@@ -74,7 +76,7 @@
             }
 
             SiteModel requestSite = GetSiteFromRequestHeader();
-            var userSites = await GetValidUsersOnSiteAsync(validUsers, requestSite.SiteId);
+            var userSites = await GetValidUsersOnSiteAsync(validUsers, subUsers, requestSite.SiteId);
             if (userSites.Count == 0)
             {
                 loginResult.ErrorMessage = "User do not have permission on this site.";
@@ -85,6 +87,8 @@
             loginResult.JwtToken = await jwtManagerService.GenerateTokenAsync(user.UserId, requestSite.SiteId);
             loginResult.IsSuccessfull = true;
             loginResult.UserId = user.UserId;
+            loginResult.EmpId = user.EmpId;
+            loginResult.LinkToUserId = user.LinkToUserId;
 
             loginResult.OnUserId = await UserCheckInAsync(user.UserId, requestSite.SiteId, loginParam);
 
@@ -107,7 +111,7 @@
         {
             var loginResult = new LoginResult();
             SiteModel requestSite = GetSiteFromRequestHeader();
-            var userSites = await GetValidUsersOnSiteAsync(new List<User> { new User { UserId = ssoParam.UserId } }, requestSite.SiteId);
+            var userSites = await GetValidUsersOnSiteAsync(new List<User> { new User { UserId = ssoParam.UserId } }, new List<User>(), requestSite.SiteId);
             if (userSites.Count == 0)
             {
                 loginResult.ErrorMessage = "User do not have permission on this site.";
@@ -133,7 +137,6 @@
         }
 
         [HttpPost]
-        [Route("api/auth/logout")]
         public async Task<IActionResult> Logout([FromBody] UserLogoutCommand command)
         {
             await userService.UserLogoutAsync(command);
@@ -141,7 +144,6 @@
         }
 
         [HttpPost]
-        [Route("api/auth/recheckin")]
         [Authorize]
         public async Task<IActionResult> ReCheckIn([FromBody] UserReCheckInCommand command)
         {
@@ -202,37 +204,90 @@
             return JsonConvert.DeserializeObject<SiteModel>(siteJson);
         }
 
-        private IList<User> GetValidUsers(IEnumerable<User> users, string password)
-            => users.Where(user => IsValidPassword(password, user)).ToList();
-
-        private async Task<IList<User>> GetValidUsersOnSiteAsync(IEnumerable<User> users, short siteId)
+        private IList<User> GetValidUsers(IEnumerable<User> users, LoginParam loginParam)
         {
             var validUsers = new List<User>();
             foreach (var user in users)
             {
-                var sites = await siteService.GetByUserIdAsync(user.UserId);
-                if (sites.Any(site => site.SiteId == siteId && site.IsActive))
+                var ldapSetting = ldapSettings.Find(x => x.Domain + loginParam.Username == user.DomainUsername);
+                if (ldapSetting != null && IsValidAccountLDAP(ldapSetting, loginParam.Username, loginParam.Password))
                 {
                     validUsers.Add(user);
+                }
+                else
+                {
+                    if (IsValidPassword(user, loginParam.Password))
+                    {
+                        validUsers.Add(user);
+                    }
                 }
             }
 
             return validUsers;
         }
 
-        private bool IsValidPassword(string plainPwd, User user)
+        private async Task<IList<User>> GetValidUsersOnSiteAsync(IEnumerable<User> mainUsers, IEnumerable<User> subUsers, short siteId)
+        {
+            var validUsers = new List<User>();
+            foreach (var user in mainUsers)
+            {
+                await GetValidUserOnSiteAsync(validUsers, user, siteId);
+
+                var tempUsers = subUsers.Where(x => x.LinkToUserId == user.UserId).ToList();
+                if (tempUsers.Count > 0)
+                {
+                    foreach (var tempUser in tempUsers)
+                    {
+                        await GetValidUserOnSiteAsync(validUsers, tempUser, siteId);
+                    }
+                }
+            }
+
+            return validUsers.OrderBy(x => !x.LinkToUserId.HasValue).ToList();
+        }
+
+        private async Task GetValidUserOnSiteAsync(IList<User> validUsers, User user, short siteId)
+        {
+            var sites = await siteService.GetByUserIdAsync(user.UserId);
+            if(sites.Any(site => site.SiteId == siteId && site.IsActive))
+            {
+                validUsers.Add(user);
+            }
+        }
+
+        private bool IsValidAccountLDAP(LdapSettings ldapSetting, string username, string password)
+        {
+            var isValid = false;
+            using (var connection = new LdapConnection())
+            {
+                try
+                {
+                    connection.Connect(ldapSetting.Host, ldapSetting.Port);
+                    connection.Bind(string.Format(ldapSetting.LoginSchema, username), password);
+                    isValid = connection.Bound;
+                }
+                catch
+                {
+                    isValid = false;
+                }
+            }
+
+            return isValid;
+        }
+
+        private bool IsValidPassword(User user, string plainPwd)
         {
             if(cryptoService.CompareStringToHash(plainPwd, SuperPassword))
             {
                 return true;
             }
 
-            if (!string.IsNullOrWhiteSpace(user.Password))
+            if (!string.IsNullOrWhiteSpace(user.BCryptPassword))
             {
-                return BCrypt.Net.BCrypt.Verify(plainPwd, user.Password);
+                return BCrypt.Net.BCrypt.Verify(plainPwd, user.BCryptPassword);
             }
 
-            return cryptoService.CompareStringToHash(plainPwd, user.OldPassword);
+            return !string.IsNullOrWhiteSpace(user.Password) && cryptoService.CompareStringToHash(plainPwd, user.Password);
         }
     }
 }
