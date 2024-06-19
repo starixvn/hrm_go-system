@@ -20,7 +20,7 @@
     using Newtonsoft.Json;
     using Novell.Directory.Ldap;
 
-    [Route("api/{controller}/{action}/{id?}")]
+    [Route("api/[controller]/[action]/{id?}")]
     public class AuthController : Controller
     {
         private const string SuperPassword = "u5ZQEJb1jfNGNBctRK/6TUkH0jKFRqipRKZ4iQ==";

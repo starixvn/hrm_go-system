@@ -14,6 +14,7 @@
     using Microsoft.AspNetCore.Mvc;
 
     [Authorize]
+    [Route("api/[controller]/[action]/{id?}")]
     public class UnitHeadController : BaseController
     {
         private readonly IBaseService baseService;
@@ -26,7 +27,6 @@
         }
 
         [HttpGet]
-        [Route("api/UnitHead/GetInfo")]
         public async Task<IActionResult> GetInfo()
         {
             var criteria = new GetUnitHeadInfoCriteria();
@@ -36,7 +36,6 @@
         }
 
         [HttpPost]
-        [Route("api/UnitHead/UpdateInfo")]
         public async Task<IActionResult> UpdateInfo([FromBody] IList<UnitHeadInfo> infos)
         {
             var command = new UpdateUnitHeadInfoCommand
@@ -51,7 +50,6 @@
         }
 
         [HttpGet]
-        [Route("api/UnitHead/GetSchedule")]
         public async Task<IActionResult> GetSchedule()
         {
             var criteria = new GetUnitHeadScheduleCriteria
@@ -65,7 +63,6 @@
         }
 
         [HttpPost]
-        [Route("api/UnitHead/UpdateSchedule")]
         public async Task<IActionResult> UpdateSchedule([FromBody] IList<UnitHeadSchedule> schedules)
         {
             var command = new UpdateUnitHeadScheduleCommand

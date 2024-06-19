@@ -9,6 +9,7 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
+    [Route("api/[controller]/[action]/{id?}")]
     public class RoleController : BaseController
     {
         private readonly IBaseService baseService;
@@ -43,7 +44,6 @@
 
         [HttpPost]
         [Authorize]
-        [Route("api/role/assignPermission")]
         public async Task<IActionResult> AssignPermission([FromBody] AssignFunctionToRoleCommand command)
         {
             command.ModifiedBy = UserId;

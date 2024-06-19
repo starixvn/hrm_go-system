@@ -8,6 +8,7 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
+    [Route("api/[controller]/[action]/{id?}")]
     public class UserMappingController : BaseController
     {
         private readonly IUserMappingService userMappingService;
@@ -20,7 +21,6 @@
         }
 
         [HttpGet]
-        [Route("api/UserMapping/GetBySiteId")]
         public async Task<IActionResult> GetBySiteId(DateTime? lastModifiedDate)
         {
             IEnumerable<UserMapping> userMappings = await userMappingService.GetBySiteIdAsync(Site.SiteId, lastModifiedDate);

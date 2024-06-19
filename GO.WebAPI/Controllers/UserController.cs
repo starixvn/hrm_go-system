@@ -14,7 +14,7 @@
     using Microsoft.AspNetCore.Mvc;
 
     [Authorize]
-    [Route("api/{controller}/{action}/{id?}")]
+    [Route("api/[controller]/[action]/{id?}")]
     public class UserController : BaseController
     {
         private readonly IBaseService baseService;
