@@ -1,0 +1,16 @@
+﻿namespace GO.UserControl.Client.Core.Models.User
+{
+    using System;
+
+    [Serializable]
+    public class UpdateUserInfoParam
+    {
+        public int? RefId { get; set; }
+        public int UserId { get; set; }
+        public string Code { get; set; }
+        public string Nickname { get; set; }
+        public string FullName { get; set; }
+        public string Email { get; set; }
+        public bool IsActive { get; set; }
+    }
+}
