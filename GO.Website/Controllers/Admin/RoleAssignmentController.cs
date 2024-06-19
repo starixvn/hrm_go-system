@@ -3,16 +3,16 @@
     using System.Linq;
     using System.Threading.Tasks;
     using GO.Core.Services;
+    using GO.UserControl.Client.Core;
+    using GO.UserControl.Client.Core.Enumerables;
+    using GO.UserControl.Client.Core.Models;
+    using GO.UserControl.Client.Core.Models.User;
+    using GO.UserControl.Client.Core.Services;
+    using GO.UserControl.Client.Core.Session;
     using GO.Website.Constants;
     using GO.Website.Criteria.RoleAssignment;
     using GO.Website.Filters;
     using GO.Website.Models.RoleAssignment;
-    using HRM.UserControl.Client.Core.Configurations;
-    using HRM.UserControl.Client.Core.Enumerables;
-    using HRM.UserControl.Client.Core.Models;
-    using HRM.UserControl.Client.Core.Models.User;
-    using HRM.UserControl.Client.Core.Services;
-    using HRM.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("Admin/RoleAssignment/[action]")]

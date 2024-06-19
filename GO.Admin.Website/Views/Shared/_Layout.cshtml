@@ -1,6 +1,6 @@
 ﻿@using GO.Admin.Website.Constants
 @using GO.Admin.Website.Models
-@using HRM.UserControl.Client.Core.Session
+@using GO.UserControl.Client.Core.Session
 @inject IUserControlSession userControlSession
 @{
     var currentController = ViewContext.RouteData.Values["Controller"].ToString().ToLowerInvariant();
@@ -9,7 +9,7 @@
     var companies = userControlSession.Get<IList<Company>>(SessionKey.InternalCompanies);
 }
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

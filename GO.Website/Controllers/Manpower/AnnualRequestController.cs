@@ -4,6 +4,8 @@
     using System.Linq;
     using System.Threading.Tasks;
     using GO.Core.Services;
+    using GO.UserControl.Client.Core.Enumerables;
+    using GO.UserControl.Client.Core.Session;
     using GO.Website.Constants;
     using GO.Website.Criteria.Manpower;
     using GO.Website.Criteria.Manpower.AnnualRequest;
@@ -11,11 +13,9 @@
     using GO.Website.Models.Manpower;
     using GO.Website.Models.Manpower.AnnualRequest;
     using GO.Website.Services;
-    using HRM.UserControl.Client.Core.Enumerables;
-    using HRM.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
 
-    [Route("ManpowerForecast/AnnualRequest/[action]/{id?}")]
+    [Route("ManpowerForecast/[controller]/[action]/{id?}")]
     public class AnnualRequestController : BaseController
     {
         private readonly IUserControlSession userControlSession;

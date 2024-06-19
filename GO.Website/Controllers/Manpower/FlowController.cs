@@ -5,15 +5,15 @@
     using Filters;
     using GO.Core.Extensions.XML;
     using GO.Core.Services;
-    using Constants;
+    using GO.UserControl.Client.Core.Enumerables;
+    using GO.UserControl.Client.Core.Session;
+    using GO.Website.Constants;
     using GO.Website.Criteria.Manpower;
-    using Models;
+    using GO.Website.Models;
     using GO.Website.Models.Manpower;
-    using HRM.UserControl.Client.Core.Enumerables;
-    using HRM.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
 
-    [Route("Manpower/Flow/[action]")]
+    [Route("Manpower/[controller]/[action]/{id?}")]
     [GOPermission(FunctionKey = FunctionKey.ManpowerForecast_FlowManagement, Policy = Policy.Read)]
     public class FlowController : BaseController
     {

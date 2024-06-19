@@ -6,18 +6,18 @@
     using System.Threading.Tasks;
     using Fanex.NexHR.ViewModels;
     using GO.Core.Services;
+    using GO.UserControl.Client.Core.Enumerables;
+    using GO.UserControl.Client.Core.Session;
     using GO.Website.Constants;
     using GO.Website.Criteria.Manpower;
     using GO.Website.Criteria.Report;
     using GO.Website.Filters;
     using GO.Website.Models;
     using GO.Website.Models.Manpower;
-    using HRM.UserControl.Client.Core.Enumerables;
-    using HRM.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
     using Services;
 
-    [Route("Manpower/Employee/[action]")]
+    [Route("Manpower/[controller]/[action]/{id?}")]
     [GOPermission(FunctionKey = FunctionKey.ManpowerForecast_EmployeeManagement, Policy = Policy.Read)]
     public class EmployeeController : BaseController
     {

@@ -1,21 +1,21 @@
 ﻿namespace GO.Website.UnitTests.Controllers
 {
-    using AutoFixture;
-    using Fanex.Data;
-    using GO.Core.Models;
-    using GO.Website.Controllers;
-    using GO.Website.Models;
-    using GO.Website.Models.Todolist;
-    using GO.Website.Services;
-    using HRM.UserControl.Client.Core.Services;
-    using HRM.UserControl.Client.Core.Session;
-    using Microsoft.AspNetCore.Mvc;
-    using NSubstitute;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
     using System.Web;
+    using AutoFixture;
+    using Fanex.Data;
+    using GO.Core.Models;
+    using GO.UserControl.Client.Core.Services;
+    using GO.UserControl.Client.Core.Session;
+    using GO.Website.Controllers;
+    using GO.Website.Models;
+    using GO.Website.Models.Todolist;
+    using GO.Website.Services;
+    using Microsoft.AspNetCore.Mvc;
+    using NSubstitute;
     using Xunit;
 
     public class TodolistControllerTests

@@ -9,12 +9,12 @@
     using GO.Admin.Website.Models.Site;
     using GO.Admin.Website.Models.User;
     using GO.Admin.Website.Services;
-    using HRM.UserControl.Client.Core.Configurations;
-    using HRM.UserControl.Client.Core.Enumerables;
-    using HRM.UserControl.Client.Core.Models;
-    using HRM.UserControl.Client.Core.Models.User;
-    using HRM.UserControl.Client.Core.Services;
-    using HRM.UserControl.Client.Core.Session;
+    using GO.UserControl.Client.Core;
+    using GO.UserControl.Client.Core.Enumerables;
+    using GO.UserControl.Client.Core.Models;
+    using GO.UserControl.Client.Core.Models.User;
+    using GO.UserControl.Client.Core.Services;
+    using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
 
     [UCPermission(FunctionKey = FunctionKey.UserManagement, Policy = Policy.Read)]

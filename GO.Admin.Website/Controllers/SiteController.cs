@@ -8,9 +8,9 @@
     using GO.Admin.Website.Filters;
     using GO.Admin.Website.Models.Site;
     using GO.Admin.Website.Services;
-    using HRM.UserControl.Client.Core.Enumerables;
-    using HRM.UserControl.Client.Core.Models;
-    using HRM.UserControl.Client.Core.Session;
+    using GO.UserControl.Client.Core.Enumerables;
+    using GO.UserControl.Client.Core.Models;
+    using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
 
     [UCPermission(FunctionKey = FunctionKey.SiteManagement, Policy = Policy.Read)]

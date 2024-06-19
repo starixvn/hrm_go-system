@@ -5,7 +5,7 @@
     using System.Threading.Tasks;
     using Fanex.Data.Repository;
     using GO.Admin.Website.Repositories;
-    using HRM.UserControl.Client.Core.Models;
+    using GO.UserControl.Client.Core.Models;
 
     public class BaseService : IBaseService
     {

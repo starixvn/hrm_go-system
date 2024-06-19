@@ -1,11 +1,12 @@
 ﻿namespace GO.Website.Controllers
 {
+    using System;
     using System.Threading.Tasks;
-    using HRM.UserControl.Client.Core.Configurations;
-    using HRM.UserControl.Client.Core.Models;
-    using HRM.UserControl.Client.Core.Models.Auth;
-    using HRM.UserControl.Client.Core.Services;
-    using HRM.UserControl.Client.Core.Session;
+    using GO.UserControl.Client.Core;
+    using GO.UserControl.Client.Core.Models;
+    using GO.UserControl.Client.Core.Models.Auth;
+    using GO.UserControl.Client.Core.Services;
+    using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Mvc;
@@ -38,7 +39,7 @@
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginParam model)
         {
-            model.IP = HttpContext.Connection?.RemoteIpAddress?.ToString();
+            model.IP = GetClientIP();
             model.Platform = HttpContext.Request?.Headers["User-Agent"].ToString();
             model.BrowserName = HttpContext.Request?.Headers["User-Agent"].ToString();
             model.NetSessionId = HttpContext.Session.Id;
@@ -63,6 +64,22 @@
             userControlSession.ClearAll();
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login");
+        }
+
+        private string GetClientIP()
+        {
+            var clientIp = HttpContext.Request.Headers["x-forwarded-for"].ToString();
+            if (string.IsNullOrEmpty(clientIp))
+            {
+                clientIp = HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
+            }
+            else
+            {
+                var forwardedIps = clientIp.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                clientIp = forwardedIps[0];
+            }
+
+            return clientIp;
         }
     }
 }

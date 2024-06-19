@@ -3,13 +3,13 @@ namespace GO.Website.Controllers.Admin
     using System.Linq;
     using System.Threading.Tasks;
     using GO.Core.Services;
+    using GO.UserControl.Client.Core.Enumerables;
+    using GO.UserControl.Client.Core.Session;
     using GO.Website.Constants;
     using GO.Website.Criteria.UserMapping;
     using GO.Website.Filters;
     using GO.Website.Models.Employee;
     using GO.Website.Models.UserMapping;
-    using HRM.UserControl.Client.Core.Enumerables;
-    using HRM.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("Admin/[controller]/[action]")]

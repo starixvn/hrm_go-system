@@ -4,14 +4,14 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using AutoFixture;
-    using HRM.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
-    using Models.Manpower;
-    using Models.Report.Manpower;
+    using GO.UserControl.Client.Core.Session;
+    using GO.Website.Controllers.Report;
+    using GO.Website.Criteria.Report.Manpower;
+    using GO.Website.Models.Manpower;
+    using GO.Website.Models.Report.Manpower;
+    using GO.Website.Services;
     using NSubstitute;
-    using Website.Controllers.Report;
-    using Website.Criteria.Report.Manpower;
-    using Website.Services;
     using Xunit;
 
     public class ManpowerForecastReportControllerTests

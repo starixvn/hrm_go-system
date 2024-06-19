@@ -1,26 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GO.Website.UnitTests.Controllers.Admin
+﻿namespace GO.Website.UnitTests.Controllers.Admin
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using AutoFixture;
-    using Core.Services;
-    using HRM.UserControl.Client.Core.Configurations;
-    using HRM.UserControl.Client.Core.Models;
-    using HRM.UserControl.Client.Core.Models.User;
-    using HRM.UserControl.Client.Core.Services;
-    using HRM.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.VisualBasic;
-    using Models;
-    using Models.RoleAssignment;
+    using GO.Core.Services;
+    using GO.UserControl.Client.Core;
+    using GO.UserControl.Client.Core.Models;
+    using GO.UserControl.Client.Core.Models.User;
+    using GO.UserControl.Client.Core.Services;
+    using GO.UserControl.Client.Core.Session;
+    using GO.Website.Controllers.Admin;
+    using GO.Website.Criteria.RoleAssignment;
+    using GO.Website.Models.RoleAssignment;
     using NSubstitute;
-    using Website.Controllers.Admin;
-    using Website.Criteria.RoleAssignment;
-    using Website.Services;
     using Xunit;
 
     public class RoleAssignmentControllerTests

@@ -4,15 +4,15 @@
     using System.Collections.Generic;
     using System.Security.Claims;
     using System.Threading.Tasks;
+    using GO.UserControl.Client.Core;
+    using GO.UserControl.Client.Core.Services;
+    using GO.UserControl.Client.Core.Session;
     using GO.Website.Criteria.Account;
     using GO.Website.Enumerations;
     using GO.Website.Filters;
     using GO.Website.Models;
     using GO.Website.Models.Account;
     using GO.Website.Services;
-    using HRM.UserControl.Client.Core.Configurations;
-    using HRM.UserControl.Client.Core.Services;
-    using HRM.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Mvc;

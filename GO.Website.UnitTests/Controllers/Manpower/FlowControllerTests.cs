@@ -1,21 +1,21 @@
-﻿using AutoFixture;
-using GO.Core.Models;
-using GO.Core.Services;
-using GO.Website.Constants;
-using GO.Website.Controllers.Manpower;
-using GO.Website.Criteria.Manpower;
-using GO.Website.Models;
-using GO.Website.Models.Manpower;
-using HRM.UserControl.Client.Core.Enumerables;
-using HRM.UserControl.Client.Core.Session;
-using Microsoft.AspNetCore.Mvc;
-using NSubstitute;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Xunit;
-
-namespace GO.Website.UnitTests.Controllers.Manpower
+﻿namespace GO.Website.UnitTests.Controllers.Manpower
 {
+    using AutoFixture;
+    using GO.Core.Models;
+    using GO.Core.Services;
+    using GO.UserControl.Client.Core.Enumerables;
+    using GO.UserControl.Client.Core.Session;
+    using GO.Website.Constants;
+    using GO.Website.Controllers.Manpower;
+    using GO.Website.Criteria.Manpower;
+    using GO.Website.Models;
+    using GO.Website.Models.Manpower;
+    using Microsoft.AspNetCore.Mvc;
+    using NSubstitute;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Xunit;
+
     public class FlowControllerTests
     {
         private IUserControlSession userControlSession;

@@ -5,12 +5,12 @@
     using System.Linq;
     using System.Threading.Tasks;
     using GO.Core.Services;
+    using GO.UserControl.Client.Core.Enumerables;
     using GO.Website.Constants;
     using GO.Website.Criteria.Report;
     using GO.Website.Filters;
     using GO.Website.Models.Report.Manpower;
     using GO.Website.Services;
-    using HRM.UserControl.Client.Core.Enumerables;
     using Microsoft.AspNetCore.Mvc;
 
     [GOPermission(FunctionKey = FunctionKey.JobLevelSummaryReport, Policy = Policy.Read)]

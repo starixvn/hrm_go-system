@@ -1,20 +1,20 @@
 ﻿namespace GO.Website.UnitTests.Controllers.Manpower
 {
-    using AutoFixture;
-    using GO.Core.Models;
-    using GO.Core.Services;
-    using GO.Website.Constants;
-    using GO.Website.Controllers.Manpower;
-    using GO.Website.Criteria.Manpower.Period;
-    using GO.Website.Models.Manpower.Period;
-    using HRM.UserControl.Client.Core.Enumerables;
-    using HRM.UserControl.Client.Core.Session;
-    using Microsoft.AspNetCore.Mvc;
-    using NSubstitute;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using AutoFixture;
+    using GO.Core.Models;
+    using GO.Core.Services;
+    using GO.UserControl.Client.Core.Enumerables;
+    using GO.UserControl.Client.Core.Session;
+    using GO.Website.Constants;
+    using GO.Website.Controllers.Manpower;
+    using GO.Website.Criteria.Manpower.Period;
+    using GO.Website.Models.Manpower.Period;
+    using Microsoft.AspNetCore.Mvc;
+    using NSubstitute;
     using Xunit;
 
     public class PeriodControllerTests

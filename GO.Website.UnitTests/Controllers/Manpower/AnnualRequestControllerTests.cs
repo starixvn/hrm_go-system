@@ -5,6 +5,7 @@
     using AutoFixture;
     using Core.Services;
     using GO.Core.Models;
+    using GO.UserControl.Client.Core.Session;
     using GO.Website.Constants;
     using GO.Website.Controllers.Manpower;
     using GO.Website.Criteria.Manpower;
@@ -13,7 +14,6 @@
     using GO.Website.Models.Manpower.AnnualRequest;
     using GO.Website.Models.Manpower.Period;
     using GO.Website.Services;
-    using HRM.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
     using NSubstitute;
     using Xunit;

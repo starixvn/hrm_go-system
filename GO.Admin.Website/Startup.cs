@@ -10,12 +10,11 @@ namespace GO.Admin.Website
     using GO.Admin.Website.Middlewares;
     using GO.Admin.Website.Repositories;
     using GO.Admin.Website.Services;
-    using HRM.UserControl.Client.AspNetCore.Configurations;
-    using HRM.UserControl.Client.AspNetCore.Session;
-    using HRM.UserControl.Client.Core;
-    using HRM.UserControl.Client.Core.Configurations;
-    using HRM.UserControl.Client.Core.Services;
-    using HRM.UserControl.Client.Core.Session;
+    using GO.UserControl.Client.AspNetCore;
+    using GO.UserControl.Client.AspNetCore.Session;
+    using GO.UserControl.Client.Core;
+    using GO.UserControl.Client.Core.Services;
+    using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;

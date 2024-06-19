@@ -2,19 +2,18 @@
 {
     using System.Threading.Tasks;
     using AutoFixture;
+    using GO.UserControl.Client.Core;
+    using GO.UserControl.Client.Core.Models.User;
+    using GO.UserControl.Client.Core.Services;
+    using GO.UserControl.Client.Core.Session;
     using GO.Website.Controllers;
+    using GO.Website.Criteria.Account;
     using GO.Website.Enumerations;
     using GO.Website.Models;
+    using GO.Website.Models.Account;
     using GO.Website.Services;
-    using HRM.UserControl.Client.AspNetCore.Session;
-    using HRM.UserControl.Client.Core.Configurations;
-    using HRM.UserControl.Client.Core.Models.User;
-    using HRM.UserControl.Client.Core.Services;
-    using HRM.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
-    using Models.Account;
     using NSubstitute;
-    using Website.Criteria.Account;
     using Xunit;
 
     public class AccountControllerTests
