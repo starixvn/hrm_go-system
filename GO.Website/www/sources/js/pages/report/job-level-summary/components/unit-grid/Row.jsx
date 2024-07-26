@@ -20,7 +20,7 @@ const Row = ({ data, jobType, totalJobType, showHideOptions, showHideJobOptions,
     const renderJobTotal = () => {
         const total = [];
         totalJobType.map(item => {
-            if (item.name.slice(0, 2) === jobType && isMultipleData) {
+            if (item.name.slice(0, 2) === jobType) {
                 const cells = [];
                 cells.push(<td key={`${item.name}-totaljobtype`} colSpan={2} className="text-center col-job-level bold">Total {jobType}</td>);
                 item.cells.map(gunit => {

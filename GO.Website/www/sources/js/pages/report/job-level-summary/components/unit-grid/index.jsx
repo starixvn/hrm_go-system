@@ -84,10 +84,13 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
                             return (
                                 <td key={gunit.name} className="group-unit" colSpan={colSpan}>
                                     <span>{gunit.name}</span>
-                                    <span
-                                        className={`fa ${showHideOption.show ? 'fa-minus-square-o' : 'fa-plus-square-o'}`}
-                                        onClick={() => handleShowHideCells(gunit.name)}
-                                    />
+                                    {
+                                        gunit.name !== "Other" && 
+                                        <span
+                                            className={`fa ${showHideOption.show ? 'fa-minus-square-o' : 'fa-plus-square-o'}`}
+                                            onClick={() => handleShowHideCells(gunit.name)}
+                                        />
+                                    }
                                 </td>
                             );
                         })
@@ -104,7 +107,7 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
                                 });
                             }
 
-                            cols.push(<td key={`${gunit.name}-total`} colSpan={2}>Total</td>);
+                            cols.push(<td key={`${gunit.name}-total`} colSpan={2}>{`${gunit.name} Total`}</td>);
 
                             return cols;
                         })
