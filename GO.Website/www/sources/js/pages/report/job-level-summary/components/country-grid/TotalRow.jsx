@@ -25,7 +25,7 @@ const TotalRow = ({ data }) => {
                         country.cells.map(unit => {
                             total += unit.total;
                         });
-                         cells.push(<td colSpan={3} key={`total-super-${country.name}`} className="text-center">{renderNumber(total)}</td>);
+                         cells.push(<td colSpan={4} key={`total-super-${country.name}`} className="text-center">{renderNumber(total)}</td>);
                         return cells;
                     })
                 }

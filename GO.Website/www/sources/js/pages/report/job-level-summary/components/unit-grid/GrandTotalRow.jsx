@@ -6,7 +6,7 @@ const GrandTotalRow = ({ data, showHideOptions }) => {
     return (
         <>
             <tr className="row-total">
-                <td className="text-center" colSpan={2} rowSpan={2}>{data.name}</td>
+                <td className="text-center" colSpan={2} rowSpan={2}>Total</td>
                 {
                     data.cells.map(gunit => {
                         const cells = [];

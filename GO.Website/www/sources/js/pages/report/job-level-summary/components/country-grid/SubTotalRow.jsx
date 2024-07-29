@@ -2,7 +2,7 @@
 
 import { renderNumber } from '../../common.funcs';
 
-const GrandTotalRow = ({ data, totalSupervisor, totalEmployee }) => {
+const SubTotalRow = ({ data, totalSupervisor, totalEmployee }) => {
     return (
         <>
             <tr className="row-total">
@@ -23,7 +23,7 @@ const GrandTotalRow = ({ data, totalSupervisor, totalEmployee }) => {
             <tr className="row-total">
                 {
                     data.cells.map(country =>
-                        <td key={`grand-total-${country.name}`} className="text-center" colSpan={3}>{renderNumber(country.cells[0].total)}</td>
+                        <td key={`sub-total-${country.name}`} className="text-center" colSpan={4}>{renderNumber(country.cells[0].total)}</td>
                     )
                 }
             </tr>
@@ -31,4 +31,4 @@ const GrandTotalRow = ({ data, totalSupervisor, totalEmployee }) => {
     );
 };
 
-export default GrandTotalRow;
+export default SubTotalRow;

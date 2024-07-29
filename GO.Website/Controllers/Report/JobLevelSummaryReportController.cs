@@ -31,7 +31,7 @@
             { "Employee", new[] { "E" } }
         };
 
-        private readonly List<string> countryTypes = new() { "Philippines", "Vietnam", "Malaysia", "Taiwan", "Other" };
+        private readonly List<string> countryTypes = new() { "Philippines", "Vietnam", "Malaysia", "Taiwan" };
 
         private readonly IBaseService baseService;
         private readonly IExportExcelService excelService;
@@ -130,6 +130,9 @@
                 dictionaryJobLevels.Add(jobLevelType.Key, jobLevelNames.ToArray());
             }
 
+            var ortherJobLevels = jobLevels.Where(x => !x[..1].Contains("M") && !x[..1].Contains("P") && !x[..1].Contains("E")).ToArray();
+            dictionaryJobLevels.Add("Other", ortherJobLevels);
+
             return dictionaryJobLevels;
         }
 
@@ -147,6 +150,9 @@
 
                 dictionaryJobLevelTypes.Add(jobLevelType.Key, SortJobLevel(jobLevelNames));
             }
+
+            var ortherJobLevels = jobLevels.Where(x => !x[..1].Contains("M") && !x[..1].Contains("P") && !x[..1].Contains("E")).Select(y => y[..LengthJobLevelType]).Distinct().ToArray();
+            dictionaryJobLevelTypes.Add("Other", ortherJobLevels);
 
             return dictionaryJobLevelTypes;
         }
@@ -168,12 +174,17 @@
             Dictionary<string, string[]> jobLevelTypes,
             IEnumerable<EmployeeInfo> employeeInfos)
         {
-            var (supervisors, totalSupervisor) = GroupDataByCountry(jobLevels.ElementAt(0).Value, countryTypes, units, employeeInfos);
-            var (employees, totalEmployee) = GroupDataByCountry(jobLevels.ElementAt(1).Value, countryTypes, units, employeeInfos);
-            var totalJobTypeSupervisor = GetTotalByJobType(countryTypes, units, jobLevelTypes.ElementAt(0).Value, employeeInfos.ToList());
-            var totalJobTypeEmployee = GetTotalByJobType(countryTypes, units, jobLevelTypes.ElementAt(1).Value, employeeInfos.ToList());
-            var grandTotal = GetGrandTotal(countryTypes, totalSupervisor, totalEmployee);
-            var headers = countryTypes.Select(country => new RowItem
+            IList<string> countries = employeeInfos.Where(emp => !string.IsNullOrWhiteSpace(emp.Country))
+                .Select(emp => emp.Country).Distinct().OrderBy(item => item).ToList();
+            countries.Add("Other");
+            var (supervisors, totalSupervisor) = GroupDataByCountry(jobLevels.ElementAt(0).Value, countries, units, employeeInfos);
+            var (employees, totalEmployee) = GroupDataByCountry(jobLevels.ElementAt(1).Value, countries, units, employeeInfos);
+            var (others, totalOthers) = GroupDataByCountry(jobLevels.ElementAt(2).Value, countries, units, employeeInfos);
+            var totalJobTypeSupervisor = GetTotalByJobType(countries, units, jobLevelTypes.ElementAt(0).Value, employeeInfos.ToList());
+            var totalJobTypeEmployee = GetTotalByJobType(countries, units, jobLevelTypes.ElementAt(1).Value, employeeInfos.ToList());
+            var totalJobTypeOthers = GetTotalByJobType(countries, units, jobLevelTypes.ElementAt(2).Value, employeeInfos.ToList());
+            var grandTotal = GetGrandTotal(countries, totalSupervisor, totalEmployee, totalOthers);
+            var headers = countries.Select(country => new RowItem
             {
                 Name = country,
                 Cells = units.Select(item => new GroupCellItem
@@ -191,10 +202,13 @@
                 Headers = headers,
                 Supervisors = supervisors,
                 Employees = employees,
+                Others = others,
                 TotalSupervisor = totalSupervisor,
                 TotalEmployee = totalEmployee,
+                TotalOthers = totalOthers,
                 TotalJobTypeSupervisor = totalJobTypeSupervisor,
                 TotalJobTypeEmployee = totalJobTypeEmployee,
+                TotalJobTypeOthers = totalJobTypeOthers,
                 GrandTotal = grandTotal
             };
         }
@@ -202,11 +216,12 @@
         private static RowItem GetGrandTotal(
             IEnumerable<string> countries,
             RowItem totalSupervisor,
-            RowItem totalEmployee)
+            RowItem totalEmployee,
+            RowItem totalOther)
         {
             return new RowItem
             {
-                Name = "Grand Total",
+                Name = "Sub Total",
                 Cells = countries.Select(country =>
                 {
                     return new GroupCellItem
@@ -218,6 +233,7 @@
                             {
                                 Total = totalSupervisor.Cells.First(sup => country.Equals(sup.Name)).Cells.Sum(cell => cell.Total)
                                     + totalEmployee.Cells.First(emp => country.Equals(emp.Name)).Cells.Sum(cell => cell.Total)
+                                    + totalOther.Cells.First(emp => country.Equals(emp.Name)).Cells.Sum(cell => cell.Total)
                             }
                         }
                     };
@@ -225,7 +241,7 @@
             };
         }
 
-        private static (IList<RowItem>, RowItem) GroupDataByCountry(
+        private (IList<RowItem>, RowItem) GroupDataByCountry(
             string[] jobLevels,
             IList<string> countries,
             Dictionary<string, string[]> units,
@@ -265,7 +281,7 @@
                         var cell = new CellItem
                         {
                             Name = unit.Key,
-                            Total = country == "Other" ? employees.Count(emp => !countries.Any(x => x.Equals(emp.Country, StringComparison.CurrentCultureIgnoreCase)) && unit.Value.Contains(emp.UnitName))
+                            Total = country == "Other" ? employees.Count(emp => !countryTypes.Any(x => x.Equals(emp.Country, StringComparison.CurrentCultureIgnoreCase)) && unit.Value.Contains(emp.UnitName))
                                 : employees.Count(emp => country.Equals(emp.Country, StringComparison.CurrentCultureIgnoreCase) && unit.Value.Contains(emp.UnitName))
                         };
                         groupCell.Cells.Add(cell);
@@ -291,9 +307,11 @@
         {
             var (supervisors, totalSupervisor) = GroupDataByUnit(jobLevels.ElementAt(0).Value, units, employeeInfos);
             var (employees, totalEmployee) = GroupDataByUnit(jobLevels.ElementAt(1).Value, units, employeeInfos);
-            var grandTotal = GetGrandTotal(units, totalSupervisor, totalEmployee);
+            var (others, totalOther) = GroupDataByUnit(jobLevels.ElementAt(2).Value, units, employeeInfos);
+            var grandTotal = GetGrandTotalUnit(units, totalSupervisor, totalEmployee, totalOther);
             var totalJobTypeSupervisor = GetTotalByJobType(units, jobLevelTypes.ElementAt(0).Value, employeeInfos);
             var totalJobTypeEmployee = GetTotalByJobType(units, jobLevelTypes.ElementAt(1).Value, employeeInfos);
+            var totalJobTypeOther = GetTotalByJobType(units, jobLevelTypes.ElementAt(2).Value, employeeInfos);
             var headers = units.Select(group => new RowItem
             {
                 Name = group.Key,
@@ -305,10 +323,13 @@
                 Headers = headers,
                 Supervisors = supervisors,
                 Employees = employees,
+                Others = others,
                 TotalSupervisor = totalSupervisor,
                 TotalEmployee = totalEmployee,
+                TotalOthers = totalOther,
                 TotalJobTypeSupervisor = totalJobTypeSupervisor,
                 TotalJobTypeEmployee = totalJobTypeEmployee,
+                TotalJobTypeOthers = totalJobTypeOther,
                 GrandTotal = grandTotal
             };
         }
@@ -497,10 +518,11 @@
             return totalJobType;
         }
 
-        private static RowItem GetGrandTotal(
+        private static RowItem GetGrandTotalUnit(
             Dictionary<string, string[]> units,
             RowItem totalSupervisor,
-            RowItem totalEmployee)
+            RowItem totalEmployee,
+            RowItem totalOther)
         {
             return new RowItem
             {
@@ -512,12 +534,13 @@
                     {
                         var supervisor = totalSupervisor.Cells.First(itemCell => item.Key.Equals(itemCell.Name)).Cells.First(cell => unit.Equals(cell.Name));
                         var employee = totalEmployee.Cells.First(itemCell => item.Key.Equals(itemCell.Name)).Cells.First(cell => unit.Equals(cell.Name));
+                        var other = totalOther.Cells.First(itemCell => item.Key.Equals(itemCell.Name)).Cells.First(cell => unit.Equals(cell.Name));
 
                         return new CellItem
                         {
                             Name = unit,
-                            TotalLocal = supervisor.TotalLocal + employee.TotalLocal,
-                            TotalExpat = supervisor.TotalExpat + employee.TotalExpat
+                            TotalLocal = supervisor.TotalLocal + employee.TotalLocal + other.TotalLocal,
+                            TotalExpat = supervisor.TotalExpat + employee.TotalExpat + other.TotalExpat
                         };
                     }).ToList()
                 }).ToList()

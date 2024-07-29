@@ -4,8 +4,10 @@ import TotalRow from './TotalRow';
 import GrandTotalRow from './GrandTotalRow';
 import LangHelper from '@jsroot/common/langHelper';
 
+import { renderNumber } from '../../common.funcs';
+
 const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
-    const { headers, supervisors, employees, totalSupervisor, totalEmployee, grandTotal, totalJobTypeSupervisor, totalJobTypeEmployee } = data;
+    const { headers, supervisors, employees, others, totalSupervisor, totalEmployee, totalOthers, grandTotal, totalJobTypeSupervisor, totalJobTypeEmployee, totalJobTypeOthers } = data;
 
     const showHideJobs = () => {
         const showHides = [];
@@ -17,6 +19,13 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
         });
 
         totalJobTypeEmployee.map(item => {
+            showHides.push({
+                key: item.name,
+                show: false
+            })
+        });
+
+        totalJobTypeOthers.map(item => {
             showHides.push({
                 key: item.name,
                 show: false
@@ -71,6 +80,33 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
         return trs;
     };
 
+    const GetNameUnitTypeTotal = name => {
+        const words = name.split(' ');
+        let nameTotal = '';
+        words.map(x => {
+            nameTotal += x.substring(0, 1);
+        })
+        return words.length === 1 ? name : nameTotal;
+    };
+
+    const renderGrandTotal = data => {
+        let grandTotal = 0;
+        let colSpanGrandTotal = 1;
+
+        data.cells.map(gunit => {
+            gunit.cells.map(unit => {
+                grandTotal += unit.totalLocal + unit.totalExpat;
+            });
+            colSpanGrandTotal += 4;
+        })
+
+        const demo = <tr className="row-total">
+            <td className="text-center" rowSpan={2} colSpan={2}>Grand Total</td>
+            <td key={`grand-total-table-country`} className="text-center" colSpan={colSpanGrandTotal}>{renderNumber(grandTotal)}</td>
+        </tr>;
+        return demo;
+    }
+
     return (
         <table className="table group-by-country">
             <thead>
@@ -107,7 +143,7 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
                                 });
                             }
 
-                            cols.push(<td key={`${gunit.name}-total`} colSpan={2}>{`${gunit.name} Total`}</td>);
+                            cols.push(<td key={`${gunit.name}-total`} colSpan={2}>{`${GetNameUnitTypeTotal(gunit.name)} Total`}</td>);
 
                             return cols;
                         })
@@ -139,6 +175,9 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
                 <TotalRow data={totalSupervisor} showHideOptions={showHideOptions} />
                 {renderRows(employees, jobLevelTypes.Employee, totalJobTypeEmployee)}
                 <TotalRow data={totalEmployee} showHideOptions={showHideOptions} />
+                {renderRows(others, jobLevelTypes.Other, totalJobTypeOthers)}
+                <TotalRow data={totalOthers} showHideOptions={showHideOptions} />
+                {renderGrandTotal(grandTotal)}
             </tbody>
         </table>
     );

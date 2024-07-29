@@ -16,7 +16,8 @@ export default class AppContainer extends Component {
             gridUnitData: null,
             jobLevelTypes: {
                 Supervisor: [],
-                Employee: []
+                Employee: [],
+                Other: []
             },
             detail: {
                 show: false,

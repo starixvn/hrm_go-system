@@ -29,7 +29,7 @@ const Row = ({ data, jobType, totalJobType, showHideOptions, handleShowHideCells
                     country.cells.map(gunit => {
                         totalCompany += gunit.total;
                     });
-                    cells.push(<td colSpan={3} key={`${country.name}-${jobType}-total`} className="text-center col-total">{renderNumber(totalCompany)}</td>);
+                    cells.push(<td colSpan={4} key={`${country.name}-${jobType}-total`} className="text-center col-total">{renderNumber(totalCompany)}</td>);
                 })
                 total.push(<tr key={`${item.name}-totalrow-jobtotal`}>{cells}</tr>);
             }
@@ -95,7 +95,6 @@ const Row = ({ data, jobType, totalJobType, showHideOptions, handleShowHideCells
         <>
             {renderbody()}
             {renderTotal()}
-            {renderJobTotal()}
         </>
     );
 };

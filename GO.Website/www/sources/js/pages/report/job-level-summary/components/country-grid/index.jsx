@@ -1,8 +1,10 @@
 ﻿import React, { useState, Fragment } from 'react';
 import Row from './Row';
 import TotalRow from './TotalRow';
-import GrandTotalRow from './GrandTotalRow';
+import SubTotalRow from './SubTotalRow';
 import LangHelper from '@jsroot/common/langHelper';
+
+import { renderNumber } from '../../common.funcs';
 
 const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
     const { headers, supervisors, employees, totalSupervisor, totalEmployee, grandTotal, totalJobTypeSupervisor, totalJobTypeEmployee } = data;
@@ -57,13 +59,27 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
         return trs;
     };
 
+    const renderGrandTotal = data => {
+        let grandTotal = 0;
+        let colSpanGrandTotal = 1;
+        data.cells.map(country => {
+            grandTotal += country.cells[0].total;
+            colSpanGrandTotal += 4;
+        });
+        const demo = <tr className="row-total">
+            <td className="text-center" rowSpan={2} colSpan={2}>Grand Total</td>
+            <td key={`grand-total-table-country`} className="text-center" colSpan={colSpanGrandTotal}>{renderNumber(grandTotal)}</td>
+        </tr>;
+        return demo;
+    }
+
     return (
         <table className="table group-by-country">
             <thead>
                 <tr>
                     <td rowSpan={2} colSpan={2} className="col-job-level">{LangHelper.getResource('JobLevel')}</td>
                     {
-                        headers.map(country => <td key={country.name} colSpan={3}>{country.name}</td>)
+                        headers.map(country => <td key={country.name} colSpan={4}>{country.name}</td>)
                     }
                 </tr>
                 <tr>
@@ -72,16 +88,18 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
                             <td className="col-total">PU Total</td>
                             <td className="col-total">BU Total</td>
                             <td className="col-total">SU Total</td>
+                            <td className="col-total">Other</td>
                         </Fragment>)
                     }
                 </tr>
             </thead>
             <tbody>
-                <GrandTotalRow data={grandTotal} totalSupervisor={totalSupervisor} totalEmployee={totalEmployee} />
+                <SubTotalRow data={grandTotal} totalSupervisor={totalSupervisor} totalEmployee={totalEmployee} />
                 {renderRows(supervisors, jobLevelTypes.Supervisor, totalJobTypeSupervisor)}
                 <TotalRow data={totalSupervisor} />
                 {renderRows(employees, jobLevelTypes.Employee, totalJobTypeEmployee)}
                 <TotalRow data={totalEmployee} />
+                {renderGrandTotal(grandTotal) }
             </tbody>
         </table>
     );
