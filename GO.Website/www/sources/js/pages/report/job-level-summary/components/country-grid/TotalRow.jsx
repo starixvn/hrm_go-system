@@ -10,9 +10,17 @@ const TotalRow = ({ data }) => {
                 {
                     data.cells.map(country => {
                         const cells = [];
-                        country.cells.map(unit => {
-                            cells.push(<td key={`total-super-${country.name}-${unit.name}`} className="text-center">{renderNumber(unit.total)}</td>);
-                        });
+                        if (country.name !== "Other") {
+                            country.cells.map(unit => {
+                                cells.push(<td key={`total-super-${country.name}-${unit.name}`} className="text-center">{renderNumber(unit.total)}</td>);
+                            });
+                        } else {
+                            let totalEmployee = 0;
+                            country.cells.map(unit => {
+                                totalEmployee += unit.total;
+                            });
+                            cells.push(<td key={`total-super-${country.name}`} className="text-center">{renderNumber(totalEmployee)}</td>);
+                        }
                         return cells;
                     })
                 }
@@ -25,7 +33,7 @@ const TotalRow = ({ data }) => {
                         country.cells.map(unit => {
                             total += unit.total;
                         });
-                         cells.push(<td colSpan={4} key={`total-super-${country.name}`} className="text-center">{renderNumber(total)}</td>);
+                         cells.push(<td colSpan={country.name === "Other" ? 1 : 4} key={`total-super-${country.name}`} className="text-center">{renderNumber(total)}</td>);
                         return cells;
                     })
                 }

@@ -11,10 +11,18 @@ const SubTotalRow = ({ data, totalSupervisor, totalEmployee }) => {
                 {
                     totalSupervisor.cells.map((country, indexSup) => {
                         const cells = [];
-                        country.cells.map((unit, indexUnit) => {
-                            const totalUnitEmployee = totalEmployee.cells[indexSup].cells[indexUnit].total;
-                            cells.push(<td key={`total-super-${country.name}-${unit.name}`} className="text-center">{renderNumber(unit.total + totalUnitEmployee)}</td>);
-                        });
+                        if (country.name !== "Other") {
+                            country.cells.map((unit, indexUnit) => {
+                                const totalUnitEmployee = totalEmployee.cells[indexSup].cells[indexUnit].total;
+                                cells.push(<td key={`total-super-${country.name}-${unit.name}`} className="text-center">{renderNumber(unit.total + totalUnitEmployee)}</td>);
+                            });
+                        } else {
+                            let totalUnitEmployee = 0;
+                            country.cells.map((unit, indexUnit) => {
+                                totalUnitEmployee = unit.total + totalEmployee.cells[indexSup].cells[indexUnit].total;
+                            });
+                            cells.push(<td key={`total-super-${country.name}`} className="text-center">{renderNumber(totalUnitEmployee)}</td>);
+                        }
 
                         return cells;
                     })
@@ -23,7 +31,7 @@ const SubTotalRow = ({ data, totalSupervisor, totalEmployee }) => {
             <tr className="row-total">
                 {
                     data.cells.map(country =>
-                        <td key={`sub-total-${country.name}`} className="text-center" colSpan={4}>{renderNumber(country.cells[0].total)}</td>
+                        <td key={`sub-total-${country.name}`} className="text-center" colSpan={country.name === "Other" ? 1 :4}>{renderNumber(country.cells[0].total)}</td>
                     )
                 }
             </tr>

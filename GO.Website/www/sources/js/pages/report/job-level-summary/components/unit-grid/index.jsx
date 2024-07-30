@@ -7,7 +7,7 @@ import LangHelper from '@jsroot/common/langHelper';
 import { renderNumber } from '../../common.funcs';
 
 const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
-    const { headers, supervisors, employees, others, totalSupervisor, totalEmployee, totalOthers, grandTotal, totalJobTypeSupervisor, totalJobTypeEmployee, totalJobTypeOthers } = data;
+    const { headers, supervisors, employees, others, totalSupervisor, totalEmployee, grandTotal, totalJobTypeSupervisor, totalJobTypeEmployee, totalJobTypeOthers } = data;
 
     const showHideJobs = () => {
         const showHides = [];

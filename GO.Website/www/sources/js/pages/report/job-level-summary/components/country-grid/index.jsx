@@ -7,7 +7,7 @@ import LangHelper from '@jsroot/common/langHelper';
 import { renderNumber } from '../../common.funcs';
 
 const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
-    const { headers, supervisors, employees, totalSupervisor, totalEmployee, grandTotal, totalJobTypeSupervisor, totalJobTypeEmployee } = data;
+    const { headers, supervisors, employees, others, totalSupervisor, totalEmployee, grandTotal, totalJobTypeSupervisor, totalJobTypeEmployee, totalJobTypeOthers } = data;
 
     const showHides = () => {
         const showHides = [];
@@ -23,6 +23,11 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
                 key: item.name,
                 show: false
             })
+        });
+
+        showHides.push({
+            key: "Other",
+            show: false
         });
         return showHides;
     }
@@ -44,7 +49,7 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
         }
     };
 
-    const renderRows = (rows, jobLevelTypes, totalJobType) => {
+    const renderRows = (rows, jobLevelTypes, totalJobType, isOther = false) => {
         const trs = [];
         jobLevelTypes.map(jobType => {
             trs.push(<Row key={jobType}
@@ -53,15 +58,16 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
                 handleShowHideCells={handleShowHideCells}
                 totalJobType={totalJobType}
                 showHideOptions={showHideOptions}
-                onClick={handleShowDetail} />);
-        });
+                onClick={handleShowDetail}
+                isOther={isOther}/>);
+    });
 
         return trs;
     };
 
     const renderGrandTotal = data => {
         let grandTotal = 0;
-        let colSpanGrandTotal = 1;
+        let colSpanGrandTotal = -3;
         data.cells.map(country => {
             grandTotal += country.cells[0].total;
             colSpanGrandTotal += 4;
@@ -79,16 +85,20 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
                 <tr>
                     <td rowSpan={2} colSpan={2} className="col-job-level">{LangHelper.getResource('JobLevel')}</td>
                     {
-                        headers.map(country => <td key={country.name} colSpan={4}>{country.name}</td>)
+                        headers.map(country => <td key={country.name} rowSpan={country.name !== "Other" ? 1 : 2 } colSpan={country.name !== "Other" ? 4 : 1}>{country.name}</td>)
                     }
                 </tr>
                 <tr>
                     {
                         headers.map(country => <Fragment key={country.name}>
-                            <td className="col-total">PU Total</td>
-                            <td className="col-total">BU Total</td>
-                            <td className="col-total">SU Total</td>
-                            <td className="col-total">Other</td>
+                            {
+                                country.name !== "Other" && <>
+                                    <td className="col-total">PU Total</td>
+                                    <td className="col-total">BU Total</td>
+                                    <td className="col-total">SU Total</td>
+                                    <td className="col-total">Other</td>
+                                </>
+                            }
                         </Fragment>)
                     }
                 </tr>
@@ -99,6 +109,7 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
                 <TotalRow data={totalSupervisor} />
                 {renderRows(employees, jobLevelTypes.Employee, totalJobTypeEmployee)}
                 <TotalRow data={totalEmployee} />
+                {renderRows(others, jobLevelTypes.Other, totalJobTypeOthers, true)}
                 {renderGrandTotal(grandTotal) }
             </tbody>
         </table>

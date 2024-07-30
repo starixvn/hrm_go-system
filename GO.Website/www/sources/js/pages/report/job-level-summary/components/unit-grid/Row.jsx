@@ -7,6 +7,8 @@ const Row = ({ data, jobType, totalJobType, showHideOptions, showHideJobOptions,
         value > 0 ? <div className="cursor-pointer" onClick={event => onClick(event, jobLevel, unitName, isLocal)}>{value}</div> : '';
     const isMultipleData = data.filter(obj => obj.name.slice(0, 2) === jobType).length > 1 || (isOther && data.length > 1);
 
+    const getRowSpanJobTypeOther = () => data.length > 1 ? data.length + 1 : data.length;
+
     const getRowSpanJobType = () => {
         let countColSpan = 0;
         data.map(item => {
@@ -50,7 +52,7 @@ const Row = ({ data, jobType, totalJobType, showHideOptions, showHideJobOptions,
     const renderTotal = () => {
         const total = [];
         totalJobType.map(item => {
-            if (((item.name.slice(0, 2) === jobType) && isMultipleData) || isOther) {
+            if (((item.name.slice(0, 2) === jobType) || isOther) && isMultipleData) {
                 const cells = [];
                 cells.push(<td key={`${item.name}-totaljobLevel`} className="text-center col-job-level">Total</td>);
                 item.cells.map(gunit => {
@@ -90,7 +92,7 @@ const Row = ({ data, jobType, totalJobType, showHideOptions, showHideJobOptions,
                 const showHideJobOption = showHideJobOptions.find(x => x.key === jobType || (isOther && x.key === "Other"));
                 const cells = [];
                 if (rows.length === 0) {
-                    cells.push(<td key={`${item.name}-jobtype`} className={`${isMultipleData ? '' : 'text-center'} col-job-level bold`} rowSpan={isOther ? (data.length + 1) : getRowSpanJobType()}>
+                    cells.push(<td key={`${item.name}-jobtype`} className={`${isMultipleData ? '' : 'text-center'} col-job-level bold`} rowSpan={isOther ? getRowSpanJobTypeOther() : getRowSpanJobType()}>
                         {
                            isMultipleData &&
                            <span className={`fa ${showHideJobOption.show ? 'fa-minus-square-o' : 'fa-plus-square-o'}`}

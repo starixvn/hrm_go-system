@@ -130,7 +130,6 @@
             }
 
             var ortherJobLevels = jobLevels.Where(x => !x[..1].Contains("M") && !x[..1].Contains("P") && !x[..1].Contains("E")).ToList();
-            ortherJobLevels.Add("Demo");
             dictionaryJobLevels.Add("Other", ortherJobLevels.ToArray());
 
             return dictionaryJobLevels;
@@ -151,9 +150,7 @@
                 dictionaryJobLevelTypes.Add(jobLevelType.Key, SortJobLevel(jobLevelNames));
             }
 
-            //var ortherJobLevels = jobLevels.Where(x => !x[..1].Contains("M") && !x[..1].Contains("P") && !x[..1].Contains("E")).Select(y => y[..LengthJobLevelType]).Distinct().ToList();
             var ortherJobLevels = new[] { "Other" };
-            //ortherJobLevels.Add("De");
             dictionaryJobLevelTypes.Add("Other", ortherJobLevels.ToArray());
 
             return dictionaryJobLevelTypes;
