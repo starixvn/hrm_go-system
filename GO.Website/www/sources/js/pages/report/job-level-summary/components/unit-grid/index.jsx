@@ -25,11 +25,9 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
             })
         });
 
-        totalJobTypeOthers.map(item => {
-            showHides.push({
-                key: item.name,
-                show: false
-            })
+        showHides.push({
+            key: "Other",
+            show: false
         });
         return showHides;
     }
@@ -64,7 +62,7 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
         }
     };
 
-    const renderRows = (rows, jobLevelTypes, totalJobType) => {
+    const renderRows = (rows, jobLevelTypes, totalJobType, isOther = false) => {
         const trs = [];
         jobLevelTypes.map(jobType => {
             trs.push(<Row key={jobType}
@@ -74,7 +72,8 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
                 showHideOptions={showHideOptions}
                 showHideJobOptions={showHideJobOptions}
                 handleShowHideJobCells={handleShowHideJobCells}
-                onClick={handleShowDetail} />);
+                onClick={handleShowDetail}
+                isOther={isOther}/>);
         });
 
         return trs;
@@ -175,8 +174,7 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
                 <TotalRow data={totalSupervisor} showHideOptions={showHideOptions} />
                 {renderRows(employees, jobLevelTypes.Employee, totalJobTypeEmployee)}
                 <TotalRow data={totalEmployee} showHideOptions={showHideOptions} />
-                {renderRows(others, jobLevelTypes.Other, totalJobTypeOthers)}
-                <TotalRow data={totalOthers} showHideOptions={showHideOptions} />
+                {renderRows(others, jobLevelTypes.Other, totalJobTypeOthers, true)}
                 {renderGrandTotal(grandTotal)}
             </tbody>
         </table>

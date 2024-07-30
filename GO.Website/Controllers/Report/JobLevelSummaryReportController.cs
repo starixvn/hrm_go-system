@@ -64,7 +64,6 @@
 
             var gridCountryData = GroupDataByCountry(jobLevels, units, jobLevelTypes, employeeInfos);
             var gridUnitData = GroupDataByUnit(jobLevels, units, jobLevelTypes, employeeInfos);
-
             return Json(new { employeeInfos, gridCountryData, gridUnitData, jobLevelTypes });
         }
 
@@ -130,8 +129,9 @@
                 dictionaryJobLevels.Add(jobLevelType.Key, jobLevelNames.ToArray());
             }
 
-            var ortherJobLevels = jobLevels.Where(x => !x[..1].Contains("M") && !x[..1].Contains("P") && !x[..1].Contains("E")).ToArray();
-            dictionaryJobLevels.Add("Other", ortherJobLevels);
+            var ortherJobLevels = jobLevels.Where(x => !x[..1].Contains("M") && !x[..1].Contains("P") && !x[..1].Contains("E")).ToList();
+            ortherJobLevels.Add("Demo");
+            dictionaryJobLevels.Add("Other", ortherJobLevels.ToArray());
 
             return dictionaryJobLevels;
         }
@@ -151,8 +151,10 @@
                 dictionaryJobLevelTypes.Add(jobLevelType.Key, SortJobLevel(jobLevelNames));
             }
 
-            var ortherJobLevels = jobLevels.Where(x => !x[..1].Contains("M") && !x[..1].Contains("P") && !x[..1].Contains("E")).Select(y => y[..LengthJobLevelType]).Distinct().ToArray();
-            dictionaryJobLevelTypes.Add("Other", ortherJobLevels);
+            //var ortherJobLevels = jobLevels.Where(x => !x[..1].Contains("M") && !x[..1].Contains("P") && !x[..1].Contains("E")).Select(y => y[..LengthJobLevelType]).Distinct().ToList();
+            var ortherJobLevels = new[] { "Other" };
+            //ortherJobLevels.Add("De");
+            dictionaryJobLevelTypes.Add("Other", ortherJobLevels.ToArray());
 
             return dictionaryJobLevelTypes;
         }
@@ -422,11 +424,10 @@
                     Cells = item.Value.Select(unit => new CellItem { Name = unit }).ToList()
                 }).ToList()
             }).ToList();
-
             foreach (var item in totalJobType)
             {
-                var employees = employeeInfos.Where(emp =>
-                    item.Name.Equals(emp.JobLevel[..LengthJobLevelType], StringComparison.CurrentCultureIgnoreCase)).ToList();
+                var employees = employeeInfos.Where(emp => (item.Name == "Other" && !emp.JobLevel[..1].Contains("M") && !emp.JobLevel[..1].Contains("P") && !emp.JobLevel[..1].Contains("E")) ||
+                     (item.Name != "Other" && item.Name.Equals(emp.JobLevel[..LengthJobLevelType], StringComparison.CurrentCultureIgnoreCase))).ToList();
                 var row = new RowItem
                 {
                     Name = item.Name,
@@ -482,8 +483,8 @@
 
             foreach (var item in totalJobType)
             {
-                var employees = employeeInfos.Where(emp =>
-                    item.Name.Equals(emp.JobLevel[..LengthJobLevelType], StringComparison.CurrentCultureIgnoreCase)).ToList();
+                var employees = employeeInfos.Where(emp => (item.Name == "Other" && !emp.JobLevel[..1].Contains("M") && !emp.JobLevel[..1].Contains("P") && !emp.JobLevel[..1].Contains("E")) ||
+                    (item.Name != "Other" && item.Name.Equals(emp.JobLevel[..LengthJobLevelType], StringComparison.CurrentCultureIgnoreCase))).ToList();
                 var row = new RowItem
                 {
                     Name = item.Name,

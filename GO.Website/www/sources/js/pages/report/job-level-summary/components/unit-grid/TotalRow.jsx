@@ -2,11 +2,11 @@
 
 import { renderNumber } from '../../common.funcs';
 
-const TotalRow = ({ data, showHideOptions }) => {
+const TotalRow = ({ data, showHideOptions, isOther = false }) => {
     return (
         <>
             <tr className="row-total">
-                <td className="text-center" colSpan={2} rowSpan={2}>{data.name}</td>
+                <td className="text-center" colSpan={2} rowSpan={2}>{isOther ? "Total Other" :data.name}</td>
                 {
                     data.cells.map(gunit => {
                         const cells = [];
