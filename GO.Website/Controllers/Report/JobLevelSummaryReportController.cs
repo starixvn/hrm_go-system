@@ -62,9 +62,11 @@
             var jobLevels = GetJobLevels(listJobLevels);
             var jobLevelTypes = GetJobLevelTypes(listJobLevels);
 
-            var gridCountryData = GroupDataByCountry(jobLevels, units, jobLevelTypes, employeeInfos);
-            var gridUnitData = GroupDataByUnit(jobLevels, units, jobLevelTypes, employeeInfos);
-            return Json(new { employeeInfos, gridCountryData, gridUnitData, jobLevelTypes });
+            var gridCountryData = GroupGridDataByCountry(jobLevels, units, jobLevelTypes, employeeInfos);
+            var gridUnitData = GroupGridDataByUnit(jobLevels, units, jobLevelTypes, employeeInfos);
+            var gridCompanyData = GroupGridDataByCompany(jobLevels, jobLevelTypes, employeeInfos);
+
+            return Json(new { employeeInfos, gridCountryData, gridUnitData, gridCompanyData, jobLevelTypes });
         }
 
         [HttpPost]
@@ -80,8 +82,8 @@
             var jobLevelTypes = GetJobLevelTypes(listJobLevels);
 
             var numEmployeeInfos = employeeInfos.ToList();
-            var gridCountryData = GroupDataByCountry(jobLevels, units, jobLevelTypes, numEmployeeInfos);
-            var gridUnitData = GroupDataByUnit(jobLevels, units, jobLevelTypes, numEmployeeInfos);
+            var gridCountryData = GroupGridDataByCountry(jobLevels, units, jobLevelTypes, numEmployeeInfos);
+            var gridUnitData = GroupGridDataByUnit(jobLevels, units, jobLevelTypes, numEmployeeInfos);
 
             var bytes = excelService.ExportJobLevelSummaryReport(gridUnitData, gridCountryData);
             var reportName = $"JobLevelSummaryReportByUnitAndCountry_{DateTime.Today:yyyyMMdd}";
@@ -167,7 +169,7 @@
             return sortJobLevels.ToArray();
         }
 
-        private GridData GroupDataByCountry(
+        private GridData GroupGridDataByCountry(
             Dictionary<string, string[]> jobLevels,
             Dictionary<string, string[]> units,
             Dictionary<string, string[]> jobLevelTypes,
@@ -240,6 +242,31 @@
             };
         }
 
+        private static RowItem GetGrandTotalCompany(
+            Dictionary<string, string[]> companies,
+            RowItem totalSupervisor,
+            RowItem totalEmployee,
+            RowItem totalOther)
+        {
+            return new RowItem
+            {
+                Name = "Sub Total",
+                Cells = companies.Select(country =>
+                {
+                    return new GroupCellItem
+                    {
+                        Name = country.Key,
+                        Cells = country.Value.Select(company => new CellItem
+                        {
+                            Total = totalSupervisor.Cells.First(sup => country.Key.Equals(sup.Name)).Cells.Where(x => x.Name.Equals(company)).Sum(cell => cell.Total)
+                                    + totalEmployee.Cells.First(emp => country.Key.Equals(emp.Name)).Cells.Where(x => x.Name.Equals(company)).Sum(cell => cell.Total)
+                                    + totalOther.Cells.First(emp => country.Key.Equals(emp.Name)).Cells.Where(x => x.Name.Equals(company)).Sum(cell => cell.Total)
+                        }).ToList()
+                    };
+                }).ToList()
+            };
+        }
+
         private (IList<RowItem>, RowItem) GroupDataByCountry(
             string[] jobLevels,
             IList<string> countries,
@@ -298,7 +325,116 @@
             return (rows, totalRow);
         }
 
-        private static GridData GroupDataByUnit(
+        private (IList<RowItem>, RowItem) GroupDataByCompany(
+            string[] jobLevels,
+            Dictionary<string, string[]> companies,
+            IEnumerable<EmployeeInfo> employeeInfos)
+        {
+            var rows = new List<RowItem>();
+            var totalRow = new RowItem
+            {
+                Name = "Total " + GetJobTypeLevel(jobLevels) + " Level",
+                Cells = companies.Select(country => new GroupCellItem
+                {
+                    Name = country.Key,
+                    Cells = country.Value.Select(company => new CellItem { Name = company }).ToList()
+                }).ToList()
+            };
+
+            foreach (var jobLevel in jobLevels)
+            {
+                var employees = employeeInfos.Where(emp => jobLevel.Equals(emp.JobLevel, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                var row = new RowItem
+                {
+                    Name = jobLevel,
+                    Cells = new List<GroupCellItem>()
+                };
+                foreach (var country in companies)
+                {
+                    var groupCell = new GroupCellItem
+                    {
+                        Name = country.Key,
+                        Cells = new List<CellItem>()
+                    };
+                    foreach (var company in country.Value)
+                    {
+                        var cell = new CellItem
+                        {
+                            Name = company,
+                            Total = country.Key == "Other" ? employees.Count(emp => !countryTypes.Any(x => x.Equals(emp.Country, StringComparison.CurrentCultureIgnoreCase)) && company.Contains(emp.CompanyName))
+                                : employees.Count(emp => country.Key.Equals(emp.Country, StringComparison.CurrentCultureIgnoreCase) && company.Contains(emp.CompanyName))
+                        };
+                        groupCell.Cells.Add(cell);
+
+                        totalRow.Cells.First(item => item.Name.Equals(country.Key, StringComparison.CurrentCultureIgnoreCase))
+                            .Cells.First(item => item.Name.Equals(company, StringComparison.CurrentCultureIgnoreCase)).Total += cell.Total;
+                    }
+
+                    row.Cells.Add(groupCell);
+                }
+
+                rows.Add(row);
+            }
+
+            return (rows, totalRow);
+        }
+
+        private GridData GroupGridDataByCompany(
+            Dictionary<string, string[]> jobLevels,
+            Dictionary<string, string[]> jobLevelTypes,
+            IEnumerable<EmployeeInfo> employeeInfos)
+        {
+            IList<string> countries = employeeInfos.Where(emp => !string.IsNullOrWhiteSpace(emp.Country))
+               .Select(emp => emp.Country).Distinct().OrderBy(item => item).ToList();
+            countries.Add("Other");
+            var companies = new Dictionary<string, string[]>();
+            foreach (var item in countries)
+            {
+                string[] company;
+                if (item != "Other")
+                {
+                    company = employeeInfos.Where(emp => !string.IsNullOrWhiteSpace(emp.CompanyName) && emp.Country == item)
+                                .Select(emp => emp.CompanyName).Distinct().OrderBy(item => item).ToArray();
+                }
+                else
+                {
+                    company = employeeInfos.Where(emp => !string.IsNullOrWhiteSpace(emp.CompanyName) && !countryTypes.Any(x => x.Contains(emp.Country)))
+                                .Select(emp => emp.CompanyName).Distinct().OrderBy(item => item).ToArray();
+                }
+                companies.Add(item, company);
+            }
+
+            var (supervisors, totalSupervisor) = GroupDataByCompany(jobLevels.ElementAt(0).Value, companies, employeeInfos);
+            var (employees, totalEmployee) = GroupDataByCompany(jobLevels.ElementAt(1).Value, companies, employeeInfos);
+            var (others, totalOthers) = GroupDataByCompany(jobLevels.ElementAt(2).Value, companies, employeeInfos);
+            var totalJobTypeSupervisor = GetTotalByCompany(companies, jobLevelTypes.ElementAt(0).Value, employeeInfos.ToList());
+            var totalJobTypeEmployee = GetTotalByCompany(companies, jobLevelTypes.ElementAt(1).Value, employeeInfos.ToList());
+            var totalJobTypeOthers = GetTotalByCompany(companies, jobLevelTypes.ElementAt(2).Value, employeeInfos.ToList());
+            var grandTotal = GetGrandTotalCompany(companies, totalSupervisor, totalEmployee, totalOthers);
+
+            var headers = companies.Select(country => new RowItem
+            {
+                Name = country.Key,
+                Cells = country.Value.Select(company => new GroupCellItem { Name = company }).ToList()
+            }).ToList();
+
+            return new GridData
+            {
+                Headers = headers,
+                Supervisors = supervisors,
+                Employees = employees,
+                Others = others,
+                TotalSupervisor = totalSupervisor,
+                TotalEmployee = totalEmployee,
+                TotalOthers = totalOthers,
+                TotalJobTypeSupervisor = totalJobTypeSupervisor,
+                TotalJobTypeEmployee = totalJobTypeEmployee,
+                TotalJobTypeOthers = totalJobTypeOthers,
+                GrandTotal = grandTotal
+            };
+        }
+
+        private static GridData GroupGridDataByUnit(
             Dictionary<string, string[]> jobLevels,
             Dictionary<string, string[]> units,
             Dictionary<string, string[]> jobLevelTypes,
@@ -507,6 +643,58 @@
 
                         item.Cells.First(itemCell => itemCell.Name.Equals(country, StringComparison.CurrentCultureIgnoreCase))
                             .Cells.First(itemCell => itemCell.Name.Equals(unit.Key, StringComparison.CurrentCultureIgnoreCase)).Total += cell.Total;
+                    }
+
+                    row.Cells.Add(groupCell);
+                }
+            }
+
+            return totalJobType;
+        }
+        private static List<RowItem> GetTotalByCompany(
+            Dictionary<string, string[]> companies,
+            IEnumerable<string> jobLevelsType,
+            IEnumerable<EmployeeInfo> employeeInfos)
+        {
+            var totalJobType = jobLevelsType.Select(item => new RowItem
+            {
+                Name = item,
+                Cells = companies.Select(country => new GroupCellItem
+                {
+                    Name = country.Key,
+                    Cells = country.Value.Select(company => new CellItem { Name = company }).ToList()
+                }).ToList()
+            }).ToList();
+
+            foreach (var item in totalJobType)
+            {
+                var employees = employeeInfos.Where(emp => (item.Name == "Other" && !emp.JobLevel[..1].Contains("M") && !emp.JobLevel[..1].Contains("P") && !emp.JobLevel[..1].Contains("E")) ||
+                    (item.Name != "Other" && item.Name.Equals(emp.JobLevel[..LengthJobLevelType], StringComparison.CurrentCultureIgnoreCase))).ToList();
+                var row = new RowItem
+                {
+                    Name = item.Name,
+                    Cells = new List<GroupCellItem>()
+                };
+
+                foreach (var country in companies)
+                {
+                    var groupCell = new GroupCellItem
+                    {
+                        Name = country.Key,
+                        Cells = new List<CellItem>()
+                    };
+                    foreach (var company in country.Value)
+                    {
+                        var cell = new CellItem
+                        {
+                            Name = company,
+                            Total = employees
+                                .Count(emp => country.Key.Equals(emp.Country, StringComparison.CurrentCultureIgnoreCase) && company.Contains(emp.CompanyName))
+                        };
+                        groupCell.Cells.Add(cell);
+
+                        item.Cells.First(itemCell => itemCell.Name.Equals(country.Key, StringComparison.CurrentCultureIgnoreCase))
+                            .Cells.First(itemCell => itemCell.Name.Equals(company, StringComparison.CurrentCultureIgnoreCase)).Total += cell.Total;
                     }
 
                     row.Cells.Add(groupCell);

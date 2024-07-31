@@ -40,6 +40,7 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
     });
     const [showHideOptions, setShowHideOptions] = useState(showHides);
     const [showHideJobOptions, setShowHideJobOptions] = useState(showHideJobs);
+    const [showMore, setShowMore] = useState(false);
 
     const handleShowHideCells = unit => {
         const options = [...showHideOptions];
@@ -107,77 +108,86 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
     }
 
     return (
-        <table className="table group-by-country">
-            <thead>
-                <tr>
-                    <td rowSpan={3} colSpan={2} className="col-job-level">{LangHelper.getResource('JobLevel')}</td>
+        <>
+            <table className="table group-by-country">
+                <thead>
+                    <tr>
+                        <td rowSpan={3} colSpan={2} className="col-job-level">{LangHelper.getResource('JobLevel')}</td>
+                        {
+                            headers.map(gunit => {
+                                const showHideOption = showHideOptions.find(x => x.key === gunit.name);
+                                const colSpan = (showHideOption.show ? gunit.cells.length * 2 : 0) + 2;
+
+                                return (
+                                    <td key={gunit.name} className="group-unit" colSpan={colSpan}>
+                                        <span>{gunit.name}</span>
+                                        {
+                                            gunit.name !== "Other" && 
+                                            <span
+                                                className={`fa ${showHideOption.show ? 'fa-minus-square-o' : 'fa-plus-square-o'}`}
+                                                onClick={() => handleShowHideCells(gunit.name)}
+                                            />
+                                        }
+                                    </td>
+                                );
+                            })
+                        }
+                    </tr>
+                    <tr>
+                        {
+                            headers.map(gunit => {
+                                const cols = [];
+                                const showHideOption = showHideOptions.find(x => x.key === gunit.name);
+                                if (showHideOption.show) {
+                                    gunit.cells.map(unit => {
+                                        cols.push(<td key={`${gunit.name}-${unit.name}`} colSpan={2}>{unit.name}</td>);
+                                    });
+                                }
+
+                                cols.push(<td key={`${gunit.name}-total`} colSpan={2}>{`${GetNameUnitTypeTotal(gunit.name)} Total`}</td>);
+
+                                return cols;
+                            })
+                        }
+                    </tr>
+                    <tr>
+                        {
+                            headers.map(gunit => {
+                                const cols = [];
+                                const showHideOption = showHideOptions.find(x => x.key === gunit.name);
+                                if (showHideOption.show) {
+                                    gunit.cells.map(unit => {
+                                        cols.push(<td key={`${gunit.name}-${unit.name}-expat`}>Expat</td>);
+                                        cols.push(<td key={`${gunit.name}-${unit.name}-local`}>Local</td>);
+                                    });
+                                }
+
+                                cols.push(<td key={`${gunit.name}-total-expat`}>Expat</td>);
+                                cols.push(<td key={`${gunit.name}-total-local`}>Local</td>);
+
+                                return cols;
+                            })
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    <GrandTotalRow data={grandTotal} showHideOptions={showHideOptions} />
                     {
-                        headers.map(gunit => {
-                            const showHideOption = showHideOptions.find(x => x.key === gunit.name);
-                            const colSpan = (showHideOption.show ? gunit.cells.length * 2 : 0) + 2;
-
-                            return (
-                                <td key={gunit.name} className="group-unit" colSpan={colSpan}>
-                                    <span>{gunit.name}</span>
-                                    {
-                                        gunit.name !== "Other" && 
-                                        <span
-                                            className={`fa ${showHideOption.show ? 'fa-minus-square-o' : 'fa-plus-square-o'}`}
-                                            onClick={() => handleShowHideCells(gunit.name)}
-                                        />
-                                    }
-                                </td>
-                            );
-                        })
+                        showMore && 
+                        <>
+                            {renderRows(supervisors, jobLevelTypes.Supervisor, totalJobTypeSupervisor)}
+                            <TotalRow data={totalSupervisor} showHideOptions={showHideOptions} />
+                            {renderRows(employees, jobLevelTypes.Employee, totalJobTypeEmployee)}
+                            <TotalRow data={totalEmployee} showHideOptions={showHideOptions} />
+                            {renderRows(others, jobLevelTypes.Other, totalJobTypeOthers, true)}
+                        </>
                     }
-                </tr>
-                <tr>
-                    {
-                        headers.map(gunit => {
-                            const cols = [];
-                            const showHideOption = showHideOptions.find(x => x.key === gunit.name);
-                            if (showHideOption.show) {
-                                gunit.cells.map(unit => {
-                                    cols.push(<td key={`${gunit.name}-${unit.name}`} colSpan={2}>{unit.name}</td>);
-                                });
-                            }
+                    {renderGrandTotal(grandTotal)}
+                </tbody>
+            </table>
 
-                            cols.push(<td key={`${gunit.name}-total`} colSpan={2}>{`${GetNameUnitTypeTotal(gunit.name)} Total`}</td>);
-
-                            return cols;
-                        })
-                    }
-                </tr>
-                <tr>
-                    {
-                        headers.map(gunit => {
-                            const cols = [];
-                            const showHideOption = showHideOptions.find(x => x.key === gunit.name);
-                            if (showHideOption.show) {
-                                gunit.cells.map(unit => {
-                                    cols.push(<td key={`${gunit.name}-${unit.name}-expat`}>Expat</td>);
-                                    cols.push(<td key={`${gunit.name}-${unit.name}-local`}>Local</td>);
-                                });
-                            }
-
-                            cols.push(<td key={`${gunit.name}-total-expat`}>Expat</td>);
-                            cols.push(<td key={`${gunit.name}-total-local`}>Local</td>);
-
-                            return cols;
-                        })
-                    }
-                </tr>
-            </thead>
-            <tbody>
-                <GrandTotalRow data={grandTotal} showHideOptions={showHideOptions} />
-                {renderRows(supervisors, jobLevelTypes.Supervisor, totalJobTypeSupervisor)}
-                <TotalRow data={totalSupervisor} showHideOptions={showHideOptions} />
-                {renderRows(employees, jobLevelTypes.Employee, totalJobTypeEmployee)}
-                <TotalRow data={totalEmployee} showHideOptions={showHideOptions} />
-                {renderRows(others, jobLevelTypes.Other, totalJobTypeOthers, true)}
-                {renderGrandTotal(grandTotal)}
-            </tbody>
-        </table>
+            <button onClick={() => setShowMore(!showMore)}>Show More</button>
+        </>
     );
 };
 

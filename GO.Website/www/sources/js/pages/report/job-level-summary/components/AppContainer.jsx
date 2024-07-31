@@ -2,6 +2,7 @@
 import { Button, Overlay, Popover } from 'react-bootstrap';
 import DataService from '@jsroot/common/dataService';
 import UnitGrid from './unit-grid/index';
+import CompanyGrid from './company-grid/index';
 import CountryGrid from './country-grid/index';
 import Site from '@jsroot/common/site';
 import LangHelper from '@jsroot/common/langHelper';
@@ -14,6 +15,7 @@ export default class AppContainer extends Component {
             employeeInfos: [],
             gridCountryData: null,
             gridUnitData: null,
+            gridCompanyData: null,
             jobLevelTypes: {
                 Supervisor: [],
                 Employee: [],
@@ -114,7 +116,7 @@ export default class AppContainer extends Component {
     };
 
     render() {
-        const { employeeInfos, gridCountryData, gridUnitData, jobLevelTypes, detail } = this.state;
+        const { employeeInfos, gridCountryData, gridUnitData, gridCompanyData, jobLevelTypes, detail } = this.state;
 
         return (
             <div className="manpower-report">
@@ -125,6 +127,16 @@ export default class AppContainer extends Component {
                     gridUnitData &&
                     <UnitGrid
                         data={gridUnitData}
+                        employeeInfos={employeeInfos}
+                        detail={detail}
+                        onShowDetail={this.handleShowDetail}
+                        jobLevelTypes={jobLevelTypes}
+                    />
+                }
+                {
+                    gridCompanyData &&
+                    <CompanyGrid
+                        data={gridCompanyData}
                         employeeInfos={employeeInfos}
                         detail={detail}
                         onShowDetail={this.handleShowDetail}

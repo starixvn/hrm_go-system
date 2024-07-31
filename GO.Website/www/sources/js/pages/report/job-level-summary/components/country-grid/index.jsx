@@ -33,6 +33,7 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
     }
 
     const [showHideOptions, setShowHideOptions] = useState(showHides);
+    const [showMore, setShowMore] = useState(false);
 
     const handleShowHideCells = unit => {
         const options = [...showHideOptions];
@@ -80,39 +81,48 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
     }
 
     return (
-        <table className="table group-by-country">
-            <thead>
-                <tr>
-                    <td rowSpan={2} colSpan={2} className="col-job-level">{LangHelper.getResource('JobLevel')}</td>
+        <>
+            <table className="table group-by-country">
+                <thead>
+                    <tr>
+                        <td rowSpan={2} colSpan={2} className="col-job-level">{LangHelper.getResource('JobLevel')}</td>
+                        {
+                            headers.map(country => <td key={country.name} rowSpan={country.name !== "Other" ? 1 : 2} colSpan={country.name !== "Other" ? 4 : 1}>{country.name}</td>)
+                        }
+                    </tr>
+                    <tr>
+                        {
+                            headers.map(country => <Fragment key={country.name}>
+                                {
+                                    country.name !== "Other" && <>
+                                        <td className="col-total">PU Total</td>
+                                        <td className="col-total">BU Total</td>
+                                        <td className="col-total">SU Total</td>
+                                        <td className="col-total">Other</td>
+                                    </>
+                                }
+                            </Fragment>)
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    <SubTotalRow data={grandTotal} totalSupervisor={totalSupervisor} totalEmployee={totalEmployee} />
                     {
-                        headers.map(country => <td key={country.name} rowSpan={country.name !== "Other" ? 1 : 2 } colSpan={country.name !== "Other" ? 4 : 1}>{country.name}</td>)
+                        showMore &&
+                        <>
+                            {renderRows(supervisors, jobLevelTypes.Supervisor, totalJobTypeSupervisor)}
+                            <TotalRow data={totalSupervisor} />
+                            {renderRows(employees, jobLevelTypes.Employee, totalJobTypeEmployee)}
+                            <TotalRow data={totalEmployee} />
+                            {renderRows(others, jobLevelTypes.Other, totalJobTypeOthers, true)}
+                        </>
                     }
-                </tr>
-                <tr>
-                    {
-                        headers.map(country => <Fragment key={country.name}>
-                            {
-                                country.name !== "Other" && <>
-                                    <td className="col-total">PU Total</td>
-                                    <td className="col-total">BU Total</td>
-                                    <td className="col-total">SU Total</td>
-                                    <td className="col-total">Other</td>
-                                </>
-                            }
-                        </Fragment>)
-                    }
-                </tr>
-            </thead>
-            <tbody>
-                <SubTotalRow data={grandTotal} totalSupervisor={totalSupervisor} totalEmployee={totalEmployee} />
-                {renderRows(supervisors, jobLevelTypes.Supervisor, totalJobTypeSupervisor)}
-                <TotalRow data={totalSupervisor} />
-                {renderRows(employees, jobLevelTypes.Employee, totalJobTypeEmployee)}
-                <TotalRow data={totalEmployee} />
-                {renderRows(others, jobLevelTypes.Other, totalJobTypeOthers, true)}
-                {renderGrandTotal(grandTotal) }
-            </tbody>
-        </table>
+                    {renderGrandTotal(grandTotal)}
+                </tbody>
+            </table>
+
+            <button onClick={() => setShowMore(!showMore)}>Show More</button>
+        </>
     );
 };
 
