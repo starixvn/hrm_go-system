@@ -1,5 +1,6 @@
 ﻿import React, { useState, Fragment } from 'react';
 import Row from './Row';
+import { Button } from 'react-bootstrap';
 import TotalRow from './TotalRow';
 import SubTotalRow from './SubTotalRow';
 import LangHelper from '@jsroot/common/langHelper';
@@ -121,7 +122,7 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
                 </tbody>
             </table>
 
-            <button onClick={() => setShowMore(!showMore)}>Show More</button>
+            <Button className="btn-show-more" onClick={() => setShowMore(!showMore)}>Show More</Button>
         </>
     );
 };

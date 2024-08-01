@@ -3,8 +3,7 @@ import Row from './Row';
 import TotalRow from './TotalRow';
 import SubTotalRow from './SubTotalRow';
 import LangHelper from '@jsroot/common/langHelper';
-
-import { renderNumber } from '../../common.funcs';
+import { Button } from 'react-bootstrap';
 
 const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
     const { headers, supervisors, employees, others, totalSupervisor, totalEmployee, grandTotal, totalJobTypeSupervisor, totalJobTypeEmployee, totalJobTypeOthers } = data;
@@ -108,7 +107,8 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
                     }
                 </tbody>
             </table>
-            <button onClick={() => setShowMore(!showMore)}>Show More</button>
+            <Button className="btn-show-more" onClick={() => setShowMore(!showMore)}>Show More</Button>
+            <hr></hr>
         </>
     );
 };

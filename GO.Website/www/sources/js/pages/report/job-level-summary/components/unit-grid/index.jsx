@@ -1,4 +1,5 @@
 ﻿import React, { useState } from 'react';
+import { Button} from 'react-bootstrap';
 import Row from './Row';
 import TotalRow from './TotalRow';
 import GrandTotalRow from './GrandTotalRow';
@@ -186,7 +187,8 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
                 </tbody>
             </table>
 
-            <button onClick={() => setShowMore(!showMore)}>Show More</button>
+            <Button className="btn-show-more" onClick={() => setShowMore(!showMore)}>Show More</Button>
+            <hr></hr>
         </>
     );
 };

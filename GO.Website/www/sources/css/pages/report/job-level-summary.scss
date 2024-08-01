@@ -3,8 +3,33 @@
 @import "../../components/buttons";
 @import "../../components/form-filter";
 @import "../../components/tables";
+@import '../../components/date-picker/style';
 
 .manpower-report {
+    .filter-job-level{
+        margin-bottom: unset !important;
+    } 
+    
+    .form-group-width {
+        width: unset !important;
+    }
+
+    .btn-show-more {
+        width: 200px;
+        padding: .25rem .5rem;
+        font-size: 1rem;
+        border-radius: .2rem;
+        color: #fff;
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+        margin-top: 10px;
+    }
+
+    .react-datepicker-year-header {
+        line-height: 2.5rem;
+        font-size: 1.2rem;
+    }
+
     .btn-excel {
         margin-top: 16px;
         background: #6c757d;

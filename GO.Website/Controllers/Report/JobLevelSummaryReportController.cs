@@ -9,6 +9,7 @@
     using GO.Website.Constants;
     using GO.Website.Criteria.Report;
     using GO.Website.Filters;
+    using GO.Website.Models.Report.JobLevelSummary;
     using GO.Website.Models.Report.Manpower;
     using GO.Website.Services;
     using Microsoft.AspNetCore.Mvc;
@@ -50,9 +51,14 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetData()
+        public async Task<IActionResult> GetData([FromBody] GetJobLevelSummaryParam param)
         {
-            var criteria = new GetJobLevelSummaryReportCriteria();
+
+            param.JoinedDate = param.JoinedDate.AddMonths(1);
+            var criteria = new GetJobLevelSummaryReportCriteria()
+            {
+                JoinedDate = new DateTime(param.JoinedDate.Year, param.JoinedDate.Month, 1, 0, 0, 0, DateTimeKind.Utc),
+            };
             var employeeInfos = await baseService.GetDataAsync<EmployeeInfo>(criteria);
 
             var listUnits = await GetUnitAsync();

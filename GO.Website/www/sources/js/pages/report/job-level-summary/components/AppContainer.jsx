@@ -1,11 +1,12 @@
 ﻿import React, { Component } from 'react';
-import { Button, Overlay, Popover } from 'react-bootstrap';
+import { Button, Overlay, Popover, Form } from 'react-bootstrap';
 import DataService from '@jsroot/common/dataService';
 import UnitGrid from './unit-grid/index';
 import CompanyGrid from './company-grid/index';
 import CountryGrid from './country-grid/index';
 import Site from '@jsroot/common/site';
 import LangHelper from '@jsroot/common/langHelper';
+import DatePicker from '@jsroot/components/date-picker/index';
 
 export default class AppContainer extends Component {
     constructor(props) {
@@ -16,6 +17,7 @@ export default class AppContainer extends Component {
             gridCountryData: null,
             gridUnitData: null,
             gridCompanyData: null,
+            joinedDate: new Date(),
             jobLevelTypes: {
                 Supervisor: [],
                 Employee: [],
@@ -36,7 +38,10 @@ export default class AppContainer extends Component {
     getReportData = async () => {
         Site.blockUI();
         const url = Site.resolveClientUrl('JobLevelSummaryReport/getData');
-        await DataService.postDataAsync(url).then(response => {
+        const param = {
+            JoinedDate: this.state.joinedDate
+        }
+        await DataService.postDataAsync(url, param).then(response => {
             this.setState({
                 ...response.data
             });
@@ -116,13 +121,32 @@ export default class AppContainer extends Component {
     };
 
     render() {
-        const { employeeInfos, gridCountryData, gridUnitData, gridCompanyData, jobLevelTypes, detail } = this.state;
+        const { employeeInfos, gridCountryData, gridUnitData, gridCompanyData, jobLevelTypes, detail, joinedDate } = this.state;
 
         return (
             <div className="manpower-report">
-                <Button variant="secondary" size="sm" className="btn-excel" type="button" onClick={this.exportExcel}>
-                    Export to Excel
-                </Button>
+                <Form className="form-filter">
+                    <Form.Row bsPrefix="form-row">
+                        <Form.Group className="filter-job-level" >
+                            <DatePicker selected={joinedDate}
+                                showMonthYearPicker
+                                dateFormat="MMM yyyy"
+                                onChange={value => this.setState({
+                                    joinedDate: value
+                                })}
+                            />
+                        </Form.Group>
+                        <Form.Group className="form-group-width filter-job-level">
+                            <Button variant="primary" size="sm" className="mr-3" onClick={this.getReportData}>
+                                {LangHelper.getResource('Submit')}
+                            </Button>
+                            <Button variant="primary" size="sm" className="mr-3" onClick={this.exportExcel}>
+                                {LangHelper.getResource('ExportExcel')}
+                            </Button>
+                        </Form.Group>
+                    </Form.Row>
+                </Form>
+
                 {
                     gridUnitData &&
                     <UnitGrid
