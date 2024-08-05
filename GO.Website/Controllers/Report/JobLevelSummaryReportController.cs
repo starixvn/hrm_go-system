@@ -76,22 +76,27 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> ExportExcel()
+        public async Task<IActionResult> ExportExcel([FromBody] GetJobLevelSummaryParam param)
         {
-            var criteria = new GetJobLevelSummaryReportCriteria();
+            param.JoinedDate = param.JoinedDate.AddMonths(1);
+            var criteria = new GetJobLevelSummaryReportCriteria()
+            {
+                JoinedDate = new DateTime(param.JoinedDate.Year, param.JoinedDate.Month, 1, 0, 0, 0, DateTimeKind.Utc),
+            };
             var employeeInfos = await baseService.GetDataAsync<EmployeeInfo>(criteria);
+
             var listUnits = await GetUnitAsync();
             var listJobLevels = await GetJobLevelAsync();
+            var units = GetUnit(listUnits);
 
-            var units = GetUnit(listUnits.ToList());
             var jobLevels = GetJobLevels(listJobLevels);
             var jobLevelTypes = GetJobLevelTypes(listJobLevels);
 
-            var numEmployeeInfos = employeeInfos.ToList();
-            var gridCountryData = GroupGridDataByCountry(jobLevels, units, jobLevelTypes, numEmployeeInfos);
-            var gridUnitData = GroupGridDataByUnit(jobLevels, units, jobLevelTypes, numEmployeeInfos);
+            var gridCountryData = GroupGridDataByCountry(jobLevels, units, jobLevelTypes, employeeInfos);
+            var gridUnitData = GroupGridDataByUnit(jobLevels, units, jobLevelTypes, employeeInfos);
+            var gridCompanyData = GroupGridDataByCompany(jobLevels, jobLevelTypes, employeeInfos);
 
-            var bytes = excelService.ExportJobLevelSummaryReport(gridUnitData, gridCountryData);
+            var bytes = excelService.ExportJobLevelSummaryReport(gridUnitData, gridCountryData, gridCompanyData);
             var reportName = $"JobLevelSummaryReportByUnitAndCountry_{DateTime.Today:yyyyMMdd}";
             return File(bytes, "application/xlsx", $"{reportName}.xlsx");
         }

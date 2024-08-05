@@ -51,7 +51,10 @@ export default class AppContainer extends Component {
     exportExcel = async () => {
         Site.blockUI();
         const url = Site.resolveClientUrl('JobLevelSummaryReport/exportExcel');
-        await DataService.getFileAsync(url).then(response => {
+        const param = {
+            JoinedDate: this.state.joinedDate
+        }
+        await DataService.getFileAsync(url, param).then(response => {
             const fileName = response.headers['content-disposition'].split('filename=')[1].split(';')[0];
             Site.downloadFile(response.data, fileName);
         }).then(() => Site.unblockUI());
@@ -183,7 +186,7 @@ export default class AppContainer extends Component {
                     popperConfig={{ placement: 'auto' }}
                 >
                     <Popover id="popover-employee-infos" className="popover-employee-infos">
-                        <Popover.Title as="div"><i className="fa fa-times" onClick={this.handleHideDetail} /></Popover.Title>
+                        <Popover.Title as="div"><i className="fa fa-times" onClick={this.handleHideDetail}/></Popover.Title>
                         <Popover.Content>
                             {this.renderDetail(detail.employeeInfos)}
                         </Popover.Content>

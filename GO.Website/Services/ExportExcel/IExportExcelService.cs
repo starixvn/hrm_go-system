@@ -9,7 +9,7 @@
     {
         byte[] ExportAnnualManpowerForecastRequestForm(AnnualManpowerForecastRequest request);
 
-        byte[] ExportJobLevelSummaryReport(GridData gridUnitData, GridData gridCountryData);
+        byte[] ExportJobLevelSummaryReport(GridData gridUnitData, GridData gridCountryData, GridData gridCompanyData);
 
         byte[] ExportManpowerForecastReport(IEnumerable<AnnualManpowerForecastRequest> requests, int year, string periodName);
         byte[] ExportEmployeeReport(IEnumerable<EmployeeInfo> employeeInfos);

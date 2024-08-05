@@ -25,11 +25,11 @@
             return excel.Export();
         }
 
-        public byte[] ExportJobLevelSummaryReport(GridData gridUnitData, GridData gridCountryData)
+        public byte[] ExportJobLevelSummaryReport(GridData gridUnitData, GridData gridCountryData, GridData gridCompanyData)
         {
             const string ExcelTemplatePath = "ExcelTemplates/JobLevelSummaryReportByUnitAndCountry.xlsx";
             var templatePath = Path.Combine(hostingEnvironment.ContentRootPath, ExcelTemplatePath);
-            var excel = new JobLevelSummaryReportExcel(templatePath, gridUnitData, gridCountryData);
+            var excel = new JobLevelSummaryReportExcel(templatePath, gridUnitData, gridCountryData, gridCompanyData);
             return excel.Export();
         }
 
