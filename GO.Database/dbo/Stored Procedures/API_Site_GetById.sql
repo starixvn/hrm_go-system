@@ -17,6 +17,9 @@ BEGIN
 		,s.AccessToken
 		,s.IsActive
 		,s.SiteURL
+		,c.CompanyId
+		,c.[Name] AS CompanyName
 	FROM dbo.[Site] AS s WITH (NOLOCK)
+		INNER JOIN dbo.Company AS c WITH (NOLOCK) ON s.CompanyId = c.CompanyId
 	WHERE s.SiteId = @SiteId
 END

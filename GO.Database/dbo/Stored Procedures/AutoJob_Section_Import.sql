@@ -1,5 +1,5 @@
 ﻿
-CREATE PROCEDURE [dbo].[AutoJob_Section_Import] @SiteId SMALLINT
+CREATE PROCEDURE [dbo].[AutoJob_Section_Import] @CompanyId SMALLINT
 	,@Value NVARCHAR(MAX)
 	,@ErrCode INT = 0 OUTPUT
 	,@ErrMsg NVARCHAR(200) = '' OUTPUT
@@ -63,7 +63,7 @@ BEGIN
 			)
 	BEGIN
 		INSERT INTO dbo.HRM_Section (
-			SiteId
+			CompanyId
 			,SectionId
 			,Code
 			,[Name]
@@ -73,7 +73,7 @@ BEGIN
 			,ModifiedDate
 			,SyncDate
 			)
-		SELECT @SiteId
+		SELECT @CompanyId
 			,tmp.SectionId
 			,tmp.Code
 			,tmp.[Name]
@@ -87,7 +87,7 @@ BEGIN
 				SELECT 1
 				FROM dbo.HRM_Section AS section WITH (NOLOCK)
 				WHERE tmp.SectionId = section.SectionId
-					AND section.SiteId = @SiteId
+					AND section.CompanyId = @CompanyId
 				)
 
 		UPDATE section
@@ -100,7 +100,7 @@ BEGIN
 			,section.SyncDate = @SyncDate
 		FROM dbo.HRM_Section AS section WITH (ROWLOCK, UPDLOCK)
 			INNER JOIN #tmpSection AS tmp WITH (NOLOCK) ON section.SectionId = tmp.SectionId
-		WHERE section.SiteId = @SiteId
+		WHERE section.CompanyId = @CompanyId
 	END
 
 	DROP TABLE #tmpSection

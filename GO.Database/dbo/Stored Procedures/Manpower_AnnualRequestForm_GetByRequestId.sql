@@ -30,27 +30,29 @@ BEGIN
 	SELECT @UserId = p.CreatedBy
 		,@Year = p.[Year]
 		,@UnitName = UnitName
+		,@PeriodId = p.PeriodId
 	FROM dbo.Manpower_AnnualRequestForm AS rq WITH (NOLOCK)
 		INNER JOIN dbo.Manpower_Period AS p WITH (NOLOCK) ON rq.PeriodId = p.PeriodId
 	WHERE rq.RequestId = @RequestId
 
 	SELECT @VerifierId = emp.UserId
 	FROM dbo.Manpower_Flow AS flow WITH (NOLOCK)
-		INNER JOIN dbo.HRM_Employee AS emp WITH (NOLOCK) ON emp.SiteId = flow.SiteId
+		INNER JOIN dbo.HRM_Employee AS emp WITH (NOLOCK) ON emp.CompanyId = flow.CompanyId
 		AND emp.EmpId = flow.EmpId
 	WHERE flow.UnitName = @UnitName
 		AND flow.ProcessId = @VerifyProcessId
 
 	SELECT @ApproverId = emp.UserId
 	FROM dbo.Manpower_Flow AS flow WITH (NOLOCK)
-		INNER JOIN dbo.HRM_Employee AS emp WITH (NOLOCK) ON emp.SiteId = flow.SiteId
+		INNER JOIN dbo.HRM_Employee AS emp WITH (NOLOCK) ON emp.CompanyId = flow.CompanyId
 		AND emp.EmpId = flow.EmpId
 	WHERE flow.UnitName = @UnitName
 		AND flow.ProcessId = @ApproveProcessId
 
 	SELECT @CurrentProcessId = ProcessId
 	FROM dbo.Manpower_PeriodProcessSetting WITH (NOLOCK)
-	WHERE @Today BETWEEN FromDate
+	WHERE PeriodId = @PeriodId
+		AND @Today BETWEEN FromDate
 			AND ToDate
 
 	INSERT INTO #tmpJobLevel (JobLevel)
@@ -97,9 +99,7 @@ BEGIN
 			)
 	WHERE rq.RequestId = @RequestId
 
-	SELECT s.SiteId
-		,s.SiteName
-		,c.CompanyId
+	SELECT c.CompanyId
 		,c.[Name] AS CompanyName
 		,unit.UnitId
 		,unit.[Name] AS UnitName
@@ -112,32 +112,29 @@ BEGIN
 		,rqdt.ExpatAddition
 	FROM dbo.Manpower_AnnualRequestForm AS rq WITH (NOLOCK)
 		INNER JOIN dbo.HRM_Unit AS unit WITH (NOLOCK) ON rq.UnitName = unit.[Name]
-		INNER JOIN dbo.[Site] AS s WITH (NOLOCK) ON unit.SiteId = s.SiteId
-		AND s.IsActive = 1
-		INNER JOIN dbo.Company AS c WITH (NOLOCK) ON s.CompanyId = c.CompanyId
+		INNER JOIN dbo.Company AS c WITH (NOLOCK) ON unit.CompanyId = c.CompanyId
 		AND c.IsActive = 1
-		INNER JOIN dbo.HRM_Department AS dept WITH (NOLOCK) ON unit.SiteId = dept.SiteId
+		INNER JOIN dbo.HRM_Department AS dept WITH (NOLOCK) ON unit.CompanyId = dept.CompanyId
 		AND unit.UnitId = dept.UnitId
 		AND dept.IsActive = 1
 		AND dept.IsDeleted = 0
-		INNER JOIN dbo.HRM_Section AS sec WITH (NOLOCK) ON dept.SiteId = sec.SiteId
+		INNER JOIN dbo.HRM_Section AS sec WITH (NOLOCK) ON dept.CompanyId = sec.CompanyId
 		AND dept.DepartmentId = sec.DepartmentId
 		AND sec.IsActive = 1
 		AND sec.IsDeleted = 0
 		CROSS APPLY #tmpJobLevel AS tmpjl WITH (NOLOCK)
 		LEFT JOIN dbo.Manpower_AnnualRequestFormDetail AS rqdt WITH (NOLOCK) ON rq.RequestId = rqdt.RequestId
-		AND sec.SiteId = rqdt.SiteId
+		AND sec.CompanyId = rqdt.CompanyId
 		AND sec.SectionId = rqdt.SectionId
 		AND rqdt.JobLevel = tmpjl.JobLevel
 	WHERE rq.RequestId = @RequestId
-	ORDER BY unit.[Name] ASC
+	ORDER BY c.[Name] ASC
+		,unit.[Name] ASC
 		,dept.[Name] ASC
 		,sec.[Name] ASC
 		,tmpjl.JobLevel DESC
 
-	SELECT s.SiteId
-		,s.SiteName
-		,c.CompanyId
+	SELECT c.CompanyId
 		,c.[Name] AS CompanyName
 		,unit.UnitId
 		,unit.[Name] AS UnitName
@@ -155,24 +152,23 @@ BEGIN
 		,modifier.FullName
 	FROM dbo.Manpower_AnnualRequestForm AS rq WITH (NOLOCK)
 		INNER JOIN dbo.HRM_Unit AS unit WITH (NOLOCK) ON rq.UnitName = unit.[Name]
-		INNER JOIN dbo.[Site] AS s WITH (NOLOCK) ON unit.SiteId = s.SiteId
-		AND s.IsActive = 1
-		INNER JOIN dbo.Company AS c WITH (NOLOCK) ON s.CompanyId = c.CompanyId
+		INNER JOIN dbo.Company AS c WITH (NOLOCK) ON unit.CompanyId = c.CompanyId
 		AND c.IsActive = 1
-		INNER JOIN dbo.HRM_Department AS dept WITH (NOLOCK) ON unit.SiteId = dept.SiteId
+		INNER JOIN dbo.HRM_Department AS dept WITH (NOLOCK) ON unit.CompanyId = dept.CompanyId
 		AND unit.UnitId = dept.UnitId
 		AND dept.IsActive = 1
 		AND dept.IsDeleted = 0
-		INNER JOIN dbo.HRM_Section AS sec WITH (NOLOCK) ON dept.SiteId = sec.SiteId
+		INNER JOIN dbo.HRM_Section AS sec WITH (NOLOCK) ON dept.CompanyId = sec.CompanyId
 		AND dept.DepartmentId = sec.DepartmentId
 		AND sec.IsActive = 1
 		AND sec.IsDeleted = 0
 		INNER JOIN dbo.Manpower_AnnualRequestFormDetail_Log AS rqdt WITH (NOLOCK) ON rq.RequestId = rqdt.RequestId
-		AND sec.SiteId = rqdt.SiteId
+		AND sec.CompanyId = rqdt.CompanyId
 		AND sec.SectionId = rqdt.SectionId
 		INNER JOIN dbo.[User] AS modifier WITH (NOLOCK) ON rqdt.ModifiedBy = modifier.UserId
 	WHERE rq.RequestId = @RequestId
-	ORDER BY unit.[Name] ASC
+	ORDER BY c.[Name] ASC
+		,unit.[Name] ASC
 		,dept.[Name] ASC
 		,sec.[Name] ASC
 		,rqdt.JobLevel DESC

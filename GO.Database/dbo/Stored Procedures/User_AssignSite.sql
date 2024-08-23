@@ -1,4 +1,5 @@
 ﻿
+
 CREATE PROCEDURE [dbo].[User_AssignSite] @SiteId SMALLINT
 	,@UserId INT
 	,@RoleIds VARCHAR(MAX) = NULL
@@ -84,22 +85,22 @@ BEGIN
 		,@startRun
 	FROM @tblRole AS tbl
 
-	IF NOT EXISTS (
-			SELECT 1
-			FROM dbo.UserMapping WITH (NOLOCK)
-			WHERE UserId = @UserId
-				AND SiteId = @SiteId
-			)
-	BEGIN
-		INSERT INTO dbo.UserMapping (
-			UserId
-			,SiteId
-			)
-		VALUES (
-			@UserId
-			,@SiteId
-			)
-	END
+	--IF NOT EXISTS (
+	--		SELECT 1
+	--		FROM dbo.UserMapping WITH (NOLOCK)
+	--		WHERE UserId = @UserId
+	--			AND SiteId = @SiteId
+	--		)
+	--BEGIN
+	--	INSERT INTO dbo.UserMapping (
+	--		UserId
+	--		,SiteId
+	--		)
+	--	VALUES (
+	--		@UserId
+	--		,@SiteId
+	--		)
+	--END
 
 	-- write log
 	SET @endRun = GETUTCDATE()

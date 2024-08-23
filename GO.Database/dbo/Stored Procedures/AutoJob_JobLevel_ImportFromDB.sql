@@ -1,5 +1,5 @@
 ﻿
-CREATE PROCEDURE [dbo].[AutoJob_JobLevel_ImportFromDB] @SiteId SMALLINT
+CREATE PROCEDURE [dbo].[AutoJob_JobLevel_ImportFromDB] @CompanyId SMALLINT
 	,@DbName VARCHAR(50)
 	,@ErrCode INT = 0 OUTPUT
 	,@ErrMsg NVARCHAR(200) = '' OUTPUT
@@ -22,7 +22,7 @@ BEGIN
 
 	SELECT @LastModifiedDate = MAX(ModifiedDate)
 	FROM dbo.HRM_JobLevel WITH (NOLOCK)
-	WHERE SiteId = @SiteId
+	WHERE CompanyId = @CompanyId
 
 	SET @LastModifiedDate = ISNULL(@LastModifiedDate, '2010-01-01')
 
@@ -55,17 +55,17 @@ BEGIN
 		,jl.SyncDate = @SyncDate
 	FROM dbo.HRM_JobLevel AS jl WITH (ROWLOCK, UPDLOCK)
 		INNER JOIN #tmpJobLevel AS tmp WITH (NOLOCK) ON tmp.JobLevelId = jl.JobLevelId
-	WHERE jl.SiteId = @SiteId
+	WHERE jl.CompanyId = @CompanyId
 
 	INSERT INTO dbo.HRM_JobLevel (
-		SiteId
+		CompanyId
 		,JobLevelId
 		,[Name]
 		,IsDeleted
 		,ModifiedDate
 		,SyncDate
 		)
-	SELECT @SiteId
+	SELECT @CompanyId
 		,tmp.JobLevelId
 		,tmp.[Name]
 		,tmp.IsDeleted
@@ -75,7 +75,7 @@ BEGIN
 	WHERE NOT EXISTS (
 			SELECT 1
 			FROM dbo.HRM_JobLevel AS jl WITH (NOLOCK)
-			WHERE jl.SiteId = @SiteId
+			WHERE jl.CompanyId = @CompanyId
 				AND tmp.JobLevelId = jl.JobLevelId
 			)
 

@@ -39,13 +39,11 @@ BEGIN
 		,emp.FullName
 		,emp.IsActive
 		,emp.IsDeleted
-		,s.SiteName
 		,c.[Name] AS CompanyName
 	INTO #tblUser
 	FROM dbo.[User] AS u WITH (NOLOCK)
 		INNER JOIN dbo.HRM_Employee AS emp WITH (NOLOCK) ON u.UserId = emp.UserId
-		INNER JOIN dbo.[Site] AS s WITH (NOLOCK) ON emp.SiteId = s.SiteId
-		INNER JOIN dbo.Company AS c WITH (NOLOCK) ON s.CompanyId = c.CompanyId
+		INNER JOIN dbo.Company AS c WITH (NOLOCK) ON emp.CompanyId = c.CompanyId
 	WHERE (
 			ISNULL(emp.Username, '') LIKE @Keyword
 			OR ISNULL(emp.Code, '') LIKE @Keyword
@@ -59,19 +57,19 @@ BEGIN
 			WHERE us.UserId = u.UserId
 				AND s.SiteId = @SiteId
 			)
-		AND (
-			--emp.EmpId IS NULL
-			EXISTS (
-				SELECT 1
-				FROM dbo.UserMapping AS um WITH (NOLOCK)
-				WHERE emp.SiteId = um.SiteId
-					AND emp.EmpId = um.RefId
-					AND (
-						emp.UserId = um.UserId
-						OR emp.UserId = um.NewUserId
-						)
-				)
-			)
+		--AND (
+		--	--emp.EmpId IS NULL
+		--	EXISTS (
+		--		SELECT 1
+		--		FROM dbo.UserMapping AS um WITH (NOLOCK)
+		--		WHERE um.SiteId = @SiteId
+		--			AND emp.EmpId = um.RefId
+		--			AND (
+		--				emp.UserId = um.UserId
+		--				OR emp.UserId = um.NewUserId
+		--				)
+		--		)
+		--	)
 		AND (
 			@StatusId IS NULL
 			OR (
@@ -109,7 +107,6 @@ BEGIN
 		,FullName
 		,IsActive
 		,IsDeleted
-		,SiteName
 		,CompanyName
 	FROM #tblUser WITH (NOLOCK)
 

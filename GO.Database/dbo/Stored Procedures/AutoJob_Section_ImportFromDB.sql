@@ -1,5 +1,5 @@
 ﻿
-CREATE PROCEDURE [dbo].[AutoJob_Section_ImportFromDB] @SiteId SMALLINT
+CREATE PROCEDURE [dbo].[AutoJob_Section_ImportFromDB] @CompanyId SMALLINT
 	,@DbName VARCHAR(50)
 	,@ErrCode INT = 0 OUTPUT
 	,@ErrMsg NVARCHAR(200) = '' OUTPUT
@@ -22,7 +22,7 @@ BEGIN
 
 	SELECT @LastModifiedDate = MAX(ModifiedDate)
 	FROM dbo.HRM_Section WITH (NOLOCK)
-	WHERE SiteId = @SiteId
+	WHERE CompanyId = @CompanyId
 
 	SET @LastModifiedDate = ISNULL(@LastModifiedDate, '2010-01-01')	
 
@@ -66,10 +66,10 @@ BEGIN
 		,section.SyncDate = @SyncDate
 	FROM dbo.HRM_Section AS section WITH (ROWLOCK, UPDLOCK)
 		INNER JOIN #tmpSection AS tmp WITH (NOLOCK) ON section.SectionId = tmp.SectionId
-	WHERE section.SiteId = @SiteId
+	WHERE section.CompanyId = @CompanyId
 
 	INSERT INTO dbo.HRM_Section (
-		SiteId
+		CompanyId
 		,SectionId
 		,[Name]
 		,Code
@@ -79,7 +79,7 @@ BEGIN
 		,ModifiedDate
 		,SyncDate
 		)
-	SELECT @SiteId
+	SELECT @CompanyId
 		,tmp.SectionId
 		,tmp.[Name]
 		,tmp.Code
@@ -92,7 +92,7 @@ BEGIN
 	WHERE NOT EXISTS (
 			SELECT 1
 			FROM dbo.HRM_Section AS section WITH (NOLOCK)
-			WHERE section.SiteId = @SiteId
+			WHERE section.CompanyId = @CompanyId
 				AND section.SectionId = tmp.SectionId
 			)
 

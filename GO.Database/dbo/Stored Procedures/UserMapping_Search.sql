@@ -1,56 +1,59 @@
 ﻿
-CREATE PROCEDURE [dbo].[UserMapping_Search] @Keyword NVARCHAR(50) = NULL
-	,@SiteId SMALLINT = NULL
-	,@StatusId TINYINT = NULL
+CREATE PROCEDURE [dbo].[UserMapping_Search] @CompanyId SMALLINT = NULL
+	,@Keyword NVARCHAR(50) = NULL
+	,@ExcludeUserId INT = NULL
+	,@Type TINYINT = 1
 AS
 /*
-Created: 20211019@Tim.Trinh
-Task: get all user
+Created: 20240607@Tim.Trinh
+Task: search user
 DB:
 Original:
 
 Revisions:
 Param's Explanation:
-	- StatusId: 1 - active, 2 - inactive, 3 - deleted
+	@Type: 1 - main, 2 - sub
 */
 BEGIN
 	SET NOCOUNT ON;
 	SET @Keyword = '%' + ISNULL(@Keyword, '') + '%'
 
-	SELECT DISTINCT TOP 10 u.UserId
-		,u.Username
-		,u.Code
-		,u.Nickname
-		,u.FullName
-		,u.Email
-		,u.IsActive
-		,u.IsDeleted
-	FROM dbo.[User] AS u WITH (NOLOCK)
-		INNER JOIN dbo.UserMapping AS um WITH (NOLOCK) ON u.UserId = um.UserId
-	WHERE (
-			ISNULL(u.Username, '') LIKE @Keyword
-			OR ISNULL(u.Code, '') LIKE @Keyword
-			OR ISNULL(u.Nickname, '') LIKE @Keyword
-			OR ISNULL(u.FullName, '') LIKE @Keyword
+	SELECT TOP 20 emp.UserId
+		,c.CompanyId
+		,c.[Name] AS CompanyName
+		,emp.Username
+		,emp.Code
+		,emp.Nickname
+		,emp.FullName
+	FROM dbo.HRM_Employee AS emp WITH (NOLOCK)
+		INNER JOIN dbo.Company AS c WITH (NOLOCK) ON emp.CompanyId = c.CompanyId
+	WHERE emp.IsActive = 1
+		AND emp.IsDeleted = 0
+		AND (
+			ISNULL(emp.Nickname, '') LIKE @Keyword
+			OR ISNULL(emp.FullName, '') LIKE @Keyword
 			)
 		AND (
-			@SiteId IS NULL
-			OR um.SiteId = @SiteId
+			@CompanyId IS NULL
+			OR c.CompanyId = @CompanyId
 			)
 		AND (
-			@StatusId IS NULL
-			OR (
-				@StatusId = 1
-				AND u.IsActive = 1
+			(
+				@Type = 1
+				AND NOT EXISTS (
+					SELECT 1
+					FROM dbo.UserMapping_New AS um WITH (NOLOCK)
+					WHERE emp.UserId = um.UserId
+					)
 				)
 			OR (
-				@StatusId = 2
-				AND u.IsActive = 0
-				AND u.IsDeleted = 0
-				)
-			OR (
-				@StatusId = 3
-				AND u.IsDeleted = 1
+				@Type = 2
+				AND emp.UserId != ISNULL(@ExcludeUserId, 0)
+				AND NOT EXISTS (
+					SELECT 1
+					FROM dbo.UserMapping_New AS um WITH (NOLOCK)
+					WHERE emp.UserId = um.LinkToUserId
+					)
 				)
 			)
 END

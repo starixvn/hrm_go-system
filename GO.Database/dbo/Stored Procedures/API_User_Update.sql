@@ -82,6 +82,7 @@ BEGIN
 		,FullName = @FullName
 		,Email = @Email
 		,IsActive = @IsActive
+		,IsDeleted = CASE WHEN @IsActive = 1 AND IsDeleted = 1 THEN 0 ELSE IsDeleted END
 		,[Password] = CASE WHEN ISNULL(@OldPassword, '') != '' THEN NULL ELSE [Password] END
 		,OldPassword = CASE WHEN ISNULL(@OldPassword, '') != '' THEN @OldPassword ELSE OldPassword END
 		,ModifiedBy = @ModifiedBy
@@ -111,7 +112,7 @@ BEGIN
 				AND us.SiteId = @SiteId
 				AND us.RoleId = r.RoleId
 			)
-	
+
 	IF NOT EXISTS (
 			SELECT 1
 			FROM dbo.UserSite WITH (NOLOCK)
@@ -180,12 +181,15 @@ BEGIN
 	SET @endRun = GETUTCDATE()
 	SET @duration = DATEDIFF(millisecond, @startRun, @endRun)
 
-	EXEC dbo.Log_Detail_Insert @UserId = @ModifiedBy
-		,@SiteId = @SiteId
-		,@SpName = 'API_User_Update'
-		,@ObjectId = @tmpUserId
-		,@Data = @logData
-		,@OldData = @logDataOld
-		,@LogDate = @startRun
-		,@Duration = @duration
+	IF @ModifiedBy != 1
+	BEGIN
+		EXEC dbo.Log_Detail_Insert @UserId = @ModifiedBy
+			,@SiteId = @SiteId
+			,@SpName = 'API_User_Update'
+			,@ObjectId = @tmpUserId
+			,@Data = @logData
+			,@OldData = @logDataOld
+			,@LogDate = @startRun
+			,@Duration = @duration
+	END
 END

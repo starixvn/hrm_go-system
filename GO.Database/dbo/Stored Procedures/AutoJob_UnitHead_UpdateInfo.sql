@@ -11,7 +11,7 @@ Original:
 Param's Explanation: 
 	• @Value:
 		<Root>
-			<Row SiteId="1" EmpId="1" Code="" Nickname="" FullName="" IsActive="true" IsDeleted="false" DepartmentCode="" DepartmentName="" />
+			<Row CompanyId="1" EmpId="1" Code="" Nickname="" FullName="" IsActive="true" IsDeleted="false" DepartmentCode="" DepartmentName="" />
 		</Root>
 */
 BEGIN
@@ -20,7 +20,7 @@ BEGIN
 	DECLARE @startRun DATETIME = GETUTCDATE()
 
 	CREATE TABLE #tempUnitHeadInfo (
-		SiteId SMALLINT
+		CompanyId SMALLINT
 		,EmpId INT
 		,Code NVARCHAR(20)
 		,Nickname NVARCHAR(50)
@@ -37,7 +37,7 @@ BEGIN
 		,@Value
 
 	INSERT INTO #tempUnitHeadInfo (
-		SiteId
+		CompanyId
 		,EmpId
 		,Code
 		,Nickname
@@ -47,7 +47,7 @@ BEGIN
 		,DepartmentCode
 		,DepartmentName
 		)
-	SELECT SiteId
+	SELECT CompanyId
 		,EmpId
 		,Code
 		,Nickname
@@ -56,7 +56,7 @@ BEGIN
 		,IsDeleted
 		,DepartmentCode
 		,DepartmentName
-	FROM OPENXML(@DocHandler, '/Root/Row', 1) WITH (SiteId SMALLINT, EmpId INT, Code NVARCHAR(20), Nickname NVARCHAR(50), FullName NVARCHAR(100), IsActive BIT, IsDeleted BIT, DepartmentCode NVARCHAR(50), DepartmentName NVARCHAR(200)) AS Data
+	FROM OPENXML(@DocHandler, '/Root/Row', 1) WITH (CompanyId SMALLINT, EmpId INT, Code NVARCHAR(20), Nickname NVARCHAR(50), FullName NVARCHAR(100), IsActive BIT, IsDeleted BIT, DepartmentCode NVARCHAR(50), DepartmentName NVARCHAR(200)) AS Data
 
 	EXEC sp_xml_removedocument @DocHandler
 
@@ -71,7 +71,7 @@ BEGIN
 		,uhinfo.DepartmentName = tmp.DepartmentName
 		,uhinfo.SyncDate = @startRun
 	FROM dbo.UnitHeadInfo AS uhinfo WITH (NOLOCK)
-		INNER JOIN #tempUnitHeadInfo AS tmp WITH (NOLOCK) ON uhinfo.SiteId = tmp.SiteId
+		INNER JOIN #tempUnitHeadInfo AS tmp WITH (NOLOCK) ON uhinfo.CompanyId = tmp.CompanyId
 		AND uhinfo.EmpId = tmp.EmpId
 	WHERE uhinfo.Code != tmp.Code
 		OR uhinfo.Nickname != tmp.Nickname
@@ -82,8 +82,8 @@ BEGIN
 		OR uhinfo.DepartmentName != tmp.DepartmentName
 
 	INSERT INTO dbo.UnitHeadInfo (
-		EmpId
-		,SiteId
+		CompanyId
+		,EmpId
 		,Code
 		,Nickname
 		,FullName
@@ -93,8 +93,8 @@ BEGIN
 		,DepartmentName
 		,SyncDate
 		)
-	SELECT tmp.EmpId
-		,tmp.SiteId
+	SELECT tmp.CompanyId
+		,tmp.EmpId
 		,tmp.Code
 		,tmp.Nickname
 		,tmp.FullName
@@ -107,8 +107,8 @@ BEGIN
 	WHERE NOT EXISTS (
 			SELECT 1
 			FROM dbo.UnitHeadInfo AS uhinfo WITH (NOLOCK)
-			WHERE uhinfo.EmpId = tmp.EmpId
-				AND uhinfo.SiteId = tmp.SiteId
+			WHERE uhinfo.CompanyId = tmp.CompanyId
+				AND uhinfo.EmpId = tmp.EmpId
 			)
 
 	DROP TABLE #tempUnitHeadInfo

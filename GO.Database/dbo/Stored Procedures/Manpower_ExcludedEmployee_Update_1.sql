@@ -1,5 +1,5 @@
 ﻿
-CREATE PROCEDURE [dbo].[Manpower_ExcludedEmployee_Update] @SiteId SMALLINT
+CREATE PROCEDURE [dbo].[Manpower_ExcludedEmployee_Update] @CompanyId SMALLINT
 	,@EmpId INT
 	,@IsExcluded BIT = 0
 	,@ModifiedBy INT
@@ -26,12 +26,12 @@ BEGIN
 		,@xml XML
 
 	SET @xml = (
-			SELECT SiteId AS '@SiteId'
+			SELECT CompanyId AS '@CompanyId'
 				,EmpId AS '@EmpId'
 				,ModifiedBy AS '@ModifiedBy'
 				,ModifiedDate AS '@ModifiedDate'
 			FROM dbo.Manpower_ExcludedEmployee WITH (NOLOCK)
-			WHERE SiteId = @SiteId
+			WHERE CompanyId = @CompanyId
 				AND EmpId = @EmpId
 			FOR XML PATH('r')
 				,TYPE
@@ -43,18 +43,18 @@ BEGIN
 		IF NOT EXISTS (
 				SELECT 1
 				FROM dbo.Manpower_ExcludedEmployee WITH (NOLOCK)
-				WHERE SiteId = @SiteId
+				WHERE CompanyId = @CompanyId
 					AND EmpId = @EmpId
 				)
 		BEGIN
 			INSERT INTO dbo.Manpower_ExcludedEmployee (
-				SiteId
+				CompanyId
 				,EmpId
 				,ModifiedBy
 				,ModifiedDate
 				)
 			VALUES (
-				@SiteId
+				@CompanyId
 				,@EmpId
 				,@ModifiedBy
 				,@startRun
@@ -64,18 +64,18 @@ BEGIN
 	ELSE
 	BEGIN
 		DELETE dbo.Manpower_ExcludedEmployee WITH (ROWLOCK, UPDLOCK)
-		WHERE SiteId = @SiteId
+		WHERE CompanyId = @CompanyId
 			AND EmpId = @EmpId
 	END
 
 	-- write log
 	SET @xml = (
-			SELECT SiteId AS '@SiteId'
+			SELECT CompanyId AS '@CompanyId'
 				,EmpId AS '@EmpId'
 				,ModifiedBy AS '@ModifiedBy'
 				,ModifiedDate AS '@ModifiedDate'
 			FROM dbo.Manpower_ExcludedEmployee WITH (NOLOCK)
-			WHERE SiteId = @SiteId
+			WHERE CompanyId = @CompanyId
 				AND EmpId = @EmpId
 			FOR XML PATH('r')
 				,TYPE
@@ -85,7 +85,7 @@ BEGIN
 	SET @duration = DATEDIFF(MILLISECOND, @startRun, @endRun)
 
 	EXEC dbo.Log_Detail_Insert @UserId = @ModifiedBy
-		,@SiteId = @SiteId
+		,@SiteId = NULL
 		,@SpName = 'Manpower_ExcludedEmployee_Update'
 		,@ObjectId = @EmpId
 		,@Data = @logData

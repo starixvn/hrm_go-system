@@ -6,6 +6,7 @@
     [FullName]           NVARCHAR (100) NULL,
     [Password]           VARCHAR (100)  NULL,
     [OldPassword]        VARCHAR (100)  NULL,
+    [BCryptPassword]     VARCHAR (100)  NULL,
     [Email]              VARCHAR (50)   NULL,
     [IsActive]           BIT            CONSTRAINT [DF_User_IsActive] DEFAULT ((1)) NOT NULL,
     [IsDeleted]          BIT            CONSTRAINT [DF_User_IsDeleted] DEFAULT ((0)) NOT NULL,
@@ -18,4 +19,6 @@
     [SyncedDate]         DATETIME       NULL,
     CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED ([UserId] ASC)
 );
+
+
 

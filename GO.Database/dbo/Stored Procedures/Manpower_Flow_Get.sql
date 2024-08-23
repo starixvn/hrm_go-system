@@ -1,4 +1,5 @@
 ﻿
+
 CREATE PROCEDURE [dbo].[Manpower_Flow_Get]
 AS
 /*  
@@ -13,8 +14,6 @@ BEGIN
 
 	SELECT flow.UnitName
 		,flow.ProcessId
-		,s.SiteId
-		,s.SiteName
 		,c.CompanyId
 		,c.[Name] AS CompanyName
 		,emp.EmpId
@@ -25,10 +24,8 @@ BEGIN
 		,emp.IsActive
 		,emp.IsDeleted
 	FROM dbo.Manpower_Flow AS flow WITH (NOLOCK)
-		INNER JOIN dbo.HRM_Employee AS emp WITH (NOLOCK) ON flow.SiteId = emp.SiteId
+		INNER JOIN dbo.HRM_Employee AS emp WITH (NOLOCK) ON flow.CompanyId = emp.CompanyId
 		AND flow.EmpId = emp.EmpId
-		INNER JOIN dbo.[Site] AS s WITH (NOLOCK) ON emp.SiteId = s.SiteId
-		AND s.IsActive = 1
-		INNER JOIN dbo.Company AS c WITH (NOLOCK) ON s.CompanyId = c.CompanyId
+		INNER JOIN dbo.Company AS c WITH (NOLOCK) ON flow.CompanyId = c.CompanyId
 		AND c.IsActive = 1
 END

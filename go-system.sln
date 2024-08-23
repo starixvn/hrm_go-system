@@ -11,19 +11,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GO.Admin.Website", "GO.Admi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GO.AutoJobs", "GO.AutoJobs\GO.AutoJobs.csproj", "{7CE9C3A5-CD52-498C-9A77-234A31F16637}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GO.WebAPI", "GO.WebAPI\GO.WebAPI.csproj", "{1D9EECF7-E067-4752-9008-51E0221BCA5A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GO.WebAPI", "GO.WebAPI\GO.WebAPI.csproj", "{1D9EECF7-E067-4752-9008-51E0221BCA5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GO.Letstalk.WebAPI", "GO.Letstalk.WebAPI\GO.Letstalk.WebAPI.csproj", "{BD6F7F0A-5E94-4399-83DF-F8691E8D8DB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GO.Letstalk.WebAPI", "GO.Letstalk.WebAPI\GO.Letstalk.WebAPI.csproj", "{BD6F7F0A-5E94-4399-83DF-F8691E8D8DB2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GO.Website", "GO.Website\GO.Website.csproj", "{2D52159B-23E0-4C68-A195-F079A49D460D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GO.Website", "GO.Website\GO.Website.csproj", "{2D52159B-23E0-4C68-A195-F079A49D460D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{DF3EF079-C57A-4AB0-940B-0959740CB32A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GO.Website.UnitTests", "GO.Website.UnitTests\GO.Website.UnitTests.csproj", "{C1B0CB4C-B10D-40DC-8D85-DDE65F3CCE99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GO.Website.UnitTests", "GO.Website.UnitTests\GO.Website.UnitTests.csproj", "{C1B0CB4C-B10D-40DC-8D85-DDE65F3CCE99}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GO.UserControl.Client.Core", "GO.UserControl.Client.Core\GO.UserControl.Client.Core.csproj", "{7AB108A0-322C-4C23-99A9-DD5CBE72CFB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GO.UserControl.Client.Core", "GO.UserControl.Client.Core\GO.UserControl.Client.Core.csproj", "{7AB108A0-322C-4C23-99A9-DD5CBE72CFB8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GO.UserControl.Client.AspNetCore", "GO.UserControl.Client.AspNetCore\GO.UserControl.Client.AspNetCore.csproj", "{1091A037-036E-43D6-B975-D2B2DB724C4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GO.UserControl.Client.AspNetCore", "GO.UserControl.Client.AspNetCore\GO.UserControl.Client.AspNetCore.csproj", "{1091A037-036E-43D6-B975-D2B2DB724C4B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GO.UserControl.Client.AspNetMvc", "GO.UserControl.Client.AspNetMvc\GO.UserControl.Client.AspNetMvc.csproj", "{A0D67693-5265-4920-BF8B-BD16072891D9}"
 EndProject

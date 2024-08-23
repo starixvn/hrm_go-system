@@ -38,7 +38,7 @@ BEGIN
 	FROM dbo.Manpower_Period AS p WITH (NOLOCK)
 		INNER JOIN dbo.Manpower_PeriodProcessSetting AS ps WITH (NOLOCK) ON p.PeriodId = ps.PeriodId
 		INNER JOIN dbo.Manpower_Flow AS f WITH (NOLOCK) ON ps.ProcessId = f.ProcessId
-		INNER JOIN dbo.HRM_Employee AS emp WITH (NOLOCK) ON f.SiteId = emp.SiteId
+		INNER JOIN dbo.HRM_Employee AS emp WITH (NOLOCK) ON f.CompanyId = emp.CompanyId
 		AND f.EmpId = emp.EmpId
 	WHERE p.IsActive = 1
 		AND ps.FromDate = @Today

@@ -23,7 +23,7 @@ BEGIN
 			SELECT 1
 			FROM dbo.HRM_Employee AS emp WITH (NOLOCK)
 			WHERE emp.UserId = @UserId
-				AND emp.SiteId = flow.SiteId
+				AND emp.CompanyId = flow.CompanyId
 				AND emp.EmpId = flow.EmpId
 			)
 END

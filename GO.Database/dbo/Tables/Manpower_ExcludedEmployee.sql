@@ -1,8 +1,10 @@
 ﻿CREATE TABLE [dbo].[Manpower_ExcludedEmployee] (
-    [SiteId]       SMALLINT NOT NULL,
+    [CompanyId]    SMALLINT NOT NULL,
     [EmpId]        INT      NOT NULL,
     [ModifiedBy]   INT      NULL,
     [ModifiedDate] DATETIME NULL,
-    CONSTRAINT [PK_Manpower_ExcludedEmployee] PRIMARY KEY CLUSTERED ([SiteId] ASC, [EmpId] ASC)
+    CONSTRAINT [PK_Manpower_ExcludedEmployee] PRIMARY KEY CLUSTERED ([CompanyId] ASC, [EmpId] ASC)
 );
+
+
 

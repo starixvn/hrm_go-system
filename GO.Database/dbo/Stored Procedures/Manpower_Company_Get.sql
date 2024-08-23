@@ -13,13 +13,11 @@ BEGIN
 
 	SELECT c.CompanyId
 		,c.[Name]
-	FROM dbo.[Site] AS s WITH (NOLOCK)
-		INNER JOIN dbo.Company AS c WITH (NOLOCK) ON s.CompanyId = c.CompanyId
-	WHERE s.IsActive = 1
-		AND c.IsActive = 1
+	FROM dbo.Company AS c WITH (NOLOCK)
+	WHERE c.IsActive = 1
 		AND EXISTS (
 			SELECT 1
 			FROM dbo.HRM_Employee AS emp WITH (NOLOCK)
-			WHERE s.SiteId = emp.SiteId
+			WHERE c.CompanyId = emp.CompanyId
 			)
 END

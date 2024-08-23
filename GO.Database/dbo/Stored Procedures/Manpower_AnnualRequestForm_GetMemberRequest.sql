@@ -1,4 +1,5 @@
 ﻿
+
 CREATE PROCEDURE [dbo].[Manpower_AnnualRequestForm_GetMemberRequest] @PeriodId INT
 	,@UserId INT
 	,@StatusId TINYINT = NULL
@@ -43,7 +44,7 @@ BEGIN
 			SELECT 1
 			FROM dbo.HRM_Employee AS emp WITH (NOLOCK)
 			WHERE emp.UserId = @UserId
-				AND emp.SiteId = flow.SiteId
+				AND emp.CompanyId = flow.CompanyId
 				AND emp.EmpId = flow.EmpId
 			)
 
@@ -51,7 +52,7 @@ BEGIN
 	SET tmp.VerifierId = emp.UserId
 	FROM #tmpUnit AS tmp WITH (ROWLOCK, UPDLOCK)
 		INNER JOIN dbo.Manpower_Flow AS flow WITH (NOLOCK) ON flow.UnitName = tmp.UnitName
-		INNER JOIN dbo.HRM_Employee AS emp WITH (NOLOCK) ON emp.SiteId = flow.SiteId
+		INNER JOIN dbo.HRM_Employee AS emp WITH (NOLOCK) ON emp.CompanyId = flow.CompanyId
 		AND emp.EmpId = flow.EmpId
 	WHERE flow.ProcessId = @VerifyProcessId
 
@@ -59,7 +60,7 @@ BEGIN
 	SET tmp.ApproverId = emp.UserId
 	FROM #tmpUnit AS tmp WITH (ROWLOCK, UPDLOCK)
 		INNER JOIN dbo.Manpower_Flow AS flow WITH (NOLOCK) ON flow.UnitName = tmp.UnitName
-		INNER JOIN dbo.HRM_Employee AS emp WITH (NOLOCK) ON emp.SiteId = flow.SiteId
+		INNER JOIN dbo.HRM_Employee AS emp WITH (NOLOCK) ON emp.CompanyId = flow.CompanyId
 		AND emp.EmpId = flow.EmpId
 	WHERE flow.ProcessId = @ApproveProcessId
 
@@ -113,11 +114,11 @@ BEGIN
 		AND EXISTS (
 			SELECT 1
 			FROM dbo.Manpower_AnnualRequestFormDetail AS rqdt WITH (NOLOCK)
-				INNER JOIN dbo.HRM_Section AS sec WITH (NOLOCK) ON rqdt.SiteId = sec.SiteId
+				INNER JOIN dbo.HRM_Section AS sec WITH (NOLOCK) ON rqdt.CompanyId = sec.CompanyId
 				AND rqdt.SectionId = sec.SectionId
 				AND sec.IsActive = 1
 				AND sec.IsDeleted = 0
-				INNER JOIN dbo.HRM_Department AS dept WITH (NOLOCK) ON sec.SiteId = dept.SiteId
+				INNER JOIN dbo.HRM_Department AS dept WITH (NOLOCK) ON sec.CompanyId = dept.CompanyId
 				AND sec.DepartmentId = dept.DepartmentId
 				AND dept.IsActive = 1
 				AND dept.IsDeleted = 0

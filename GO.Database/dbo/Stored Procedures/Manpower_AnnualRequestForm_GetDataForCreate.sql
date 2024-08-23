@@ -17,7 +17,7 @@ BEGIN
 		,@Today DATE = GETDATE()
 
 	CREATE TABLE #tmpUnit (
-		SiteId SMALLINT
+		CompanyId SMALLINT
 		,UnitId INT
 		,UnitName NVARCHAR(50)
 		)
@@ -33,11 +33,11 @@ BEGIN
 	ORDER BY p.[Year] DESC
 
 	INSERT INTO #tmpUnit (
-		SiteId
+		CompanyId
 		,UnitId
 		,UnitName
 		)
-	SELECT DISTINCT unit.SiteId
+	SELECT DISTINCT unit.CompanyId
 		,unit.UnitId
 		,unit.[Name]
 	FROM dbo.Manpower_Flow AS flow WITH (NOLOCK)
@@ -50,7 +50,7 @@ BEGIN
 			SELECT 1
 			FROM dbo.HRM_Employee AS emp WITH (NOLOCK)
 			WHERE emp.UserId = @UserId
-				AND emp.SiteId = flow.SiteId
+				AND emp.CompanyId = flow.CompanyId
 				AND emp.EmpId = flow.EmpId
 			)
 
@@ -64,9 +64,7 @@ BEGIN
 	FROM dbo.Manpower_Period WITH (NOLOCK)
 	WHERE PeriodId = @PeriodId
 
-	SELECT DISTINCT s.SiteId
-		,s.SiteName
-		,c.CompanyId
+	SELECT DISTINCT c.CompanyId
 		,c.[Name] AS CompanyName
 		,unit.UnitId
 		,unit.UnitName
@@ -78,15 +76,13 @@ BEGIN
 		,rqdt.LocalAddition
 		,rqdt.ExpatAddition
 	FROM #tmpUnit AS unit WITH (NOLOCK)
-		INNER JOIN dbo.[Site] AS s WITH (NOLOCK) ON unit.SiteId = s.SiteId
-		AND s.IsActive = 1
-		INNER JOIN dbo.Company AS c WITH (NOLOCK) ON s.CompanyId = c.CompanyId
+		INNER JOIN dbo.Company AS c WITH (NOLOCK) ON unit.CompanyId = c.CompanyId
 		AND c.IsActive = 1
-		INNER JOIN dbo.HRM_Department AS dept WITH (NOLOCK) ON unit.SiteId = dept.SiteId
+		INNER JOIN dbo.HRM_Department AS dept WITH (NOLOCK) ON unit.CompanyId = dept.CompanyId
 		AND unit.UnitId = dept.UnitId
 		AND dept.IsActive = 1
 		AND dept.IsDeleted = 0
-		INNER JOIN dbo.HRM_Section AS sec WITH (NOLOCK) ON dept.SiteId = sec.SiteId
+		INNER JOIN dbo.HRM_Section AS sec WITH (NOLOCK) ON dept.CompanyId = sec.CompanyId
 		AND dept.DepartmentId = sec.DepartmentId
 		AND sec.IsActive = 1
 		AND sec.IsDeleted = 0
@@ -94,10 +90,11 @@ BEGIN
 		LEFT JOIN dbo.Manpower_AnnualRequestForm AS rq WITH (NOLOCK) ON unit.UnitName = rq.UnitName
 		AND rq.PeriodId = @PeriodId
 		LEFT JOIN dbo.Manpower_AnnualRequestFormDetail AS rqdt WITH (NOLOCK) ON rqdt.RequestId = rq.RequestId
-		AND sec.SiteId = rqdt.SiteId
+		AND sec.CompanyId = rqdt.CompanyId
 		AND sec.SectionId = rqdt.SectionId
 		AND rqdt.JobLevel = tmpjl.JobLevel
-	ORDER BY unit.UnitName ASC
+	ORDER BY c.[Name] ASC
+		,unit.UnitName ASC
 		,dept.[Name] ASC
 		,sec.[Name] ASC
 		,tmpjl.JobLevel DESC

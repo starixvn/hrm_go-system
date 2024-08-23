@@ -1,5 +1,5 @@
 ﻿
-CREATE PROCEDURE [dbo].[AutoJob_JobTitle_ImportFromDB] @SiteId SMALLINT
+CREATE PROCEDURE [dbo].[AutoJob_JobTitle_ImportFromDB] @CompanyId SMALLINT
 	,@DbName VARCHAR(50)
 	,@ErrCode INT = 0 OUTPUT
 	,@ErrMsg NVARCHAR(200) = '' OUTPUT
@@ -39,15 +39,15 @@ BEGIN
 		,jt.SyncDate = @SyncDate
 	FROM dbo.HRM_JobTitle AS jt WITH (ROWLOCK, UPDLOCK)
 		INNER JOIN #tmpJobTitle AS tmp WITH (NOLOCK) ON tmp.JobTitleId = jt.JobTitleId
-	WHERE jt.SiteId = @SiteId
+	WHERE jt.CompanyId = @CompanyId
 
 	INSERT INTO dbo.HRM_JobTitle (
-		SiteId
+		CompanyId
 		,JobTitleId
 		,[Name]
 		,SyncDate
 		)
-	SELECT @SiteId
+	SELECT @CompanyId
 		,tmp.JobTitleId
 		,tmp.[Name]
 		,@SyncDate
@@ -55,7 +55,7 @@ BEGIN
 	WHERE NOT EXISTS (
 			SELECT 1
 			FROM dbo.HRM_JobTitle AS jt WITH (NOLOCK)
-			WHERE jt.SiteId = @SiteId
+			WHERE jt.CompanyId = @CompanyId
 				AND tmp.JobTitleId = jt.JobTitleId
 			)
 

@@ -1,5 +1,5 @@
 ﻿
-CREATE PROCEDURE [dbo].[AutoJob_Employee_Import] @SiteId SMALLINT
+CREATE PROCEDURE [dbo].[AutoJob_Employee_Import] @CompanyId SMALLINT
 	,@Value NVARCHAR(MAX)
 	,@ErrCode INT = 0 OUTPUT
 	,@ErrMsg NVARCHAR(200) = '' OUTPUT
@@ -12,7 +12,7 @@ Original:
 
 Revisions:
 Param's Explanation:
-	- @Value: "<Root><Row EmpId='' Code='' Nickname='' FullName='' TeamId='' IsLocal='' IsActive='' IsDeleted=''
+	- @Value: "<Root><Row EmpId='' DomainUsername='' Code='' Nickname='' FullName='' TeamId='' IsLocal='' IsActive='' IsDeleted=''
 		Email='' JoinedDate='' ConfirmedDate='' ResignedDate='' ModifiedDate='' /></Root>"
 */
 BEGIN
@@ -22,6 +22,7 @@ BEGIN
 
 	CREATE TABLE #tmpEmployee (
 		EmpId INT
+		,DomainUsername NVARCHAR(50) NULL
 		,Code VARCHAR(20)
 		,Nickname NVARCHAR(50)
 		,FullName NVARCHAR(100)
@@ -45,6 +46,7 @@ BEGIN
 
 	INSERT INTO #tmpEmployee (
 		EmpId
+		,DomainUsername
 		,Code
 		,Nickname
 		,FullName
@@ -61,6 +63,7 @@ BEGIN
 		,ModifiedDate
 		)
 	SELECT EmpId
+		,DomainUsername
 		,Code
 		,Nickname
 		,FullName
@@ -87,15 +90,16 @@ BEGIN
 			WHEN ModifiedDate = '1900-01-01' THEN NULL
 			ELSE ModifiedDate
 			END
-	FROM OPENXML(@DocHandler, '/Root/Row', 1) WITH (EmpId INT, Code VARCHAR(20), Nickname NVARCHAR(50), FullName NVARCHAR(100)
+	FROM OPENXML(@DocHandler, '/Root/Row', 1) WITH (EmpId INT, DomainUsername NVARCHAR(50), Code VARCHAR(20), Nickname NVARCHAR(50), FullName NVARCHAR(100)
 		,TeamId INT, JobTitleId SMALLINT, JobLevelId SMALLINT, IsLocal BIT, IsActive BIT, IsDeleted BIT, Email NVARCHAR(100)
 		,JoinedDate DATE, ConfirmedDate DATE, ResignedDate DATE, ModifiedDate DATETIME) AS Data
 
 	EXEC sp_xml_removedocument @DocHandler
 
 	INSERT INTO dbo.HRM_Employee (
-		SiteId
+		CompanyId
 		,EmpId
+		,DomainUsername
 		,Code
 		,Nickname
 		,FullName
@@ -112,8 +116,9 @@ BEGIN
 		,ModifiedDate
 		,SyncDate
 		)
-	SELECT @SiteId
+	SELECT @CompanyId
 		,tmp.EmpId
+		,tmp.DomainUsername
 		,tmp.Code
 		,tmp.Nickname
 		,tmp.FullName
@@ -134,7 +139,7 @@ BEGIN
 			SELECT 1
 			FROM dbo.HRM_Employee AS emp WITH (NOLOCK)
 			WHERE tmp.EmpId = emp.EmpId
-				AND emp.SiteId = @SiteId
+				AND emp.CompanyId = @CompanyId
 			)
 
 	UPDATE emp
@@ -154,7 +159,7 @@ BEGIN
 		,emp.SyncDate = @SyncDate
 	FROM dbo.HRM_Employee AS emp WITH (ROWLOCK, UPDLOCK)
 		INNER JOIN #tmpEmployee AS tmp WITH (NOLOCK) ON emp.EmpId = tmp.EmpId
-	WHERE emp.SiteId = @SiteId
+	WHERE emp.CompanyId = @CompanyId
 
 	DROP TABLE #tmpEmployee
 END

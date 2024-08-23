@@ -14,7 +14,7 @@ Original:
 
 Revisions:
 Param's Explanation:
-	- @DetailXml: "<Root><Row SiteId='' SectionId='' JobLevel='' LocalAddition='' ExpatAddition='' /></Root>"
+	- @DetailXml: "<Root><Row CompanyId='' SectionId='' JobLevel='' LocalAddition='' ExpatAddition='' /></Root>"
 */
 BEGIN
 	SET NOCOUNT ON;
@@ -29,7 +29,7 @@ BEGIN
 		,@DocHandler INT
 
 	CREATE TABLE #tmpDetail (
-		SiteId SMALLINT
+		CompanyId SMALLINT
 		,SectionId INT
 		,SectionName NVARCHAR(50)
 		,JobLevel NVARCHAR(50)
@@ -38,7 +38,7 @@ BEGIN
 		)
 
 	CREATE TABLE #tmpDetailLog (
-		SiteId SMALLINT
+		CompanyId SMALLINT
 		,SectionId INT
 		,SectionName NVARCHAR(50)
 		,JobLevel NVARCHAR(50)
@@ -52,20 +52,20 @@ BEGIN
 			,@DetailXml
 
 		INSERT INTO #tmpDetail (
-			SiteId
+			CompanyId
 			,SectionId
 			,SectionName
 			,JobLevel
 			,LocalAddition
 			,ExpatAddition
 			)
-		SELECT SiteId
+		SELECT CompanyId
 			,SectionId
 			,SectionName
 			,JobLevel
 			,LocalAddition
 			,ExpatAddition
-		FROM OPENXML(@DocHandler, '/Root/Row', 1) WITH (SiteId SMALLINT, SectionId INT, SectionName NVARCHAR(50), JobLevel NVARCHAR(50), LocalAddition SMALLINT, ExpatAddition SMALLINT) AS Data
+		FROM OPENXML(@DocHandler, '/Root/Row', 1) WITH (CompanyId SMALLINT, SectionId INT, SectionName NVARCHAR(50), JobLevel NVARCHAR(50), LocalAddition SMALLINT, ExpatAddition SMALLINT) AS Data
 
 		EXEC sp_xml_removedocument @DocHandler
 	END
@@ -85,7 +85,7 @@ BEGIN
 					,CreatedBy AS '@CreatedBy'
 					,CreatedDate AS '@CreatedDate'
 					,(
-						SELECT SiteId AS '@SiteId'
+						SELECT CompanyId AS '@CompanyId'
 							,SectionId AS '@SectionId'
 							,SectionName AS '@SectionName'
 							,JobLevel AS '@JobLevel'
@@ -104,19 +104,19 @@ BEGIN
 		SET @logDataOld = REPLACE(CONVERT(NVARCHAR(MAX), @xml), '" />', '"/"')
 
 		DELETE rqdt
-		OUTPUT DELETED.SiteId
+		OUTPUT DELETED.CompanyId
 			,DELETED.SectionId
 			,DELETED.SectionName
 			,DELETED.JobLevel
 			,DELETED.LocalAddition
 			,DELETED.ExpatAddition
-		INTO #tmpDetailLog(SiteId, SectionId, SectionName, JobLevel, LocalAddition, ExpatAddition)
+		INTO #tmpDetailLog(CompanyId, SectionId, SectionName, JobLevel, LocalAddition, ExpatAddition)
 		FROM dbo.Manpower_AnnualRequestFormDetail AS rqdt WITH (ROWLOCK, UPDLOCK)
 		WHERE rqdt.RequestId = @RequestId
 			AND NOT EXISTS (
 				SELECT 1
 				FROM #tmpDetail AS tmp WITH (NOLOCK)
-				WHERE rqdt.SiteId = tmp.SiteId
+				WHERE rqdt.CompanyId = tmp.CompanyId
 					AND rqdt.SectionId = tmp.SectionId
 					AND rqdt.JobLevel = tmp.JobLevel
 				)
@@ -124,15 +124,15 @@ BEGIN
 		UPDATE rqdt
 		SET rqdt.LocalAddition = tmp.LocalAddition
 			,rqdt.ExpatAddition = tmp.ExpatAddition
-		OUTPUT INSERTED.SiteId
+		OUTPUT INSERTED.CompanyId
 			,INSERTED.SectionId
 			,INSERTED.SectionName
 			,INSERTED.JobLevel
 			,INSERTED.LocalAddition
 			,INSERTED.ExpatAddition
-		INTO #tmpDetailLog(SiteId, SectionId, SectionName, JobLevel, LocalAddition, ExpatAddition)
+		INTO #tmpDetailLog(CompanyId, SectionId, SectionName, JobLevel, LocalAddition, ExpatAddition)
 		FROM dbo.Manpower_AnnualRequestFormDetail AS rqdt WITH (ROWLOCK, UPDLOCK)
-			INNER JOIN #tmpDetail AS tmp WITH (NOLOCK) ON rqdt.SiteId = tmp.SiteId
+			INNER JOIN #tmpDetail AS tmp WITH (NOLOCK) ON rqdt.CompanyId = tmp.CompanyId
 			AND rqdt.SectionId = tmp.SectionId
 			AND rqdt.JobLevel = tmp.JobLevel
 		WHERE rqdt.RequestId = @RequestId
@@ -143,22 +143,22 @@ BEGIN
 
 		INSERT INTO dbo.Manpower_AnnualRequestFormDetail (
 			RequestId
-			,SiteId
+			,CompanyId
 			,SectionId
 			,SectionName
 			,JobLevel
 			,LocalAddition
 			,ExpatAddition
 			)
-		OUTPUT INSERTED.SiteId
+		OUTPUT INSERTED.CompanyId
 			,INSERTED.SectionId
 			,INSERTED.SectionName
 			,INSERTED.JobLevel
 			,INSERTED.LocalAddition
 			,INSERTED.ExpatAddition
-		INTO #tmpDetailLog(SiteId, SectionId, SectionName, JobLevel, LocalAddition, ExpatAddition)
+		INTO #tmpDetailLog(CompanyId, SectionId, SectionName, JobLevel, LocalAddition, ExpatAddition)
 		SELECT @RequestId
-			,SiteId
+			,CompanyId
 			,SectionId
 			,SectionName
 			,JobLevel
@@ -169,7 +169,7 @@ BEGIN
 				SELECT 1
 				FROM dbo.Manpower_AnnualRequestFormDetail AS rqdt WITH (NOLOCK)
 				WHERE rqdt.RequestId = @RequestId
-					AND rqdt.SiteId = tmp.SiteId
+					AND rqdt.CompanyId = tmp.CompanyId
 					AND rqdt.SectionId = tmp.SectionId
 					AND rqdt.JobLevel = tmp.JobLevel
 				)
@@ -199,22 +199,22 @@ BEGIN
 
 		INSERT INTO dbo.Manpower_AnnualRequestFormDetail (
 			RequestId
-			,SiteId
+			,CompanyId
 			,SectionId
 			,SectionName
 			,JobLevel
 			,LocalAddition
 			,ExpatAddition
 			)
-		OUTPUT INSERTED.SiteId
+		OUTPUT INSERTED.CompanyId
 			,INSERTED.SectionId
 			,INSERTED.SectionName
 			,INSERTED.JobLevel
 			,INSERTED.LocalAddition
 			,INSERTED.ExpatAddition
-		INTO #tmpDetailLog(SiteId, SectionId, SectionName, JobLevel, LocalAddition, ExpatAddition)
+		INTO #tmpDetailLog(CompanyId, SectionId, SectionName, JobLevel, LocalAddition, ExpatAddition)
 		SELECT @RequestId
-			,SiteId
+			,CompanyId
 			,SectionId
 			,SectionName
 			,JobLevel
@@ -227,7 +227,7 @@ BEGIN
 
 	INSERT INTO dbo.Manpower_AnnualRequestFormDetail_Log (
 		RequestId
-		,SiteId
+		,CompanyId
 		,SectionId
 		,SectionName
 		,JobLevel
@@ -237,7 +237,7 @@ BEGIN
 		,ModifiedDate
 		)
 	SELECT @RequestId
-		,SiteId
+		,CompanyId
 		,SectionId
 		,SectionName
 		,JobLevel
@@ -255,7 +255,7 @@ BEGIN
 				,CreatedBy AS '@CreatedBy'
 				,CreatedDate AS '@CreatedDate'
 				,(
-					SELECT SiteId AS '@SiteId'
+					SELECT CompanyId AS '@CompanyId'
 						,SectionId AS '@SectionId'
 						,SectionName AS '@SectionName'
 						,JobLevel AS '@JobLevel'

@@ -60,6 +60,61 @@ BEGIN
 	WHERE UserId = @UserId
 		AND SiteId = @SiteId
 
+	/*
+	IF NOT EXISTS (
+			SELECT 1
+			FROM dbo.UserSite WITH (NOLOCK)
+			WHERE UserId = @NewUserId
+				AND SiteId = @SiteId
+			)
+	BEGIN
+		INSERT INTO dbo.UserSite (
+			UserId
+			,SiteId
+			,IsActive
+			,CreatedBy
+			,CreatedDate
+			)
+		VALUES (
+			@NewUserId
+			,@SiteId
+			,1
+			,@ModifiedBy
+			,@startRun
+			)
+	END
+
+	INSERT INTO dbo.UserRole (
+		UserId
+		,SiteId
+		,RoleId
+		,CreatedBy
+		,CreatedDate
+		)
+	SELECT @NewUserId
+		,ur.SiteId
+		,ur.RoleId
+		,@ModifiedBy
+		,@startRun
+	FROM dbo.UserRole AS ur WITH (NOLOCK)
+	WHERE ur.UserId = @UserId
+		AND ur.SiteId = @SiteId
+		AND NOT EXISTS (
+			SELECT 1
+			FROM dbo.UserRole AS tmp WITH (NOLOCK)
+			WHERE tmp.UserId = @NewUserId
+				AND tmp.SiteId = ur.SiteId
+			)
+
+	UPDATE dbo.UserSite WITH (ROWLOCK, UPDLOCK)
+	SET IsActive = 0
+		,ModifiedBy = @ModifiedBy
+		,ModifiedDate = @startRun
+	WHERE UserId = @UserId
+		AND SiteId = @SiteId
+		AND IsActive = 1
+	*/
+
 	-- write log
 	SET @xml = (
 			SELECT UserId AS '@UserId'

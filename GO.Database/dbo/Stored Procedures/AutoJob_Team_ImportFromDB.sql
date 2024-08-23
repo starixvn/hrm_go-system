@@ -1,5 +1,5 @@
 ﻿
-CREATE PROCEDURE [dbo].[AutoJob_Team_ImportFromDB] @SiteId SMALLINT
+CREATE PROCEDURE [dbo].[AutoJob_Team_ImportFromDB] @CompanyId SMALLINT
 	,@DbName VARCHAR(50)
 	,@ErrCode INT = 0 OUTPUT
 	,@ErrMsg NVARCHAR(200) = '' OUTPUT
@@ -22,7 +22,7 @@ BEGIN
 
 	SELECT @LastModifiedDate = MAX(ModifiedDate)
 	FROM dbo.HRM_Team WITH (NOLOCK)
-	WHERE SiteId = @SiteId
+	WHERE CompanyId = @CompanyId
 
 	SET @LastModifiedDate = ISNULL(@LastModifiedDate, '2010-01-01')
 
@@ -63,10 +63,10 @@ BEGIN
 		,SyncDate = @SyncDate
 	FROM dbo.HRM_Team AS team WITH (ROWLOCK, UPDLOCK)
 		INNER JOIN #tmpTeam AS tmp WITH (NOLOCK) ON team.TeamId = tmp.TeamId
-	WHERE team.SiteId = @SiteId
+	WHERE team.CompanyId = @CompanyId
 
 	INSERT INTO dbo.HRM_Team (
-		SiteId
+		CompanyId
 		,TeamId
 		,[Name]
 		,Code
@@ -75,7 +75,7 @@ BEGIN
 		,ModifiedDate
 		,SyncDate
 		)
-	SELECT @SiteId
+	SELECT @CompanyId
 		,tmp.TeamId
 		,tmp.[Name]
 		,tmp.Code
@@ -87,7 +87,7 @@ BEGIN
 	WHERE NOT EXISTS (
 			SELECT 1
 			FROM dbo.HRM_Team AS team WITH (NOLOCK)
-			WHERE team.SiteId = @SiteId
+			WHERE team.CompanyId = @CompanyId
 				AND team.TeamId = tmp.TeamId
 			)
 

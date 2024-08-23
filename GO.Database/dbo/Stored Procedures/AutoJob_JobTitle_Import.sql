@@ -1,5 +1,5 @@
 ﻿
-CREATE PROCEDURE [dbo].[AutoJob_JobTitle_Import] @SiteId SMALLINT
+CREATE PROCEDURE [dbo].[AutoJob_JobTitle_Import] @CompanyId SMALLINT
 	,@Value NVARCHAR(MAX)
 	,@ErrCode INT = 0 OUTPUT
 	,@ErrMsg NVARCHAR(200) = '' OUTPUT
@@ -48,13 +48,13 @@ BEGIN
 			)
 	BEGIN
 		INSERT INTO dbo.HRM_JobTitle (
-			SiteId
+			CompanyId
 			,JobTitleId
 			,[Name]
 			,IsDeleted
 			,SyncDate
 			)
-		SELECT @SiteId
+		SELECT @CompanyId
 			,tmp.JobTitleId
 			,tmp.[Name]
 			,tmp.IsDeleted
@@ -64,7 +64,7 @@ BEGIN
 				SELECT 1
 				FROM dbo.HRM_JobTitle AS jt WITH (NOLOCK)
 				WHERE tmp.JobTitleId = jt.JobTitleId
-					AND jt.SiteId = @SiteId
+					AND jt.CompanyId = @CompanyId
 				)
 
 		UPDATE jt
@@ -73,7 +73,7 @@ BEGIN
 			,jt.SyncDate = @SyncDate
 		FROM dbo.HRM_JobTitle AS jt WITH (ROWLOCK, UPDLOCK)
 			INNER JOIN #tmpJobTitle AS tmp WITH (NOLOCK) ON jt.JobTitleId = tmp.JobTitleId
-		WHERE jt.SiteId = @SiteId
+		WHERE jt.CompanyId = @CompanyId
 			AND (jt.[Name] != tmp.[Name] OR jt.IsDeleted != tmp.IsDeleted)
 	END
 

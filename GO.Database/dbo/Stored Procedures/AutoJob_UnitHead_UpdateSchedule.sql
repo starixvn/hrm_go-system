@@ -11,7 +11,7 @@ Original:
 Param's Explanation:
 	• @Value:
 		<Root>
-			<Row SiteId="1" EmpId="1" IsWorkDay="true" IsOffDay="false" IsHoliday="false" IsLeaveDay="false" LeaveTypeCode="" LeaveTypeName="" />
+			<Row CompanyId="1" EmpId="1" IsWorkDay="true" IsOffDay="false" IsHoliday="false" IsLeaveDay="false" LeaveTypeCode="" LeaveTypeName="" />
 		</Root>
 */
 BEGIN
@@ -20,7 +20,7 @@ BEGIN
 	DECLARE @startRun DATETIME = GETUTCDATE()
 
 	CREATE TABLE #tempUnitHeadSchedule (
-		SiteId SMALLINT
+		CompanyId SMALLINT
 		,EmpId INT
 		,WorkDate DATE
 		,IsWorkDay BIT DEFAULT(0)
@@ -37,7 +37,7 @@ BEGIN
 		,@Value
 
 	INSERT INTO #tempUnitHeadSchedule (
-		SiteId
+		CompanyId
 		,EmpId
 		,WorkDate
 		,IsWorkDay
@@ -47,7 +47,7 @@ BEGIN
 		,LeaveTypeCode
 		,LeaveTypeName
 		)
-	SELECT SiteId
+	SELECT CompanyId
 		,EmpId
 		,WorkDate
 		,IsWorkDay
@@ -56,7 +56,7 @@ BEGIN
 		,IsLeaveDay
 		,LeaveTypeCode
 		,LeaveTypeName
-	FROM OPENXML(@DocHandler, '/Root/Row', 1) WITH (SiteId SMALLINT, EmpId INT, WorkDate DATE, IsWorkDay BIT, IsOffDay BIT, IsHoliday BIT, IsLeaveDay BIT, LeaveTypeCode NVARCHAR(50), LeaveTypeName NVARCHAR(200)) AS Data
+	FROM OPENXML(@DocHandler, '/Root/Row', 1) WITH (CompanyId SMALLINT, EmpId INT, WorkDate DATE, IsWorkDay BIT, IsOffDay BIT, IsHoliday BIT, IsLeaveDay BIT, LeaveTypeCode NVARCHAR(50), LeaveTypeName NVARCHAR(200)) AS Data
 
 	EXEC sp_xml_removedocument @DocHandler
 
@@ -70,7 +70,7 @@ BEGIN
 		,uhs.LeaveTypeName = tmp.LeaveTypeName
 		,uhs.SyncDate = @startRun
 	FROM dbo.UnitHeadSchedule AS uhs WITH (NOLOCK)
-		INNER JOIN #tempUnitHeadSchedule AS tmp WITH (NOLOCK) ON uhs.SiteId = tmp.SiteId
+		INNER JOIN #tempUnitHeadSchedule AS tmp WITH (NOLOCK) ON uhs.CompanyId = tmp.CompanyId
 		AND uhs.EmpId = tmp.EmpId
 		AND uhs.WorkDate = tmp.WorkDate
 	WHERE uhs.IsWorkDay != tmp.IsWorkDay
@@ -81,8 +81,8 @@ BEGIN
 		OR uhs.LeaveTypeName != tmp.LeaveTypeName
 
 	INSERT INTO dbo.UnitHeadSchedule (
-		EmpId
-		,SiteId
+		CompanyId
+		,EmpId
 		,WorkDate
 		,IsWorkDay
 		,IsOffDay
@@ -92,8 +92,8 @@ BEGIN
 		,LeaveTypeName
 		,SyncDate
 		)
-	SELECT tmp.EmpId
-		,tmp.SiteId
+	SELECT tmp.CompanyId
+		,tmp.EmpId
 		,tmp.WorkDate
 		,IsWorkDay
 		,IsOffDay
@@ -106,8 +106,8 @@ BEGIN
 	WHERE NOT EXISTS (
 			SELECT 1
 			FROM dbo.UnitHeadSchedule AS uhs WITH (NOLOCK)
-			WHERE uhs.EmpId = tmp.EmpId
-				AND uhs.SiteId = tmp.SiteId
+			WHERE uhs.CompanyId = tmp.CompanyId
+				AND uhs.EmpId = tmp.EmpId
 				AND uhs.WorkDate = tmp.WorkDate
 			)
 

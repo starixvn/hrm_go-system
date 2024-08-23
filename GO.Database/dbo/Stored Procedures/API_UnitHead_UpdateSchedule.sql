@@ -25,6 +25,11 @@ BEGIN
 		,@logData VARCHAR(MAX)
 		,@logDataOld VARCHAR(MAX)
 		,@xml XML
+		,@CompanyId SMALLINT
+
+	SELECT @CompanyId = CompanyId
+	FROM dbo.[Site] WITH (NOLOCK)
+	WHERE SiteId = @SiteId
 
 	CREATE TABLE #tempUnitHeadSchedule (
 		EmpId INT
@@ -66,7 +71,7 @@ BEGIN
 
 	-- write log
 	SET @xml = (
-			SELECT uhs.SiteId AS '@SiteId'
+			SELECT uhs.CompanyId AS '@CompanyId'
 				,uhs.EmpId AS '@EmpId'
 				,uhs.WorkDate AS '@WorkDate'
 				,uhs.IsWorkDay AS '@IsWorkDay'
@@ -78,7 +83,7 @@ BEGIN
 			FROM dbo.UnitHeadSchedule AS uhs WITH (NOLOCK)
 				INNER JOIN #tempUnitHeadSchedule AS tmp WITH (NOLOCK) ON uhs.EmpId = tmp.EmpId
 				AND uhs.WorkDate = tmp.WorkDate
-			WHERE uhs.SiteId = @SiteId
+			WHERE uhs.CompanyId = @CompanyId
 				AND (
 					uhs.IsWorkDay != tmp.IsWorkDay
 					OR uhs.IsOffDay != tmp.IsOffDay
@@ -104,7 +109,7 @@ BEGIN
 	FROM dbo.UnitHeadSchedule AS uhs WITH (NOLOCK)
 		INNER JOIN #tempUnitHeadSchedule AS tmp WITH (NOLOCK) ON uhs.EmpId = tmp.EmpId
 		AND uhs.WorkDate = tmp.WorkDate
-	WHERE uhs.SiteId = @SiteId
+	WHERE uhs.CompanyId = @CompanyId
 		AND (
 			uhs.IsWorkDay != tmp.IsWorkDay
 			OR uhs.IsOffDay != tmp.IsOffDay
@@ -115,8 +120,8 @@ BEGIN
 			)
 
 	INSERT INTO dbo.UnitHeadSchedule (
-		EmpId
-		,SiteId
+		CompanyId
+		,EmpId
 		,WorkDate
 		,IsWorkDay
 		,IsOffDay
@@ -126,8 +131,8 @@ BEGIN
 		,LeaveTypeName
 		,SyncDate
 		)
-	SELECT tmp.EmpId
-		,@SiteId
+	SELECT @CompanyId
+		,tmp.EmpId
 		,tmp.WorkDate
 		,IsWorkDay
 		,IsOffDay
@@ -141,13 +146,13 @@ BEGIN
 			SELECT 1
 			FROM dbo.UnitHeadSchedule AS uhs WITH (NOLOCK)
 			WHERE uhs.EmpId = tmp.EmpId
-				AND uhs.SiteId = @SiteId
+				AND uhs.CompanyId = @CompanyId
 				AND uhs.WorkDate = tmp.WorkDate
 			)
 
 	-- write log
 	SET @xml = (
-			SELECT @SiteId AS '@SiteId'
+			SELECT @CompanyId AS '@CompanyId'
 				,EmpId AS '@EmpId'
 				,WorkDate AS '@WorkDate'
 				,IsWorkDay AS '@IsWorkDay'

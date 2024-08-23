@@ -25,6 +25,11 @@ BEGIN
 		,@logData VARCHAR(MAX)
 		,@logDataOld VARCHAR(MAX)
 		,@xml XML
+		,@CompanyId SMALLINT
+
+	SELECT @CompanyId = CompanyId
+	FROM dbo.[Site] WITH (NOLOCK)
+	WHERE SiteId = @SiteId
 
 	CREATE TABLE #tempUnitHeadInfo (
 		EmpId INT
@@ -66,7 +71,7 @@ BEGIN
 
 	-- write log
 	SET @xml = (
-			SELECT uhinfo.SiteId AS '@SiteId'
+			SELECT @CompanyId AS '@CompanyId'
 				,uhinfo.EmpId AS '@EmpId'
 				,uhinfo.Code AS '@Code'
 				,uhinfo.Nickname AS '@Nickname'
@@ -77,7 +82,7 @@ BEGIN
 				,uhinfo.DepartmentName AS '@DepartmentName'
 			FROM dbo.UnitHeadInfo AS uhinfo WITH (NOLOCK)
 				INNER JOIN #tempUnitHeadInfo AS tmp WITH (NOLOCK) ON uhinfo.EmpId = tmp.EmpId
-			WHERE uhinfo.SiteId = @SiteId
+			WHERE uhinfo.CompanyId = @CompanyId
 				AND (
 					uhinfo.Code != tmp.Code
 					OR uhinfo.Nickname != tmp.Nickname
@@ -104,7 +109,7 @@ BEGIN
 		,uhinfo.SyncDate = @startRun
 	FROM dbo.UnitHeadInfo AS uhinfo WITH (NOLOCK)
 		INNER JOIN #tempUnitHeadInfo AS tmp WITH (NOLOCK) ON uhinfo.EmpId = tmp.EmpId
-	WHERE uhinfo.SiteId = @SiteId
+	WHERE uhinfo.CompanyId = @CompanyId
 		AND (
 			uhinfo.Code != tmp.Code
 			OR uhinfo.Nickname != tmp.Nickname
@@ -116,8 +121,8 @@ BEGIN
 			)
 
 	INSERT INTO dbo.UnitHeadInfo (
-		EmpId
-		,SiteId
+		CompanyId
+		,EmpId
 		,Code
 		,Nickname
 		,FullName
@@ -127,8 +132,8 @@ BEGIN
 		,DepartmentName
 		,SyncDate
 		)
-	SELECT tmp.EmpId
-		,@SiteId
+	SELECT @CompanyId
+		,tmp.EmpId
 		,tmp.Code
 		,tmp.Nickname
 		,tmp.FullName
@@ -142,12 +147,12 @@ BEGIN
 			SELECT 1
 			FROM dbo.UnitHeadInfo AS uhinfo WITH (NOLOCK)
 			WHERE uhinfo.EmpId = tmp.EmpId
-				AND uhinfo.SiteId = @SiteId
+				AND uhinfo.CompanyId = @CompanyId
 			)
 
 	-- write log
 	SET @xml = (
-			SELECT @SiteId AS '@SiteId'
+			SELECT @CompanyId AS '@CompanyId'
 				,EmpId AS '@EmpId'
 				,Code AS '@Code'
 				,Nickname AS '@Nickname'

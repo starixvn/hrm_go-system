@@ -1,4 +1,5 @@
 ﻿
+
 CREATE PROCEDURE [dbo].[API_User_GetById] @UserId INT
 AS
 /*
@@ -20,6 +21,7 @@ BEGIN
 		,u.Nickname
 		,u.[Password]
 		,u.OldPassword
+		,u.BCryptPassword
 		,u.Email
 		,u.IsActive
 		,u.IsDeleted

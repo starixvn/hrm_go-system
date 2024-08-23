@@ -25,8 +25,7 @@ BEGIN
 		SET @tempDate = DATEADD(d, 1, @tempDate)
 	END
 
-	SELECT uhi.SiteId
-		,c.CompanyId
+	SELECT c.CompanyId
 		,c.[Name] AS CompanyName
 		,uhi.EmpId
 		,uhi.Code
@@ -35,14 +34,13 @@ BEGIN
 		,uhi.DepartmentCode
 		,uhi.DepartmentName
 	FROM dbo.UnitHeadInfo AS uhi WITH (NOLOCK)
-		INNER JOIN dbo.[Site] AS s WITH (NOLOCK) ON uhi.SiteId = s.SiteId
-		INNER JOIN dbo.Company AS c WITH (NOLOCK) ON s.CompanyId = c.CompanyId
+		INNER JOIN dbo.Company AS c WITH (NOLOCK) ON uhi.CompanyId = c.CompanyId
 	WHERE uhi.IsActive = 1
 		AND uhi.IsDeleted = 0
-		AND (@CompanyId IS NULL OR s.CompanyId = @CompanyId)
+		AND (@CompanyId IS NULL OR uhi.CompanyId = @CompanyId)
 	ORDER BY uhi.Nickname
 
-	SELECT uhinfo.SiteId
+	SELECT uhinfo.CompanyId
 		,uhinfo.EmpId
 		,tmp.WorkDate
 		,uhs.IsWorkDay
@@ -52,14 +50,13 @@ BEGIN
 		,uhs.LeaveTypeCode
 		,uhs.LeaveTypeName
 	FROM dbo.UnitHeadInfo AS uhinfo WITH (NOLOCK)
-		INNER JOIN dbo.[Site] AS s WITH (NOLOCK) ON uhinfo.SiteId = s.SiteId
 		CROSS APPLY #tempDate AS tmp WITH (NOLOCK)
-		LEFT JOIN dbo.UnitHeadSchedule AS uhs WITH (NOLOCK) ON uhs.SiteId = uhinfo.SiteId
+		LEFT JOIN dbo.UnitHeadSchedule AS uhs WITH (NOLOCK) ON uhs.CompanyId = uhinfo.CompanyId
 		AND uhs.EmpId = uhinfo.EmpId
 		AND tmp.WorkDate = uhs.WorkDate
 	WHERE uhinfo.IsActive = 1
 		AND uhinfo.IsDeleted = 0
-		AND (@CompanyId IS NULL OR s.CompanyId = @CompanyId)
+		AND (@CompanyId IS NULL OR uhinfo.CompanyId = @CompanyId)
 
 	DROP TABLE #tempDate
 END

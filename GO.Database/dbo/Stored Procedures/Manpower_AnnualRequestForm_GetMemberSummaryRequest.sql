@@ -1,4 +1,5 @@
 ﻿
+
 CREATE PROCEDURE [dbo].[Manpower_AnnualRequestForm_GetMemberSummaryRequest] @PeriodId SMALLINT
 	,@UserId INT
 	,@UnitType NVARCHAR(100) = NULL
@@ -65,7 +66,7 @@ BEGIN
 			SELECT 1
 			FROM dbo.HRM_Employee AS emp WITH (NOLOCK)
 			WHERE emp.UserId = @UserId
-				AND emp.SiteId = flow.SiteId
+				AND emp.CompanyId = flow.CompanyId
 				AND emp.EmpId = flow.EmpId
 			)
 
@@ -80,8 +81,6 @@ BEGIN
 	ORDER BY rq.UnitName ASC
 
 	SELECT rq.RequestId
-		,s.SiteId
-		,s.SiteName
 		,c.CompanyId
 		,c.[Name] AS CompanyName
 		,unit.UnitId
@@ -94,25 +93,24 @@ BEGIN
 		,SUM(rqdt.ExpatAddition) AS ExpatAddition
 	FROM dbo.Manpower_AnnualRequestForm AS rq WITH (NOLOCK)
 		INNER JOIN dbo.HRM_Unit AS unit WITH (NOLOCK) ON rq.UnitName = unit.[Name]
-		INNER JOIN dbo.[Site] AS s WITH (NOLOCK) ON unit.SiteId = s.SiteId
+		INNER JOIN dbo.[Site] AS s WITH (NOLOCK) ON unit.CompanyId = s.CompanyId
 		AND s.IsActive = 1
 		INNER JOIN dbo.Company AS c WITH (NOLOCK) ON s.CompanyId = c.CompanyId
 		AND c.IsActive = 1
-		INNER JOIN dbo.HRM_Department AS dept WITH (NOLOCK) ON unit.SiteId = dept.SiteId
+		INNER JOIN dbo.HRM_Department AS dept WITH (NOLOCK) ON unit.CompanyId = dept.CompanyId
 		AND unit.UnitId = dept.UnitId
 		AND dept.IsActive = 1
 		AND dept.IsDeleted = 0
-		INNER JOIN dbo.HRM_Section AS sec WITH (NOLOCK) ON dept.SiteId = sec.SiteId
+		INNER JOIN dbo.HRM_Section AS sec WITH (NOLOCK) ON dept.CompanyId = sec.CompanyId
 		AND dept.DepartmentId = sec.DepartmentId
 		AND sec.IsActive = 1
 		AND sec.IsDeleted = 0
-		LEFT JOIN dbo.Manpower_AnnualRequestFormDetail AS rqdt WITH (NOLOCK) ON sec.SiteId = rqdt.SiteId
+		LEFT JOIN dbo.Manpower_AnnualRequestFormDetail AS rqdt WITH (NOLOCK) ON rq.RequestId = rqdt.RequestId
+		AND sec.CompanyId = rqdt.CompanyId
 		AND sec.SectionId = rqdt.SectionId
 		INNER JOIN #tmpUnit AS tem WITH (NOLOCK) ON rq.UnitName = tem.UnitName
 	WHERE rq.PeriodId = @PeriodId
 	GROUP BY rq.RequestId
-		,s.SiteId
-		,s.SiteName
 		,c.CompanyId
 		,c.[Name]
 		,unit.UnitId

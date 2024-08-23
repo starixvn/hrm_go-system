@@ -1,4 +1,5 @@
 ﻿
+
 CREATE PROCEDURE [dbo].[Manpower_Employee_Get] @Keyword NVARCHAR(100) = NULL
 	,@CompanyId SMALLINT = NULL
 	,@StatusId TINYINT = NULL
@@ -44,8 +45,6 @@ BEGIN
 				,emp.Code
 				,emp.Nickname
 			) AS RowNum
-		,s.SiteId
-		,s.SiteName
 		,c.CompanyId
 		,c.[Name] AS CompanyName
 		,c.Country
@@ -72,29 +71,27 @@ BEGIN
 		,unit.[Name] AS UnitName
 	INTO #tmpEmployee
 	FROM dbo.HRM_Employee AS emp WITH (NOLOCK)
-		INNER JOIN dbo.HRM_Team AS team WITH (NOLOCK) ON emp.SiteId = team.SiteId
+		INNER JOIN dbo.HRM_Team AS team WITH (NOLOCK) ON emp.CompanyId = team.CompanyId
 		AND emp.TeamId = team.TeamId
 		AND team.IsDeleted = 0
-		INNER JOIN dbo.HRM_Section AS section WITH (NOLOCK) ON team.SiteId = section.SiteId
+		INNER JOIN dbo.HRM_Section AS section WITH (NOLOCK) ON team.CompanyId = section.CompanyId
 		AND team.SectionId = section.SectionId
 		AND section.IsActive = 1
 		AND section.IsDeleted = 0
-		INNER JOIN dbo.HRM_Department AS dept WITH (NOLOCK) ON section.SiteId = dept.SiteId
+		INNER JOIN dbo.HRM_Department AS dept WITH (NOLOCK) ON section.CompanyId = dept.CompanyId
 		AND section.DepartmentId = dept.DepartmentId
 		AND dept.IsActive = 1
 		AND dept.IsDeleted = 0
-		INNER JOIN dbo.HRM_Unit AS unit WITH (NOLOCK) ON dept.SiteId = unit.SiteId
+		INNER JOIN dbo.HRM_Unit AS unit WITH (NOLOCK) ON dept.CompanyId = unit.CompanyId
 		AND dept.UnitId = unit.UnitId
 		AND unit.IsActive = 1
 		AND unit.IsDeleted = 0
-		INNER JOIN dbo.[Site] AS s WITH (NOLOCK) ON emp.SiteId = s.SiteId
-		AND s.IsActive = 1
-		INNER JOIN dbo.Company AS c WITH (NOLOCK) ON s.CompanyId = c.CompanyId
+		INNER JOIN dbo.Company AS c WITH (NOLOCK) ON emp.CompanyId = c.CompanyId
 		AND c.IsActive = 1
-		INNER JOIN dbo.HRM_JobLevel AS jl WITH (NOLOCK) ON emp.SiteId = jl.SiteId
+		INNER JOIN dbo.HRM_JobLevel AS jl WITH (NOLOCK) ON emp.CompanyId = jl.CompanyId
 		AND emp.JobLevelId = jl.JobLevelId
 		AND jl.IsDeleted = 0
-		LEFT JOIN dbo.Manpower_ExcludedEmployee AS exclude WITH (NOLOCK) ON emp.SiteId = exclude.SiteId
+		LEFT JOIN dbo.Manpower_ExcludedEmployee AS exclude WITH (NOLOCK) ON emp.CompanyId = exclude.CompanyId
 		AND emp.EmpId = exclude.EmpId
 	WHERE (
 			ISNULL(emp.Nickname, '') LIKE @Keyword
@@ -141,8 +138,7 @@ BEGIN
 	END
 
 	SELECT RowNum
-		,SiteId
-		,SiteName
+		,CompanyId
 		,CompanyName
 		,Country
 		,EmpId

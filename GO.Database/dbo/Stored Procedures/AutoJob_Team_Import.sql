@@ -1,5 +1,5 @@
 ﻿
-CREATE PROCEDURE [dbo].[AutoJob_Team_Import] @SiteId SMALLINT
+CREATE PROCEDURE [dbo].[AutoJob_Team_Import] @CompanyId SMALLINT
 	,@Value NVARCHAR(MAX)
 	,@ErrCode INT = 0 OUTPUT
 	,@ErrMsg NVARCHAR(200) = '' OUTPUT
@@ -60,7 +60,7 @@ BEGIN
 			)
 	BEGIN
 		INSERT INTO dbo.HRM_Team (
-			SiteId
+			CompanyId
 			,TeamId
 			,Code
 			,[Name]
@@ -69,7 +69,7 @@ BEGIN
 			,ModifiedDate
 			,SyncDate
 			)
-		SELECT @SiteId
+		SELECT @CompanyId
 			,tmp.TeamId
 			,tmp.Code
 			,tmp.[Name]
@@ -82,7 +82,7 @@ BEGIN
 				SELECT 1
 				FROM dbo.HRM_Team AS team WITH (NOLOCK)
 				WHERE tmp.TeamId = team.TeamId
-					AND team.SiteId = @SiteId
+					AND team.CompanyId = @CompanyId
 				)
 
 		UPDATE team
@@ -94,7 +94,7 @@ BEGIN
 			,team.SyncDate = @SyncDate
 		FROM dbo.HRM_Team AS team WITH (ROWLOCK, UPDLOCK)
 			INNER JOIN #tmpTeam AS tmp WITH (NOLOCK) ON team.TeamId = tmp.TeamId
-		WHERE team.SiteId = @SiteId
+		WHERE team.CompanyId = @CompanyId
 	END
 
 	DROP TABLE #tmpTeam

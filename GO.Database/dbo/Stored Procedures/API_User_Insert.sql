@@ -31,28 +31,6 @@ BEGIN
 		,@logData NVARCHAR(MAX)
 		,@xml XML
 
-	--IF ISNULL(@Username, '') <> ''
-	--	AND EXISTS (
-	--		SELECT UserId
-	--		FROM dbo.[User] WITH (NOLOCK)
-	--		WHERE Username = @Username
-	--		)
-	--BEGIN
-	--	SELECT @ErrCode = 1
-	--		,@ErrMsg = 'Username already exists.'
-	--	RETURN;
-	--END
-	--IF ISNULL(@Code, '') <> ''
-	--	AND EXISTS (
-	--		SELECT UserId
-	--		FROM dbo.[User] WITH (NOLOCK)
-	--		WHERE Code = @Code
-	--		)
-	--BEGIN
-	--	SELECT @ErrCode = 1
-	--		,@ErrMsg = 'Code already exists.'
-	--	RETURN;
-	--END
 	INSERT INTO dbo.[User] (
 		Username
 		,Code
@@ -113,7 +91,7 @@ BEGIN
 	IF @RefId IS NOT NULL
 		AND NOT EXISTS (
 			SELECT 1
-			FROM dbo.UserMapping
+			FROM dbo.UserMapping WITH (NOLOCK)
 			WHERE SiteId = @SiteId
 				AND RefId = @RefId
 			)

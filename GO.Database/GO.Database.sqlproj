@@ -145,16 +145,13 @@
     <Build Include="dbo\Stored Procedures\AutoJob_Unit_ImportFromDB.sql" />
     <Build Include="dbo\Stored Procedures\AutoJob_Team_ImportFromDB.sql" />
     <Build Include="dbo\Stored Procedures\AutoJob_Team_Import.sql" />
-    <Build Include="dbo\Stored Procedures\AutoJob_Team_GetLastModifiedDateBySiteId.sql" />
     <Build Include="dbo\Stored Procedures\AutoJob_Section_ImportFromDB.sql" />
     <Build Include="dbo\Stored Procedures\AutoJob_Section_Import.sql" />
-    <Build Include="dbo\Stored Procedures\AutoJob_Section_GetLastModifiedDateBySiteId.sql" />
     <Build Include="dbo\Stored Procedures\AutoJob_JobTitle_ImportFromDB.sql" />
     <Build Include="dbo\Stored Procedures\AutoJob_JobTitle_Import.sql" />
     <Build Include="dbo\Stored Procedures\AutoJob_JobLevel_ImportFromDB.sql" />
     <Build Include="dbo\Stored Procedures\AutoJob_Employee_ImportFromDB.sql" />
     <Build Include="dbo\Stored Procedures\AutoJob_Employee_Import.sql" />
-    <Build Include="dbo\Stored Procedures\AutoJob_Employee_GetLastModifiedDateBySiteId.sql" />
     <Build Include="dbo\Stored Procedures\AutoJob_Department_ImportFromDB.sql" />
     <Build Include="dbo\Tables\Manpower_PeriodProcessSetting.sql" />
     <Build Include="dbo\Tables\Manpower_Period.sql" />
@@ -208,5 +205,29 @@
     <Build Include="dbo\Stored Procedures\UserOTP_UpdateStatus.sql" />
     <Build Include="dbo\Stored Procedures\UserOTP_UpdateSecretKey.sql" />
     <Build Include="dbo\Stored Procedures\UserOTP_GetById.sql" />
+    <Build Include="dbo\Tables\UserMapping_New.sql" />
+    <Build Include="dbo\Tables\TwoFASetting.sql" />
+    <Build Include="dbo\Tables\TwoFAMethod.sql" />
+    <Build Include="dbo\Tables\Conversation.sql" />
+    <Build Include="dbo\Stored Procedures\UserTwoFA_GetConversation.sql" />
+    <Build Include="dbo\Stored Procedures\UserTwoFA_GetById.sql" />
+    <Build Include="dbo\Stored Procedures\UserMapping_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\UserMapping_Get.sql" />
+    <Build Include="dbo\Stored Procedures\UserMapping_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\TwoFASetting_UpdateVerificationCode.sql" />
+    <Build Include="dbo\Stored Procedures\TwoFASetting_UpdateStatus.sql" />
+    <Build Include="dbo\Stored Procedures\TwoFASetting_UpdateSecretKey.sql" />
+    <Build Include="dbo\Stored Procedures\TwoFASetting_UpdateConversationId.sql" />
+    <Build Include="dbo\Stored Procedures\TwoFASetting_UpdateChannelInfo.sql" />
+    <Build Include="dbo\Stored Procedures\TwoFASetting_SaveVerificationCode.sql" />
+    <Build Include="dbo\Stored Procedures\TwoFASetting_SaveChannelId.sql" />
+    <Build Include="dbo\Stored Procedures\Report_Manpower_Get.sql" />
+    <Build Include="dbo\Stored Procedures\AutoJob_Team_GetLastModifiedDateByCompanyId.sql" />
+    <Build Include="dbo\Stored Procedures\AutoJob_Section_GetLastModifiedDateByCompanyId.sql" />
+    <Build Include="dbo\Stored Procedures\AutoJob_Employee_GetLastModifiedDateByCompanyId.sql" />
+    <Build Include="dbo\Stored Procedures\API_User_UpdatePassword_V1.sql" />
+    <Build Include="dbo\Stored Procedures\API_User_Update_V1.sql" />
+    <Build Include="dbo\Stored Procedures\API_User_Insert_V1.sql" />
+    <Build Include="dbo\Stored Procedures\API_User_GetByUsername_V1.sql" />
   </ItemGroup>
 </Project>

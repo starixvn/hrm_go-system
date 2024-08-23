@@ -1,5 +1,5 @@
 ﻿
-CREATE PROCEDURE [dbo].[AutoJob_Employee_GetLastModifiedDateBySiteId] @SiteId SMALLINT
+CREATE PROCEDURE [dbo].[AutoJob_Employee_GetLastModifiedDateByCompanyId] @CompanyId SMALLINT
 AS
 /*
 Created: 20230316@Tim.Trinh
@@ -15,5 +15,5 @@ BEGIN
 
 	SELECT MAX(ModifiedDate)
 	FROM dbo.HRM_Employee WITH (NOLOCK)
-	WHERE SiteId = @SiteId
+	WHERE CompanyId = @CompanyId
 END

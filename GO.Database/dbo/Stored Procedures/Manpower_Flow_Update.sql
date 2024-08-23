@@ -16,7 +16,7 @@ Revisions:
 Param's Explanation:
 	@FlowXml:
 		N'<Root>
-		   <Row ProcessId="1" SiteId="1" EmpId="1" />
+		   <Row ProcessId="1" CompanyId="1" EmpId="1" />
 		</Root>'
 */
 BEGIN
@@ -33,7 +33,7 @@ BEGIN
 
 	CREATE TABLE #tmpFlow (
 		ProcessId TINYINT
-		,SiteId SMALLINT
+		,CompanyId SMALLINT
 		,EmpId INT
 		)
 
@@ -44,13 +44,13 @@ BEGIN
 
 		INSERT INTO #tmpFlow (
 			ProcessId
-			,SiteId
+			,CompanyId
 			,EmpId
 			)
 		SELECT ProcessId
-			,SiteId
+			,CompanyId
 			,EmpId
-		FROM OPENXML(@idoc, '/Root/Row', 1) WITH (ProcessId TINYINT, SiteId SMALLINT, EmpId INT) AS data
+		FROM OPENXML(@idoc, '/Root/Row', 1) WITH (ProcessId TINYINT, CompanyId SMALLINT, EmpId INT) AS data
 
 		EXEC sp_xml_removedocument @idoc
 	END
@@ -59,7 +59,7 @@ BEGIN
 	SET @xml = (
 			SELECT flow.UnitName AS '@UnitName'
 				,flow.ProcessId AS '@ProcessId'
-				,flow.SiteId AS '@SiteId'
+				,flow.CompanyId AS '@CompanyId'
 				,flow.EmpId AS '@EmpId'
 			FROM dbo.Manpower_Flow AS flow WITH (NOLOCK)
 			WHERE flow.UnitName = @UnitName
@@ -76,12 +76,12 @@ BEGIN
 	INSERT INTO dbo.Manpower_Flow (
 		UnitName
 		,ProcessId
-		,SiteId
+		,CompanyId
 		,EmpId
 		)
 	SELECT @UnitName
 		,ProcessId
-		,SiteId
+		,CompanyId
 		,EmpId
 	FROM #tmpFlow AS tbl WITH (NOLOCK)
 
@@ -89,7 +89,7 @@ BEGIN
 	SET @xml = (
 			SELECT flow.UnitName AS '@UnitName'
 				,flow.ProcessId AS '@ProcessId'
-				,flow.SiteId AS '@SiteId'
+				,flow.CompanyId AS '@CompanyId'
 				,flow.EmpId AS '@EmpId'
 			FROM dbo.Manpower_Flow AS flow WITH (NOLOCK)
 			WHERE flow.UnitName = @UnitName

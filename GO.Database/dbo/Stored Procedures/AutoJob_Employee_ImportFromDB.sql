@@ -1,5 +1,5 @@
 ﻿
-CREATE PROCEDURE [dbo].[AutoJob_Employee_ImportFromDB] @SiteId SMALLINT
+CREATE PROCEDURE [dbo].[AutoJob_Employee_ImportFromDB] @CompanyId SMALLINT
 	,@DbName VARCHAR(50)
 	,@ErrCode INT = 0 OUTPUT
 	,@ErrMsg NVARCHAR(200) = '' OUTPUT
@@ -20,15 +20,14 @@ BEGIN
 		,@SyncDate DATETIME = GETUTCDATE()
 		,@sqlExecute NVARCHAR(MAX)
 
-	SELECT @LastModifiedDate = MAX(ModifiedDate)
-	FROM dbo.HRM_Employee WITH (NOLOCK)
-	WHERE SiteId = @SiteId
-
-	SET @LastModifiedDate = ISNULL(@LastModifiedDate, '2010-01-01')
-
+	--SELECT @LastModifiedDate = MAX(ModifiedDate)
+	--FROM dbo.HRM_Employee WITH (NOLOCK)
+	--WHERE CompanyId = @CompanyId
+	--SET @LastModifiedDate = ISNULL(@LastModifiedDate, '2010-01-01')
 	CREATE TABLE #tmpEmployee (
 		EmpId INT
-		,Username NVARCHAR(50)
+		,UserId INT
+		,DomainUsername NVARCHAR(50)
 		,Code NVARCHAR(20)
 		,Nickname NVARCHAR(50)
 		,FullName NVARCHAR(100)
@@ -43,13 +42,12 @@ BEGIN
 		,ConfirmedDate DATE
 		,ResignedDate DATE
 		,ModifiedDate DATETIME
-		,UserId INT
 		)
 
 	SELECT @sqlExecute = 'INSERT INTO #tmpEmployee (
 		EmpId
 		,UserId
-		,Username
+		,DomainUsername
 		,Code
 		,Nickname
 		,FullName
@@ -88,7 +86,7 @@ BEGIN
 
 	UPDATE emp
 	SET emp.UserId = tmp.UserId
-		,emp.Username = tmp.Username
+		,emp.DomainUsername = tmp.DomainUsername
 		,emp.Code = tmp.Code
 		,emp.Nickname = tmp.Nickname
 		,emp.FullName = tmp.FullName
@@ -106,13 +104,13 @@ BEGIN
 		,emp.SyncDate = @SyncDate
 	FROM dbo.HRM_Employee AS emp WITH (ROWLOCK, UPDLOCK)
 		INNER JOIN #tmpEmployee AS tmp WITH (NOLOCK) ON emp.EmpId = tmp.EmpId
-	WHERE emp.SiteId = @SiteId
+	WHERE emp.CompanyId = @CompanyId
 
 	INSERT INTO dbo.HRM_Employee (
-		SiteId
+		CompanyId
 		,EmpId
 		,UserId
-		,Username
+		,DomainUsername
 		,Code
 		,Nickname
 		,FullName
@@ -129,10 +127,10 @@ BEGIN
 		,ModifiedDate
 		,SyncDate
 		)
-	SELECT @SiteId
+	SELECT @CompanyId
 		,tmp.EmpId
 		,tmp.UserId
-		,tmp.Username
+		,tmp.DomainUsername
 		,tmp.Code
 		,tmp.Nickname
 		,tmp.FullName
@@ -152,7 +150,7 @@ BEGIN
 	WHERE NOT EXISTS (
 			SELECT 1
 			FROM dbo.HRM_Employee AS emp WITH (NOLOCK)
-			WHERE emp.SiteId = @SiteId
+			WHERE emp.CompanyId = @CompanyId
 				AND emp.EmpId = tmp.EmpId
 			)
 
