@@ -22,7 +22,6 @@
         }
 
         [HttpGet]
-        [Route("api/role/getBySiteId")]
         public async Task<IActionResult> GetBySiteId(GetRoleBySiteIdCriteria criteria)
         {
             var roles = await baseService.GetDataAsync<Role>(criteria);
@@ -30,7 +29,6 @@
         }
 
         [HttpGet]
-        [Route("api/role/getByUserId")]
         public async Task<IActionResult> GetByUserId(int userId)
         {
             var criteria = new GetRoleByUserIdCriteria

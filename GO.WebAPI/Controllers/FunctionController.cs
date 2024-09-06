@@ -7,6 +7,7 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
+    [Route("api/[controller]/[action]/{id?}")]
     public class FunctionController : BaseController
     {
         private readonly IBaseService baseService;
@@ -19,7 +20,6 @@
         }
 
         [HttpGet]
-        [Route("api/function/getBySiteId")]
         public async Task<IActionResult> GetBySiteId(GetFunctionBySiteIdCriteria criteria)
         {
             var functions = await baseService.GetDataAsync<Function>(criteria);
@@ -27,8 +27,7 @@
         }
 
         [HttpGet]
-        [Route("api/function/getPermissionBySiteAndRoleId")]
-        public async Task<IActionResult> GetBySiteAndRoleId(GetFunctionByRoleIdCriteria criteria)
+        public async Task<IActionResult> GetPermissionBySiteAndRoleId(GetFunctionByRoleIdCriteria criteria)
         {
             var permissions = await baseService.GetDataAsync<FunctionPermission>(criteria);
             return Json(permissions);
