@@ -8,7 +8,10 @@ import LangHelper from '@jsroot/common/langHelper';
 import { renderNumber } from '../../common.funcs';
 
 const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
-    const { headers, supervisors, employees, others, totalSupervisor, totalEmployee, grandTotal, totalJobTypeSupervisor, totalJobTypeEmployee, totalJobTypeOthers } = data;
+    const {
+        headers, supervisors, employees, others, totalSupervisor, totalEmployee, grandTotal,
+        totalJobTypeSupervisor, totalJobTypeEmployee, totalJobTypeOthers
+    } = data;
 
     const showHideJobs = () => {
         const showHides = [];
@@ -27,11 +30,11 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
         });
 
         showHides.push({
-            key: "Other",
+            key: 'Other',
             show: false
         });
         return showHides;
-    }
+    };
 
     const showHides = headers.map(gunit => {
         return {
@@ -81,12 +84,13 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
         return trs;
     };
 
-    const GetNameUnitTypeTotal = name => {
+    const getNameUnitTypeTotal = name => {
         const words = name.split(' ');
         let nameTotal = '';
         words.map(x => {
             nameTotal += x.substring(0, 1);
-        })
+        });
+
         return words.length === 1 ? name : nameTotal;
     };
 
@@ -99,31 +103,32 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
                 grandTotal += unit.totalLocal + unit.totalExpat;
             });
             colSpanGrandTotal += 4;
-        })
+        });
 
-        const demo = <tr className="row-total">
-            <td className="text-center" rowSpan={2} colSpan={2}>Grand Total</td>
-            <td key={`grand-total-table-country`} className="text-center" colSpan={colSpanGrandTotal}>{renderNumber(grandTotal)}</td>
-        </tr>;
-        return demo;
+        return (
+            <tr className='row-total'>
+                <td className='text-center' rowSpan={2} colSpan={2}>Grand Total</td>
+                <td key='grand-total-table-country' className='text-center' colSpan={colSpanGrandTotal}>{renderNumber(grandTotal)}</td>
+            </tr>
+        );
     }
 
     return (
         <>
-            <table className="table group-by-country">
+            <table className='table group-by-country'>
                 <thead>
                     <tr>
-                        <td rowSpan={3} colSpan={2} className="col-job-level">{LangHelper.getResource('JobLevel')}</td>
+                        <td rowSpan={3} colSpan={2} className='col-job-level'>{LangHelper.getResource('JobLevel')}</td>
                         {
                             headers.map(gunit => {
                                 const showHideOption = showHideOptions.find(x => x.key === gunit.name);
                                 const colSpan = (showHideOption.show ? gunit.cells.length * 2 : 0) + 2;
 
                                 return (
-                                    <td key={gunit.name} className="group-unit" colSpan={colSpan}>
+                                    <td key={gunit.name} className='group-unit' colSpan={colSpan}>
                                         <span>{gunit.name}</span>
                                         {
-                                            gunit.name !== "Other" && 
+                                            gunit.name !== 'Other' && 
                                             <span
                                                 className={`fa ${showHideOption.show ? 'fa-minus-square-o' : 'fa-plus-square-o'}`}
                                                 onClick={() => handleShowHideCells(gunit.name)}
@@ -145,7 +150,7 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
                                     });
                                 }
 
-                                cols.push(<td key={`${gunit.name}-total`} colSpan={2}>{`${GetNameUnitTypeTotal(gunit.name)} Total`}</td>);
+                                cols.push(<td key={`${gunit.name}-total`} colSpan={2}>{`${getNameUnitTypeTotal(gunit.name)} Total`}</td>);
 
                                 return cols;
                             })
@@ -187,8 +192,8 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
                 </tbody>
             </table>
 
-            <Button className="btn-show-more" onClick={() => setShowMore(!showMore)}>Show More</Button>
-            <hr></hr>
+            <Button className='btn-show-more' onClick={() => setShowMore(!showMore)}>Show {showMore ? 'less' : 'more'}</Button>
+            <hr />
         </>
     );
 };

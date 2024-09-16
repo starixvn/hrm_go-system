@@ -1,12 +1,17 @@
 ﻿import React, { useState, Fragment } from 'react';
+import { Button } from 'react-bootstrap';
+
 import Row from './Row';
 import TotalRow from './TotalRow';
 import SubTotalRow from './SubTotalRow';
+
 import LangHelper from '@jsroot/common/langHelper';
-import { Button } from 'react-bootstrap';
 
 const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
-    const { headers, supervisors, employees, others, totalSupervisor, totalEmployee, grandTotal, totalJobTypeSupervisor, totalJobTypeEmployee, totalJobTypeOthers } = data;
+    const {
+        headers, supervisors, employees, others, totalSupervisor, totalEmployee, grandTotal,
+        totalJobTypeSupervisor, totalJobTypeEmployee, totalJobTypeOthers
+    } = data;
 
     const showHides = () => {
         const showHides = [];
@@ -25,11 +30,12 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
         });
 
         showHides.push({
-            key: "Other",
+            key: 'Other',
             show: false
         });
+
         return showHides;
-    }
+    };
 
     const [showHideOptions, setShowHideOptions] = useState(showHides);
     const [showMore, setShowMore] = useState(false);
@@ -60,33 +66,33 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
                 showHideOptions={showHideOptions}
                 onClick={handleShowDetail}
                 isOther={isOther}/>);
-    });
+        });
 
         return trs;
     };
 
     return (
         <>
-            <table className="table group-by-country">
+            <table className='table group-by-country'>
                 <thead>
                     <tr>
-                        <td rowSpan={2} colSpan={2} className="col-job-level">{LangHelper.getResource('JobLevel')}</td>
+                        <td rowSpan={2} colSpan={2} className='col-job-level'>{LangHelper.getResource('JobLevel')}</td>
                         {
-                            headers.map(country => <td key={country.name} rowSpan={country.name !== "Other" ? 1 : 2} colSpan={country.name !== "Other" ? (country.cells.length + 1) : 1}>{country.name}</td>)
+                            headers.map(country => <td key={country.name} rowSpan={country.name !== 'Other' ? 1 : 2} colSpan={country.name !== 'Other' ? (country.cells.length + 1) : 1}>{country.name}</td>)
                         }
-                        <td rowSpan={2} className="col-job-level">Grand Total</td>
+                        <td rowSpan={2} className='col-job-level'>Grand Total</td>
                     </tr>
                     <tr>
                         {
                             headers.map(country => <Fragment key={country.name}>
                                 {
-                                    country.name !== "Other" && <>
+                                    country.name !== 'Other' && <>
                                         {
                                             country.cells.map(company => 
-                                                <td key={`header-company-${country.name}-${company.name}`} className="col-total">{company.name}</td>
+                                                <td key={`header-company-${country.name}-${company.name}`} className='col-total'>{company.name}</td>
                                             )
                                         }
-                                        <td key={`header-company-total-${country.name}`} className="col-total">Total</td>
+                                        <td key={`header-company-total-${country.name}`} className='col-total'>Total</td>
                                     </>
                                 }
                             </Fragment>)
@@ -107,8 +113,8 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
                     }
                 </tbody>
             </table>
-            <Button className="btn-show-more" onClick={() => setShowMore(!showMore)}>Show More</Button>
-            <hr></hr>
+            <Button className='btn-show-more' onClick={() => setShowMore(!showMore)}>Show {showMore ? 'less' : 'more'}</Button>
+            <hr />
         </>
     );
 };

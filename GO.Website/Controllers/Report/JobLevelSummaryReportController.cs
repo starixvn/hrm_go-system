@@ -9,13 +9,14 @@
     using GO.Website.Constants;
     using GO.Website.Criteria.Report;
     using GO.Website.Filters;
-    using GO.Website.Models.Report.JobLevelSummary;
     using GO.Website.Models.Report.Manpower;
     using GO.Website.Services;
     using Microsoft.AspNetCore.Mvc;
 
     [GOPermission(FunctionKey = FunctionKey.JobLevelSummaryReport, Policy = Policy.Read)]
-    public class JobLevelSummaryReportController : BaseController
+    public class JobLevelSummaryReportController(
+        IBaseService baseService,
+        IExportExcelService excelService) : BaseController
     {
         private const string Other = "Other";
         private const byte LengthJobLevelType = 2;
@@ -33,33 +34,15 @@
             { "Employee", new[] { "E" } }
         };
 
-        private readonly List<string> countryTypes = new() { "Philippines", "Vietnam", "Malaysia", "Taiwan" };
-
-        private readonly IBaseService baseService;
-        private readonly IExportExcelService excelService;
-
-        public JobLevelSummaryReportController(
-            IBaseService baseService,
-            IExportExcelService excelService)
-        {
-            this.baseService = baseService;
-            this.excelService = excelService;
-        }
+        private readonly List<string> countryTypes = ["Philippines", "Vietnam", "Malaysia", "Taiwan"];
 
         public IActionResult Index()
         {
             return View("~/Views/Report/JobLevelSummaryReport.cshtml");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> GetData([FromBody] GetJobLevelSummaryParam param)
+        public async Task<IActionResult> GetData(GetJobLevelSummaryReportCriteria criteria)
         {
-
-            param.JoinedDate = param.JoinedDate.AddMonths(1);
-            var criteria = new GetJobLevelSummaryReportCriteria()
-            {
-                JoinedDate = new DateTime(param.JoinedDate.Year, param.JoinedDate.Month, 1, 0, 0, 0, DateTimeKind.Utc),
-            };
             var employeeInfos = await baseService.GetDataAsync<EmployeeInfo>(criteria);
 
             var listUnits = await GetUnitAsync();
@@ -77,13 +60,8 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> ExportExcel([FromBody] GetJobLevelSummaryParam param)
+        public async Task<IActionResult> ExportExcel([FromBody] GetJobLevelSummaryReportCriteria criteria)
         {
-            param.JoinedDate = param.JoinedDate.AddMonths(1);
-            var criteria = new GetJobLevelSummaryReportCriteria()
-            {
-                JoinedDate = new DateTime(param.JoinedDate.Year, param.JoinedDate.Month, 1, 0, 0, 0, DateTimeKind.Utc),
-            };
             var employeeInfos = await baseService.GetDataAsync<EmployeeInfo>(criteria);
 
             var listUnits = await GetUnitAsync();
@@ -140,11 +118,11 @@
                     jobLevelNames.AddRange(jobLevels.Where(x => x[..1].Contains(item)).ToList());
                 }
 
-                dictionaryJobLevels.Add(jobLevelType.Key, jobLevelNames.ToArray());
+                dictionaryJobLevels.Add(jobLevelType.Key, [.. jobLevelNames]);
             }
 
-            var ortherJobLevels = jobLevels.Where(x => !x[..1].Contains("M") && !x[..1].Contains("P") && !x[..1].Contains("E")).ToList();
-            dictionaryJobLevels.Add(Other, ortherJobLevels.ToArray());
+            var ortherJobLevels = jobLevels.Where(x => !x[..1].Contains('M') && !x[..1].Contains('P') && !x[..1].Contains('E')).ToList();
+            dictionaryJobLevels.Add(Other, [.. ortherJobLevels]);
 
             return dictionaryJobLevels;
         }
@@ -164,8 +142,7 @@
                 dictionaryJobLevelTypes.Add(jobLevelType.Key, SortJobLevel(jobLevelNames));
             }
 
-            var ortherJobLevels = new[] { Other };
-            dictionaryJobLevelTypes.Add(Other, ortherJobLevels.ToArray());
+            dictionaryJobLevelTypes.Add(Other, [Other]);
 
             return dictionaryJobLevelTypes;
         }
@@ -178,7 +155,7 @@
                 sortJobLevels.AddRange(jobLevelNames.Where(x => int.Parse(x[1..]).Equals(range) && sortJobLevels.All(y => y != x)).ToList());
             }
 
-            return sortJobLevels.ToArray();
+            return [.. sortJobLevels];
         }
 
         private GridData GroupGridDataByCountry(
@@ -187,7 +164,7 @@
             Dictionary<string, string[]> jobLevelTypes,
             IEnumerable<EmployeeInfo> employeeInfos)
         {
-            IList<string> countries = employeeInfos.Where(emp => !string.IsNullOrWhiteSpace(emp.Country))
+            var countries = employeeInfos.Where(emp => !string.IsNullOrWhiteSpace(emp.Country))
                 .Select(emp => emp.Country).Distinct().OrderBy(item => item).ToList();
             countries.Add(Other);
             var (supervisors, totalSupervisor) = GroupDataByCountry(jobLevels.ElementAt(0).Value, countries, units, employeeInfos);
@@ -288,7 +265,7 @@
             var rows = new List<RowItem>();
             var totalRow = new RowItem
             {
-                Name = "Total " + GetJobTypeLevel(jobLevels) + " Level",
+                Name = $"Total {GetJobTypeLevel(jobLevels)} Level",
                 Cells = countries.Select(country => new GroupCellItem
                 {
                     Name = country,
@@ -301,7 +278,7 @@
 
             foreach (var jobLevel in jobLevels)
             {
-                var employees = employeeInfos.Where(emp => jobLevel.Equals(emp.JobLevel, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                var employees = employeeInfos.Where(emp => IsEquals(jobLevel, emp.JobLevel)).ToList();
                 var row = new RowItem
                 {
                     Name = jobLevel,
@@ -319,13 +296,14 @@
                         var cell = new CellItem
                         {
                             Name = unit.Key,
-                            Total = country == Other ? employees.Count(emp => !countryTypes.Any(x => x.Equals(emp.Country, StringComparison.CurrentCultureIgnoreCase)) && unit.Value.Contains(emp.UnitName))
-                                : employees.Count(emp => country.Equals(emp.Country, StringComparison.CurrentCultureIgnoreCase) && unit.Value.Contains(emp.UnitName))
+                            Total = country == Other
+                                ? employees.Count(emp => !countryTypes.Any(x => IsEquals(x, emp.Country)) && unit.Value.Contains(emp.UnitName))
+                                : employees.Count(emp => IsEquals(country, emp.Country) && unit.Value.Contains(emp.UnitName))
                         };
                         groupCell.Cells.Add(cell);
 
-                        totalRow.Cells.First(item => item.Name.Equals(country, StringComparison.CurrentCultureIgnoreCase))
-                            .Cells.First(item => item.Name.Equals(unit.Key, StringComparison.CurrentCultureIgnoreCase)).Total += cell.Total;
+                        totalRow.Cells.First(item => IsEquals(item.Name, country))
+                            .Cells.First(item => IsEquals(item.Name, unit.Key)).Total += cell.Total;
                     }
 
                     row.Cells.Add(groupCell);
@@ -355,7 +333,7 @@
 
             foreach (var jobLevel in jobLevels)
             {
-                var employees = employeeInfos.Where(emp => jobLevel.Equals(emp.JobLevel, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                var employees = employeeInfos.Where(emp => IsEquals(jobLevel, emp.JobLevel)).ToList();
                 var row = new RowItem
                 {
                     Name = jobLevel,
@@ -373,13 +351,14 @@
                         var cell = new CellItem
                         {
                             Name = company,
-                            Total = country.Key == Other ? employees.Count(emp => !countryTypes.Any(x => x.Equals(emp.Country, StringComparison.CurrentCultureIgnoreCase)) && company.Contains(emp.CompanyName))
-                                : employees.Count(emp => country.Key.Equals(emp.Country, StringComparison.CurrentCultureIgnoreCase) && company.Contains(emp.CompanyName))
+                            Total = country.Key == Other
+                                ? employees.Count(emp => !countryTypes.Any(x => IsEquals(x, emp.Country)) && company.Contains(emp.CompanyName))
+                                : employees.Count(emp => IsEquals(country.Key, emp.Country) && company.Contains(emp.CompanyName))
                         };
                         groupCell.Cells.Add(cell);
 
-                        totalRow.Cells.First(item => item.Name.Equals(country.Key, StringComparison.CurrentCultureIgnoreCase))
-                            .Cells.First(item => item.Name.Equals(company, StringComparison.CurrentCultureIgnoreCase)).Total += cell.Total;
+                        totalRow.Cells.First(item => IsEquals(item.Name, country.Key))
+                            .Cells.First(item => IsEquals(item.Name, company)).Total += cell.Total;
                     }
 
                     row.Cells.Add(groupCell);
@@ -396,7 +375,7 @@
             Dictionary<string, string[]> jobLevelTypes,
             IEnumerable<EmployeeInfo> employeeInfos)
         {
-            IList<string> countries = employeeInfos.Where(emp => !string.IsNullOrWhiteSpace(emp.Country))
+            var countries = employeeInfos.Where(emp => !string.IsNullOrWhiteSpace(emp.Country))
                .Select(emp => emp.Country).Distinct().OrderBy(item => item).ToList();
             countries.Add(Other);
             var companies = new Dictionary<string, string[]>();
@@ -516,7 +495,7 @@
 
             foreach (var jobLevel in jobLevels)
             {
-                var employees = employeeInfos.Where(emp => jobLevel.Equals(emp.JobLevel, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                var employees = employeeInfos.Where(emp => IsEquals(jobLevel, emp.JobLevel)).ToList();
                 var row = new RowItem
                 {
                     Name = jobLevel,
@@ -536,14 +515,14 @@
                         var cell = new CellItem
                         {
                             Name = unit,
-                            TotalLocal = employees.Count(emp => unit.Equals(emp.UnitName, StringComparison.CurrentCultureIgnoreCase) && emp.IsLocal),
-                            TotalExpat = employees.Count(emp => unit.Equals(emp.UnitName, StringComparison.CurrentCultureIgnoreCase) && !emp.IsLocal)
+                            TotalLocal = employees.Count(emp => IsEquals(unit, emp.UnitName) && emp.IsLocal),
+                            TotalExpat = employees.Count(emp => IsEquals(unit, emp.UnitName) && !emp.IsLocal)
                         };
 
                         groupCell.Cells.Add(cell);
 
-                        var totalCell = totalRow.Cells.First(itemCell => itemCell.Name.Equals(item.Key, StringComparison.CurrentCultureIgnoreCase))
-                            .Cells.First(itemCell => itemCell.Name.Equals(unit, StringComparison.CurrentCultureIgnoreCase));
+                        var totalCell = totalRow.Cells.First(itemCell => IsEquals(itemCell.Name, item.Key))
+                            .Cells.First(itemCell => IsEquals(itemCell.Name, unit));
                         totalCell.TotalLocal += cell.TotalLocal;
                         totalCell.TotalExpat += cell.TotalExpat;
                     }
@@ -571,8 +550,8 @@
             }).ToList();
             foreach (var item in totalJobType)
             {
-                var employees = employeeInfos.Where(emp => (item.Name == Other && !emp.JobLevel[..1].Contains("M") && !emp.JobLevel[..1].Contains("P") && !emp.JobLevel[..1].Contains("E")) ||
-                     (item.Name != Other && item.Name.Equals(emp.JobLevel[..LengthJobLevelType], StringComparison.CurrentCultureIgnoreCase))).ToList();
+                var employees = employeeInfos.Where(emp => (item.Name == Other && !emp.JobLevel[..1].Contains('M') && !emp.JobLevel[..1].Contains('P') && !emp.JobLevel[..1].Contains('E'))
+                    || (item.Name != Other && IsEquals(item.Name, emp.JobLevel[..LengthJobLevelType]))).ToList();
                 var row = new RowItem
                 {
                     Name = item.Name,
@@ -592,14 +571,14 @@
                         var cell = new CellItem
                         {
                             Name = unit,
-                            TotalLocal = employees.Count(emp => unit.Equals(emp.UnitName, StringComparison.CurrentCultureIgnoreCase) && emp.IsLocal),
-                            TotalExpat = employees.Count(emp => unit.Equals(emp.UnitName, StringComparison.CurrentCultureIgnoreCase) && !emp.IsLocal)
+                            TotalLocal = employees.Count(emp => IsEquals(unit, emp.UnitName) && emp.IsLocal),
+                            TotalExpat = employees.Count(emp => IsEquals(unit, emp.UnitName) && !emp.IsLocal)
                         };
 
                         groupCell.Cells.Add(cell);
 
-                        var totalCell = item.Cells.First(itemCell => itemCell.Name.Equals(dataUnit.Key, StringComparison.CurrentCultureIgnoreCase))
-                            .Cells.First(itemCell => itemCell.Name.Equals(unit, StringComparison.CurrentCultureIgnoreCase));
+                        var totalCell = item.Cells.First(itemCell => IsEquals(itemCell.Name, dataUnit.Key))
+                            .Cells.First(itemCell => IsEquals(itemCell.Name, unit));
                         totalCell.TotalLocal += cell.TotalLocal;
                         totalCell.TotalExpat += cell.TotalExpat;
                     }
@@ -628,8 +607,8 @@
 
             foreach (var item in totalJobType)
             {
-                var employees = employeeInfos.Where(emp => (item.Name == Other && !emp.JobLevel[..1].Contains("M") && !emp.JobLevel[..1].Contains("P") && !emp.JobLevel[..1].Contains("E")) ||
-                    (item.Name != Other && item.Name.Equals(emp.JobLevel[..LengthJobLevelType], StringComparison.CurrentCultureIgnoreCase))).ToList();
+                var employees = employeeInfos.Where(emp => (item.Name == Other && !emp.JobLevel[..1].Contains('M') && !emp.JobLevel[..1].Contains('P') && !emp.JobLevel[..1].Contains('E'))
+                    || (item.Name != Other && IsEquals(item.Name, emp.JobLevel[..LengthJobLevelType]))).ToList();
                 var row = new RowItem
                 {
                     Name = item.Name,
@@ -648,13 +627,12 @@
                         var cell = new CellItem
                         {
                             Name = unit.Key,
-                            Total = employees
-                                .Count(emp => country.Equals(emp.Country, StringComparison.CurrentCultureIgnoreCase) && unit.Value.Contains(emp.UnitName))
+                            Total = employees.Count(emp => IsEquals(country, emp.Country) && unit.Value.Contains(emp.UnitName))
                         };
                         groupCell.Cells.Add(cell);
 
-                        item.Cells.First(itemCell => itemCell.Name.Equals(country, StringComparison.CurrentCultureIgnoreCase))
-                            .Cells.First(itemCell => itemCell.Name.Equals(unit.Key, StringComparison.CurrentCultureIgnoreCase)).Total += cell.Total;
+                        item.Cells.First(itemCell => IsEquals(itemCell.Name, country))
+                            .Cells.First(itemCell => IsEquals(itemCell.Name, unit.Key)).Total += cell.Total;
                     }
 
                     row.Cells.Add(groupCell);
@@ -680,8 +658,8 @@
 
             foreach (var item in totalJobType)
             {
-                var employees = employeeInfos.Where(emp => (item.Name == Other && !emp.JobLevel[..1].Contains("M") && !emp.JobLevel[..1].Contains("P") && !emp.JobLevel[..1].Contains("E")) ||
-                    (item.Name != Other && item.Name.Equals(emp.JobLevel[..LengthJobLevelType], StringComparison.CurrentCultureIgnoreCase))).ToList();
+                var employees = employeeInfos.Where(emp => (item.Name == Other && !emp.JobLevel[..1].Contains('M') && !emp.JobLevel[..1].Contains('P') && !emp.JobLevel[..1].Contains('E'))
+                    || (item.Name != Other && IsEquals(item.Name, emp.JobLevel[..LengthJobLevelType]))).ToList();
                 var row = new RowItem
                 {
                     Name = item.Name,
@@ -701,12 +679,12 @@
                         {
                             Name = company,
                             Total = employees
-                                .Count(emp => country.Key.Equals(emp.Country, StringComparison.CurrentCultureIgnoreCase) && company.Contains(emp.CompanyName))
+                                .Count(emp => IsEquals(country.Key, emp.Country) && company.Contains(emp.CompanyName))
                         };
                         groupCell.Cells.Add(cell);
 
-                        item.Cells.First(itemCell => itemCell.Name.Equals(country.Key, StringComparison.CurrentCultureIgnoreCase))
-                            .Cells.First(itemCell => itemCell.Name.Equals(company, StringComparison.CurrentCultureIgnoreCase)).Total += cell.Total;
+                        item.Cells.First(itemCell => IsEquals(itemCell.Name, country.Key))
+                            .Cells.First(itemCell => IsEquals(itemCell.Name, company)).Total += cell.Total;
                     }
 
                     row.Cells.Add(groupCell);
@@ -744,5 +722,7 @@
                 }).ToList()
             };
         }
+
+        private static bool IsEquals(string value1, string value2) => value1.Equals(value2, StringComparison.CurrentCultureIgnoreCase);
     }
 }

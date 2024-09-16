@@ -5,8 +5,8 @@ import { renderNumber } from '../../common.funcs';
 const TotalRow = ({ data, showHideOptions, isOther = false }) => {
     return (
         <>
-            <tr className="row-total">
-                <td className="text-center" colSpan={2} rowSpan={2}>{isOther ? "Total Other" :data.name}</td>
+            <tr className='row-total'>
+                <td className='text-center' colSpan={2} rowSpan={2}>{isOther ? 'Total Other' :data.name}</td>
                 {
                     data.cells.map(gunit => {
                         const cells = [];
@@ -19,19 +19,19 @@ const TotalRow = ({ data, showHideOptions, isOther = false }) => {
                             totalExpat += unit.totalExpat;
 
                             if (showHideOption.show) {
-                                cells.push(<td key={`total-super-${gunit.name}-${unit.name}-expat`} className="text-center">{renderNumber(unit.totalExpat)}</td>);
-                                cells.push(<td key={`total-super-${gunit.name}-${unit.name}-local`} className="text-center">{renderNumber(unit.totalLocal)}</td>);
+                                cells.push(<td key={`total-super-${gunit.name}-${unit.name}-expat`} className='text-center'>{renderNumber(unit.totalExpat)}</td>);
+                                cells.push(<td key={`total-super-${gunit.name}-${unit.name}-local`} className='text-center'>{renderNumber(unit.totalLocal)}</td>);
                             }
                         });
 
-                        cells.push(<td key={`total-super-${gunit.name}-expat`} className="text-center">{renderNumber(totalExpat)}</td>);
-                        cells.push(<td key={`total-super-${gunit.name}-local`} className="text-center">{renderNumber(totalLocal)}</td>);
+                        cells.push(<td key={`total-super-${gunit.name}-expat`} className='text-center'>{renderNumber(totalExpat)}</td>);
+                        cells.push(<td key={`total-super-${gunit.name}-local`} className='text-center'>{renderNumber(totalLocal)}</td>);
 
                         return cells;
                     })
                 }
             </tr>
-            <tr className="row-total">
+            <tr className='row-total'>
                 {
                     data.cells.map(gunit => {
                         const cells = [];
@@ -44,13 +44,13 @@ const TotalRow = ({ data, showHideOptions, isOther = false }) => {
                             totalExpat += unit.totalExpat;
 
                             if (showHideOption.show) {
-                                cells.push(<td colSpan={2} key={`total-super-${gunit.name}-${unit.name}-expat`} className="text-center">
+                                cells.push(<td colSpan={2} key={`total-super-${gunit.name}-${unit.name}-expat`} className='text-center'>
                                     {renderNumber(unit.totalExpat + unit.totalLocal)}
                                 </td>);
                             }
                         });
 
-                        cells.push(<td colSpan={2} key={`total-super-${gunit.name}-expat`} className="text-center">
+                        cells.push(<td colSpan={2} key={`total-super-${gunit.name}-expat`} className='text-center'>
                             {renderNumber(totalExpat + totalLocal)}
                         </td>);
 

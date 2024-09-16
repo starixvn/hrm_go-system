@@ -137,6 +137,20 @@
     }
 }
 
+.react-datepicker__month-container {
+    .react-datepicker__month {
+        .react-datepicker__month-text {
+            width: 3rem;
+            line-height: 3rem;
+
+            &--selected {
+                background-color: #216ba5;
+                color: #fff;
+            }
+        }
+    }
+}
+
 // icon calendar
 .position-relative {
     position: relative;

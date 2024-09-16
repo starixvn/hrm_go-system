@@ -1,88 +1,81 @@
-﻿import React, { Component } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { Button, Overlay, Popover, Form } from 'react-bootstrap';
-import DataService from '@jsroot/common/dataService';
+
 import UnitGrid from './unit-grid/index';
 import CompanyGrid from './company-grid/index';
 import CountryGrid from './country-grid/index';
-import Site from '@jsroot/common/site';
-import LangHelper from '@jsroot/common/langHelper';
 import DatePicker from '@jsroot/components/date-picker/index';
 
-export default class AppContainer extends Component {
-    constructor(props) {
-        super(props);
+import DateTimeService from '@jsroot/common/DateTimeService';
+import DataService from '@jsroot/common/dataService';
+import Site from '@jsroot/common/site';
+import LangHelper from '@jsroot/common/langHelper';
 
-        this.state = {
-            employeeInfos: [],
-            gridCountryData: null,
-            gridUnitData: null,
-            gridCompanyData: null,
-            joinedDate: new Date(),
-            jobLevelTypes: {
-                Supervisor: [],
-                Employee: [],
-                Other: []
-            },
-            detail: {
-                show: false,
-                target: null,
-                employeeInfos: []
-            }
-        };
-    }
+const AppContainer = () => {
+    const [filterParam, setFilterParam] = useState({ joinedDate: new Date() });
+    const [reportData, setReportData] = useState({
+        employeeInfos: [],
+        gridCountryData: null,
+        gridUnitData: null,
+        gridCompanyData: null,
+        jobLevelTypes: {
+            Supervisor: [],
+            Employee: [],
+            Other: []
+        }
+    });
+    const [detailPopover, setDetailPopover] = useState({
+        show: false,
+        target: null,
+        employeeInfos: []
+    });
 
-    async componentDidMount() {
-        await this.getReportData();
-    }
+    useEffect(() => {
+        getReportData();
+    }, []);
 
-    getReportData = async () => {
+    const getReportData = async () => {
         Site.blockUI();
         const url = Site.resolveClientUrl('JobLevelSummaryReport/getData');
         const param = {
-            JoinedDate: this.state.joinedDate
+            joinedDate: DateTimeService.toShortDateFormat(DateTimeService.firstDayOfMonth(filterParam.joinedDate))
         }
-        await DataService.postDataAsync(url, param).then(response => {
-            this.setState({
-                ...response.data
-            });
+        await DataService.getDataAsync(url, param).then(response => {
+            setReportData(response.data);
         }).then(() => Site.unblockUI());
     };
 
-    exportExcel = async () => {
+    /*const exportExcel = async () => {
         Site.blockUI();
         const url = Site.resolveClientUrl('JobLevelSummaryReport/exportExcel');
         const param = {
-            JoinedDate: this.state.joinedDate
-        }
+            joinedDate: DateTimeService.toShortDateFormat(DateTimeService.firstDayOfMonth(filterParam.joinedDate))
+        };
         await DataService.getFileAsync(url, param).then(response => {
             const fileName = response.headers['content-disposition'].split('filename=')[1].split(';')[0];
             Site.downloadFile(response.data, fileName);
         }).then(() => Site.unblockUI());
-    };
+    };*/
 
-    handleShowDetail = (target, employeeInfos) => {
-        this.setState({
-            detail: {
-                show: true,
-                target,
-                employeeInfos
-            }
+    const handleShowDetail = (target, employeeInfos) => {
+        setDetailPopover({
+            show: true,
+            target,
+            employeeInfos
         });
     };
 
-    handleHideDetail = () => {
-        this.setState({
-            detail: {
-                show: false,
-                target: null,
-                employeeInfos: []
-            }
+    const handleHideDetail = () => {
+        setDetailPopover({
+            show: false,
+            target: null,
+            employeeInfos: []
         });
     };
 
-    renderDetail = emps => {
+    const renderDetail = emps => {
         return (
-            <table className="table table-employee-infos">
+            <table className='table table-employee-infos'>
                 <thead>
                     <tr>
                         <td>#</td>
@@ -103,7 +96,7 @@ export default class AppContainer extends Component {
                     {
                         emps.map((emp, index) =>
                             <tr key={`${emp.siteName}-${emp.nickname}`}>
-                                <td className="text-center">{index + 1}</td>
+                                <td className='text-center'>{index + 1}</td>
                                 <td>{emp.companyName}</td>
                                 <td>{emp.code}</td>
                                 <td>{emp.nickname}</td>
@@ -123,76 +116,75 @@ export default class AppContainer extends Component {
         );
     };
 
-    render() {
-        const { employeeInfos, gridCountryData, gridUnitData, gridCompanyData, jobLevelTypes, detail, joinedDate } = this.state;
+    const { employeeInfos, gridCountryData, gridUnitData, gridCompanyData, jobLevelTypes } = reportData;
 
-        return (
-            <div className="manpower-report">
-                <Form className="form-filter">
-                    <Form.Row bsPrefix="form-row">
-                        <Form.Group className="filter-job-level" >
-                            <DatePicker selected={joinedDate}
-                                showMonthYearPicker
-                                dateFormat="MMM yyyy"
-                                onChange={value => this.setState({
-                                    joinedDate: value
-                                })}
-                            />
-                        </Form.Group>
-                        <Form.Group className="form-group-width filter-job-level">
-                            <Button variant="primary" size="sm" className="mr-3" onClick={this.getReportData}>
-                                {LangHelper.getResource('Submit')}
-                            </Button>
-                            <Button variant="primary" size="sm" className="mr-3" onClick={this.exportExcel}>
-                                {LangHelper.getResource('ExportExcel')}
-                            </Button>
-                        </Form.Group>
-                    </Form.Row>
-                </Form>
+    return (
+        <div className='manpower-report'>
+            <Form className='form-filter'>
+                <Form.Row bsPrefix='form-row'>
+                    <Form.Group className='filter-job-level' >
+                        <DatePicker selected={filterParam.joinedDate}
+                            showMonthYearPicker
+                            dateFormat='MMM yyyy'
+                            onChange={value => setFilterParam({
+                                ...filterParam,
+                                joinedDate: value
+                            })}
+                        />
+                    </Form.Group>
+                    <Form.Group className='form-group-width filter-job-level'>
+                        <Button variant='primary' size='sm' className='mr-3' onClick={getReportData}>
+                            {LangHelper.getResource('Submit')}
+                        </Button>
+                    </Form.Group>
+                </Form.Row>
+            </Form>
 
-                {
-                    gridUnitData &&
-                    <UnitGrid
-                        data={gridUnitData}
-                        employeeInfos={employeeInfos}
-                        detail={detail}
-                        onShowDetail={this.handleShowDetail}
-                        jobLevelTypes={jobLevelTypes}
-                    />
-                }
-                {
-                    gridCompanyData &&
-                    <CompanyGrid
-                        data={gridCompanyData}
-                        employeeInfos={employeeInfos}
-                        detail={detail}
-                        onShowDetail={this.handleShowDetail}
-                        jobLevelTypes={jobLevelTypes}
-                    />
-                }
-                {
-                    gridCountryData &&
-                    <CountryGrid
-                        data={gridCountryData}
-                        employeeInfos={employeeInfos}
-                        detail={detail}
-                        onShowDetail={this.handleShowDetail}
-                        jobLevelTypes={jobLevelTypes}
-                    />
-                }
-                <Overlay
-                    show={detail.show}
-                    target={detail.target}
-                    popperConfig={{ placement: 'auto' }}
-                >
-                    <Popover id="popover-employee-infos" className="popover-employee-infos">
-                        <Popover.Title as="div"><i className="fa fa-times" onClick={this.handleHideDetail}/></Popover.Title>
-                        <Popover.Content>
-                            {this.renderDetail(detail.employeeInfos)}
-                        </Popover.Content>
-                    </Popover>
-                </Overlay>
-            </div>
-        );
-    }
-}
+            {
+                gridUnitData &&
+                <UnitGrid
+                    data={gridUnitData}
+                    employeeInfos={employeeInfos}
+                    detail={detailPopover}
+                    onShowDetail={handleShowDetail}
+                    jobLevelTypes={jobLevelTypes}
+                />
+            }
+            {
+                gridCompanyData &&
+                <CompanyGrid
+                    data={gridCompanyData}
+                    employeeInfos={employeeInfos}
+                    detail={detailPopover}
+                    onShowDetail={handleShowDetail}
+                    jobLevelTypes={jobLevelTypes}
+                />
+            }
+            {
+                gridCountryData &&
+                <CountryGrid
+                    data={gridCountryData}
+                    employeeInfos={employeeInfos}
+                    detail={detailPopover}
+                    onShowDetail={handleShowDetail}
+                    jobLevelTypes={jobLevelTypes}
+                />
+            }
+
+            <Overlay
+                show={detailPopover.show}
+                target={detailPopover.target}
+                popperConfig={{ placement: 'auto' }}
+            >
+                <Popover id='popover-employee-infos' className='popover-employee-infos'>
+                    <Popover.Title as='div'><i className='fa fa-times' onClick={handleHideDetail}/></Popover.Title>
+                    <Popover.Content>
+                        {renderDetail(detailPopover.employeeInfos)}
+                    </Popover.Content>
+                </Popover>
+            </Overlay>
+        </div>
+    );
+};
+
+export default AppContainer;

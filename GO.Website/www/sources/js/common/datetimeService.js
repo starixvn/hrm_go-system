@@ -6,6 +6,14 @@ const LongDateTimeFormat = 'MMM DD, YYYY hh:mm:ss A';
 const ClientTimezone = 7;
 
 export default class DateTimeService {
+    static firstDayOfMonth(date) {
+        return dayjs(date).startOf('month');
+    }
+
+    static lastDayOfMonth(date) {
+        return dayjs(date).endOf('month');
+    }
+
     static toShortDateFormat(date) {
         return dayjs(date).format(ShortDateFormat);
     }

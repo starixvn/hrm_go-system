@@ -67,8 +67,8 @@
 
                         colIndex += ColStep;
                     }
-
                 }
+
                 templateWorksheet.Cells[RowHeaderIndex, TotalColIndex, RowBodyIndex - 1, TotalColIndex + 1]
                    .Copy(worksheet.Cells[RowHeaderIndex, colIndex, RowBodyIndex - 1, colIndex + 1]);
 
@@ -81,7 +81,6 @@
             }
 
             //company
-
             colIndex++;
             _startCompanyColIndex = colIndex;
             headers = gridCompanyData.Headers;
@@ -110,6 +109,7 @@
                     worksheet.Cells[RowHeaderIndex, colIndex, RowHeaderIndex + Two, colIndex + country.Cells.Count].Merge = true;
                     worksheet.Cells[RowHeaderIndex, colIndex++].Value = country.Name;
                 }
+
                 colIndex += country.Cells.Count;
             }
 
@@ -212,7 +212,6 @@
             RenderCountryRows(templateWorksheet, worksheet, ref rowIndex, rows, totalJobTypes);
 
             RenderCountryGrandTotalRow(templateWorksheet, worksheet, ref rowIndex, gridCountryData);
-
         }
 
         protected internal override void ProcessUI(ExcelWorksheet worksheet)
@@ -236,7 +235,8 @@
             worksheet.View.FreezePanes(RowBodyIndex, 1);
         }
 
-        private static void RenderRowJobLevelData(ExcelWorksheet templateWorksheet,
+        private static void RenderRowJobLevelData(
+            ExcelWorksheet templateWorksheet,
             ExcelWorksheet worksheet,
             ref int rowIndex,
             ref int colIndex,
@@ -270,7 +270,8 @@
             }
         }
 
-        private static void RenderRowJobLevel(ExcelWorksheet templateWorksheet,
+        private static void RenderRowJobLevel(
+            ExcelWorksheet templateWorksheet,
             ExcelWorksheet worksheet,
             ref int rowIndex,
             IList<RowItem> rows,
@@ -288,13 +289,15 @@
                         worksheet.Row(rowIndex).OutlineLevel = 1;
                         worksheet.Row(rowIndex).Collapsed = true;
                     }
+
                     RenderRowJobLevelData(templateWorksheet, worksheet, ref rowIndex, ref colIndex, row);
                     rowIndex++;
                 }
             }
         }
 
-        private static void RenderRowTotalJobLevelData(ExcelWorksheet templateWorksheet,
+        private static void RenderRowTotalJobLevelData(
+            ExcelWorksheet templateWorksheet,
             ExcelWorksheet worksheet,
             ref int rowIndex,
             ref int colIndex,
@@ -316,6 +319,7 @@
                         worksheet.Cells[rowIndex, colIndex++].Value = unit.TotalExpat;
                         worksheet.Cells[rowIndex, colIndex++].Value = unit.TotalLocal;
                     }
+
                     totalExpat += unit.TotalExpat;
                     totalLocal += unit.TotalLocal;
                 }
@@ -327,7 +331,8 @@
             }
         }
 
-        private static void RenderRowTotalJobLevel(ExcelWorksheet templateWorksheet,
+        private static void RenderRowTotalJobLevel(
+            ExcelWorksheet templateWorksheet,
             ExcelWorksheet worksheet,
             ref int rowIndex,
             IList<RowItem> rows,
@@ -344,7 +349,8 @@
             }
         }
 
-        private static void RenderRowTotalJobTypeData(ExcelWorksheet templateWorksheet,
+        private static void RenderRowTotalJobTypeData(
+            ExcelWorksheet templateWorksheet,
             ExcelWorksheet worksheet,
             ref int rowIndex,
             ref int colIndex,
@@ -364,6 +370,7 @@
                         worksheet.Cells[rowIndex, colIndex++].Value = unit.TotalExpat + unit.TotalLocal;
                         colIndex++;
                     }
+
                     total += unit.TotalExpat + unit.TotalLocal;
                 }
 
@@ -374,7 +381,8 @@
             }
         }
 
-        private static void RenderRowTotalJobType(ExcelWorksheet templateWorksheet,
+        private static void RenderRowTotalJobType(
+            ExcelWorksheet templateWorksheet,
             ExcelWorksheet worksheet,
             ref int rowIndex,
             IList<RowItem> rows,
@@ -430,6 +438,7 @@
                         worksheet.Cells[rowIndex, colIndex++].Value = unit.TotalExpat;
                         worksheet.Cells[rowIndex, colIndex++].Value = unit.TotalLocal;
                     }
+
                     totalExpat += unit.TotalExpat;
                     totalLocal += unit.TotalLocal;
                 }
@@ -458,6 +467,7 @@
                         worksheet.Cells[rowIndex, colIndex++].Value = unit.TotalExpat + unit.TotalLocal;
                         colIndex++;
                     }
+
                     total += unit.TotalExpat + unit.TotalLocal;
                 }
 
@@ -466,6 +476,7 @@
                 worksheet.Cells[rowIndex, colIndex++].Value = total;
                 colIndex++;
             }
+
             rowIndex++;
         }
 
@@ -518,7 +529,6 @@
             foreach (var gunit in row.Cells)
             {
                 var total = 0;
-
                 foreach (var unit in gunit.Cells)
                 {
                     if (gunit.Name != Other)
@@ -588,7 +598,8 @@
             }
         }
 
-        private void RenderCountryRowsJobLevel(ExcelWorksheet templateWorksheet,
+        private void RenderCountryRowsJobLevel(
+            ExcelWorksheet templateWorksheet,
             ExcelWorksheet worksheet,
             ref int rowIndex,
             IList<RowItem> rows,
@@ -608,18 +619,19 @@
                         worksheet.Row(rowIndex).OutlineLevel = 1;
                         worksheet.Row(rowIndex).Collapsed = true;
                     }
-                    RenderCountryRowsJobLevelData(templateWorksheet, worksheet, ref rowIndex, colIndex, row, isMultiRow);
 
+                    RenderCountryRowsJobLevelData(templateWorksheet, worksheet, ref rowIndex, colIndex, row, isMultiRow);
                     rowIndex++;
                 }
             }
         }
 
-        private void RenderCompanyRowsJobLevel(ExcelWorksheet templateWorksheet,
-           ExcelWorksheet worksheet,
-           ref int rowIndex,
-           IList<RowItem> rows,
-           RowItem jobType)
+        private void RenderCompanyRowsJobLevel(
+            ExcelWorksheet templateWorksheet,
+            ExcelWorksheet worksheet,
+            ref int rowIndex,
+            IList<RowItem> rows,
+            RowItem jobType)
         {
             foreach (var row in rows)
             {
@@ -635,14 +647,15 @@
                         worksheet.Row(rowIndex).OutlineLevel = 1;
                         worksheet.Row(rowIndex).Collapsed = true;
                     }
-                    RenderCompanyRowsJobLevelData(templateWorksheet, worksheet, ref rowIndex, colIndex, row, isMultiRow);
 
+                    RenderCompanyRowsJobLevelData(templateWorksheet, worksheet, ref rowIndex, colIndex, row);
                     rowIndex++;
                 }
             }
         }
 
-        private static void RenderCountryRowsJobLevelData(ExcelWorksheet templateWorksheet,
+        private static void RenderCountryRowsJobLevelData(
+            ExcelWorksheet templateWorksheet,
             ExcelWorksheet worksheet,
             ref int rowIndex,
             int colIndex,
@@ -667,16 +680,17 @@
                     worksheet.Cells[rowIndex, colIndex++].Value = RenderNumber(unit.Total);
                 }
             }
+
             templateWorksheet.Cells[TotalRowIndex, 1].Copy(worksheet.Cells[rowIndex, colIndex]);
             worksheet.Cells[rowIndex, colIndex].Value = RenderNumber(row.Cells.Where(x => x.Name == Other).Sum(y => y.Cells.Sum(z => z.Total)));
         }
 
-        private static void RenderCompanyRowsJobLevelData(ExcelWorksheet templateWorksheet,
-           ExcelWorksheet worksheet,
-           ref int rowIndex,
-           int colIndex,
-           RowItem row,
-           bool isMultiRow)
+        private static void RenderCompanyRowsJobLevelData(
+            ExcelWorksheet templateWorksheet,
+            ExcelWorksheet worksheet,
+            ref int rowIndex,
+            int colIndex,
+            RowItem row)
         {
             int grandTotal = 0;
             foreach (var country in row.Cells)
@@ -692,11 +706,13 @@
                 worksheet.Cells[rowIndex, colIndex++].Value = RenderNumber(totalSub);
                 grandTotal += totalSub;
             }
+
             templateWorksheet.Cells[TotalRowIndex, 1].Copy(worksheet.Cells[rowIndex, colIndex]);
             worksheet.Cells[rowIndex, colIndex].Value = RenderNumber(grandTotal);
         }
 
-        private void RenderCountryRowsTotalJobLevel(ExcelWorksheet templateWorksheet,
+        private void RenderCountryRowsTotalJobLevel(
+            ExcelWorksheet templateWorksheet,
             ExcelWorksheet worksheet,
             ref int rowIndex,
             IList<RowItem> rows,
@@ -712,7 +728,8 @@
             }
         }
 
-        private void RenderCompanyRowsTotalJobLevel(ExcelWorksheet templateWorksheet,
+        private void RenderCompanyRowsTotalJobLevel(
+            ExcelWorksheet templateWorksheet,
             ExcelWorksheet worksheet,
             ref int rowIndex,
             IList<RowItem> rows,
@@ -728,7 +745,8 @@
             }
         }
 
-        private static void RenderCountryRowsTotalJobLevelData(ExcelWorksheet templateWorksheet,
+        private static void RenderCountryRowsTotalJobLevelData(
+            ExcelWorksheet templateWorksheet,
             ExcelWorksheet worksheet,
             ref int rowIndex,
             int colIndex,
@@ -743,12 +761,13 @@
                     worksheet.Cells[rowIndex, colIndex++].Value = RenderNumber(unit.Total);
                 }
             }
+
             templateWorksheet.Cells[TotalRowIndex, 1].Copy(worksheet.Cells[rowIndex, colIndex]);
             worksheet.Cells[rowIndex, colIndex].Value = RenderNumber(jobType.Cells.Where(x => x.Name == Other).Sum(y => y.Cells.Sum(z => z.Total)));
-
         }
 
-        private static void RenderCompanyRowsTotalJobLevelData(ExcelWorksheet templateWorksheet,
+        private static void RenderCompanyRowsTotalJobLevelData(
+            ExcelWorksheet templateWorksheet,
             ExcelWorksheet worksheet,
             ref int rowIndex,
             int colIndex,
@@ -760,24 +779,26 @@
                 var totalCompany = 0;
                 foreach (var company in country.Cells)
                 {
-
                     templateWorksheet.Cells[TotalRowIndex, 1].Copy(worksheet.Cells[rowIndex, colIndex]);
                     worksheet.Cells[rowIndex, colIndex++].Value = company.Total;
                     totalCompany += company.Total;
                 }
+
                 templateWorksheet.Cells[TotalRowIndex, 1].Copy(worksheet.Cells[rowIndex, colIndex]);
                 worksheet.Cells[rowIndex, colIndex++].Value = RenderNumber(totalCompany);
                 grandTotal += totalCompany;
             }
+
             templateWorksheet.Cells[TotalRowIndex, 1].Copy(worksheet.Cells[rowIndex, colIndex]);
             worksheet.Cells[rowIndex, colIndex].Value = RenderNumber(grandTotal);
         }
 
-        private static void RenderCountryRowsTotalJobTypeData(ExcelWorksheet templateWorksheet,
-           ExcelWorksheet worksheet,
-           ref int rowIndex,
-           int colIndex,
-           RowItem jobType)
+        private static void RenderCountryRowsTotalJobTypeData(
+            ExcelWorksheet templateWorksheet,
+            ExcelWorksheet worksheet,
+            ref int rowIndex,
+            int colIndex,
+            RowItem jobType)
         {
             foreach (var country in jobType.Cells.Where(x => x.Name != Other))
             {
@@ -787,20 +808,21 @@
                 worksheet.Cells[rowIndex, colIndex].Value = RenderNumber(country.Cells.Sum(unit => unit.Total));
                 colIndex += Four;
             }
+
             templateWorksheet.Cells[TotalRowIndex, 1].Copy(worksheet.Cells[rowIndex, colIndex]);
             worksheet.Cells[rowIndex, colIndex].Value = RenderNumber(jobType.Cells.Where(x => x.Name == Other).Sum(company => company.Cells.Sum(y => y.Total)));
         }
 
-        private static void RenderCompanyRowsTotalJobTypeData(ExcelWorksheet templateWorksheet,
-           ExcelWorksheet worksheet,
-           ref int rowIndex,
-           int colIndex,
-           RowItem jobType)
+        private static void RenderCompanyRowsTotalJobTypeData(
+            ExcelWorksheet templateWorksheet,
+            ExcelWorksheet worksheet,
+            ref int rowIndex,
+            int colIndex,
+            RowItem jobType)
         {
             int grandTotal = 0;
             foreach (var country in jobType.Cells)
             {
-
                 templateWorksheet.Cells[TotalRowIndex, 1].Copy(worksheet.Cells[rowIndex, colIndex]);
 
                 worksheet.Cells[rowIndex, colIndex, rowIndex, colIndex + country.Cells.Count].Merge = true;
@@ -808,11 +830,13 @@
                 colIndex += country.Cells.Count + 1;
                 grandTotal += country.Cells.Sum(unit => unit.Total);
             }
+
             templateWorksheet.Cells[TotalRowIndex, 1].Copy(worksheet.Cells[rowIndex, colIndex]);
             worksheet.Cells[rowIndex, colIndex].Value = RenderNumber(grandTotal);
         }
 
-        private void RenderCountryRowsTotalJobType(ExcelWorksheet templateWorksheet,
+        private void RenderCountryRowsTotalJobType(
+            ExcelWorksheet templateWorksheet,
             ExcelWorksheet worksheet,
             ref int rowIndex,
             IList<RowItem> rows,
@@ -833,7 +857,8 @@
             }
         }
 
-        private void RenderCompanyRowsTotalJobType(ExcelWorksheet templateWorksheet,
+        private void RenderCompanyRowsTotalJobType(
+            ExcelWorksheet templateWorksheet,
             ExcelWorksheet worksheet,
             ref int rowIndex,
             IList<RowItem> rows,
@@ -865,6 +890,7 @@
                     worksheet.Cells[rowIndex, colIndex++].Value = unit.Total;
                 }
             }
+
             templateWorksheet.Cells[TotalRowIndex, 1].Copy(worksheet.Cells[rowIndex, colIndex]);
             worksheet.Cells[rowIndex, colIndex].Value = RenderNumber(row.Cells.Where(x => x.Name == Other).Sum(company => company.Cells.Sum(y => y.Total)));
             rowIndex++;
@@ -884,10 +910,12 @@
                     worksheet.Cells[rowIndex, colIndex++].Value = company.Total;
                     totalCompany += company.Total;
                 }
+
                 templateWorksheet.Cells[TotalRowIndex, 1].Copy(worksheet.Cells[rowIndex, colIndex]);
                 worksheet.Cells[rowIndex, colIndex++].Value = RenderNumber(totalCompany);
                 grandTotal += totalCompany;
             }
+
             templateWorksheet.Cells[TotalRowIndex, 1].Copy(worksheet.Cells[rowIndex, colIndex]);
             worksheet.Cells[rowIndex, colIndex].Value = RenderNumber(grandTotal);
             rowIndex++;
@@ -897,16 +925,13 @@
         {
             foreach (var country in row.Cells.Where(x => x.Name != Other))
             {
-                var total = 0;
-                foreach (var unit in country.Cells)
-                {
-                    total += unit.Total;
-                }
+                var total = country.Cells.Sum(x => x.Total);
                 templateWorksheet.Cells[TotalRowIndex + 1, CountryColIndex, TotalRowIndex + 1, CountryColIndex + Three]
                                .Copy(worksheet.Cells[rowIndex, colIndex]);
                 worksheet.Cells[rowIndex, colIndex].Value = total;
                 colIndex += Four;
             }
+
             templateWorksheet.Cells[TotalRowIndex, 1].Copy(worksheet.Cells[rowIndex, colIndex]);
             worksheet.Cells[rowIndex, colIndex].Value = RenderNumber(row.Cells.Where(x => x.Name == Other).Sum(company => company.Cells.Sum(x => x.Total)));
             rowIndex++;
@@ -917,21 +942,19 @@
             int grandTotal = 0;
             foreach (var country in row.Cells)
             {
-                var total = 0;
-                foreach (var unit in country.Cells)
-                {
-                    total += unit.Total;
-                }
+                var total = country.Cells.Sum(x => x.Total);
                 templateWorksheet.Cells[TotalRowIndex, 1].Copy(worksheet.Cells[rowIndex, colIndex]);
 
                 if (country.Name != Other)
                 {
                     worksheet.Cells[rowIndex, colIndex, rowIndex, colIndex + 1].Merge = true;
                 }
+
                 worksheet.Cells[rowIndex, colIndex].Value = RenderNumber(total);
                 colIndex += country.Cells.Count + 1;
                 grandTotal += total;
             }
+
             templateWorksheet.Cells[TotalRowIndex, 1].Copy(worksheet.Cells[rowIndex, colIndex]);
             worksheet.Cells[rowIndex, colIndex].Value = RenderNumber(grandTotal);
             rowIndex++;
@@ -1047,6 +1070,7 @@
                     totalOther += company.Total + data.TotalEmployee.Cells[indexSup].Cells[indexUnit].Total;
                     indexUnit++;
                 }
+
                 if (country.Name == Other)
                 {
                     templateWorksheet.Cells[TotalRowIndex, CountryColIndex]
@@ -1078,6 +1102,7 @@
                         totalSub += company.Total + data.TotalEmployee.Cells[indexSup].Cells[indexUnit].Total;
                         indexUnit++;
                     }
+
                     templateWorksheet.Cells[TotalRowIndex, 1].Copy(worksheet.Cells[rowIndex, colIndex]);
                     worksheet.Cells[rowIndex, colIndex, rowIndex + 1, colIndex].Merge = true;
                     worksheet.Cells[rowIndex, colIndex++].Value = RenderNumber(totalSub);
@@ -1090,13 +1115,16 @@
                         indexUnit++;
                         totalUnitOther += company.Total + data.TotalEmployee.Cells[indexSup].Cells[indexUnit].Total;
                     }
+
                     templateWorksheet.Cells[TotalRowIndex, 1].Copy(worksheet.Cells[rowIndex, colIndex]);
                     worksheet.Cells[rowIndex, colIndex, rowIndex + 1, colIndex].Merge = true;
                     worksheet.Cells[rowIndex, colIndex++].Value = RenderNumber(totalUnitOther);
                 }
+
                 grandTotalSup += totalSub;
                 indexSup++;
             }
+
             templateWorksheet.Cells[TotalRowIndex, 1].Copy(worksheet.Cells[rowIndex, colIndex]);
             worksheet.Cells[rowIndex, colIndex, rowIndex + 1, colIndex].Merge = true;
             worksheet.Cells[rowIndex, colIndex].Value = RenderNumber(grandTotalSup);
@@ -1124,7 +1152,8 @@
             rowIndex++;
         }
 
-        private static bool IsMultipleData(IList<RowItem> rows, string jobType) => rows.Where(x => jobType.Contains(x.Name.Substring(0, Two))).ToList().Count > 1 || (jobType == Other && rows.LastOrDefault().Cells.Count > 1);
+        private static bool IsMultipleData(IList<RowItem> rows, string jobType)
+            => rows.Where(x => jobType.Contains(x.Name.Substring(0, Two))).ToList().Count > 1 || (jobType == Other && rows.LastOrDefault().Cells.Count > 1);
 
         private static int GetNumRowJobType(IList<RowItem> rows, string jobType)
         {

@@ -8,7 +8,10 @@ import LangHelper from '@jsroot/common/langHelper';
 import { renderNumber } from '../../common.funcs';
 
 const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
-    const { headers, supervisors, employees, others, totalSupervisor, totalEmployee, grandTotal, totalJobTypeSupervisor, totalJobTypeEmployee, totalJobTypeOthers } = data;
+    const {
+        headers, supervisors, employees, others, totalSupervisor, totalEmployee, grandTotal,
+        totalJobTypeSupervisor, totalJobTypeEmployee, totalJobTypeOthers
+    } = data;
 
     const showHides = () => {
         const showHides = [];
@@ -27,11 +30,12 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
         });
 
         showHides.push({
-            key: "Other",
+            key: 'Other',
             show: false
         });
+
         return showHides;
-    }
+    };
 
     const [showHideOptions, setShowHideOptions] = useState(showHides);
     const [showMore, setShowMore] = useState(false);
@@ -62,7 +66,7 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
                 showHideOptions={showHideOptions}
                 onClick={handleShowDetail}
                 isOther={isOther}/>);
-    });
+        });
 
         return trs;
     };
@@ -74,32 +78,32 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
             grandTotal += country.cells[0].total;
             colSpanGrandTotal += 4;
         });
-        const demo = <tr className="row-total">
-            <td className="text-center" rowSpan={2} colSpan={2}>Grand Total</td>
-            <td key={`grand-total-table-country`} className="text-center" colSpan={colSpanGrandTotal}>{renderNumber(grandTotal)}</td>
+        const demo = <tr className='row-total'>
+            <td className='text-center' rowSpan={2} colSpan={2}>Grand Total</td>
+            <td key='grand-total-table-country' className='text-center' colSpan={colSpanGrandTotal}>{renderNumber(grandTotal)}</td>
         </tr>;
         return demo;
     }
 
     return (
         <>
-            <table className="table group-by-country">
+            <table className='table group-by-country'>
                 <thead>
                     <tr>
-                        <td rowSpan={2} colSpan={2} className="col-job-level">{LangHelper.getResource('JobLevel')}</td>
+                        <td rowSpan={2} colSpan={2} className='col-job-level'>{LangHelper.getResource('JobLevel')}</td>
                         {
-                            headers.map(country => <td key={country.name} rowSpan={country.name !== "Other" ? 1 : 2} colSpan={country.name !== "Other" ? 4 : 1}>{country.name}</td>)
+                            headers.map(country => <td key={country.name} rowSpan={country.name !== 'Other' ? 1 : 2} colSpan={country.name !== 'Other' ? 4 : 1}>{country.name}</td>)
                         }
                     </tr>
                     <tr>
                         {
                             headers.map(country => <Fragment key={country.name}>
                                 {
-                                    country.name !== "Other" && <>
-                                        <td className="col-total">PU Total</td>
-                                        <td className="col-total">BU Total</td>
-                                        <td className="col-total">SU Total</td>
-                                        <td className="col-total">Other</td>
+                                    country.name !== 'Other' && <>
+                                        <td className='col-total'>PU Total</td>
+                                        <td className='col-total'>BU Total</td>
+                                        <td className='col-total'>SU Total</td>
+                                        <td className='col-total'>Other</td>
                                     </>
                                 }
                             </Fragment>)
@@ -122,7 +126,7 @@ const Grid = ({ employeeInfos, data, detail, onShowDetail, jobLevelTypes }) => {
                 </tbody>
             </table>
 
-            <Button className="btn-show-more" onClick={() => setShowMore(!showMore)}>Show More</Button>
+            <Button className='btn-show-more' onClick={() => setShowMore(!showMore)}>Show {showMore ? 'less' : 'more'}</Button>
         </>
     );
 };
