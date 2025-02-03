@@ -16,5 +16,6 @@
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsResetPassword { get; set; }
+        public int? ParentUserId { get; set; }
     }
 }
