@@ -2,11 +2,9 @@ namespace GO.Website
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Net.Http;
     using System.Text;
     using System.Threading.Tasks;
-    using Fanex.Data;
     using Fanex.Data.Repository;
     using Fanex.Data.SqlServer;
     using Fanex.Logging;
@@ -47,19 +45,7 @@ namespace GO.Website
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connections = Configuration.GetSection("ConnectionStrings")
-                .GetChildren()
-                .AsEnumerable()
-                .Where(x => !string.IsNullOrWhiteSpace(x.GetValue<string>("Name")))
-                .ToDictionary(x => x.GetValue<string>("Name"),
-                    y => new ConnectionConfiguration(y.GetValue<string>("Name"), y.GetValue<string>("ConnectionString"), y.GetValue<string>("ProviderName")));
-
-            DbSettingProviderManager
-               .StartNewSession()
-               .Use(connections)
-               .WithSqlServer()
-               .UseDefaultDbSettingProvider("~/App_Data")
-               .Run();
+            services.AddFanexSql(Configuration);
 
             LogManager
                 .SetDefaultLogCategory(Configuration.GetSection("Sentry:LogCategory").Value)
