@@ -1,12 +1,11 @@
 ﻿namespace GO.AutoJobs.Middlewares
 {
     using System;
-    using System.Globalization;
-    using System.Net;
     using System.Threading.Tasks;
     using Fanex.Logging;
+    using Fanex.Logging.Extensions;
+    using Fanex.Logging.Extensions.Database;
     using Microsoft.AspNetCore.Http;
-    using Newtonsoft.Json;
 
     public class ErrorHandlerMiddleware
     {
@@ -27,37 +26,13 @@
             }
             catch (Exception ex)
             {
-                await HandleExceptionAsync(context, ex);
+                var logMessage = new LogMessage(ex.Message)
+                    .AddSection("Database Info", DatabaseInfoGetters.GetDbExceptionInfo(ex))
+                    .AddSection("Server Info", CommonInfoGetters.GetServerInfo())
+                    .AddSection("Exception Info", CommonInfoGetters.GetExceptionInfo(ex))
+                    .ToString();
+                await logger.ErrorAsync(logMessage);
             }
         }
-
-        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
-        {
-            var message = string.Format(
-                    CultureInfo.InvariantCulture,
-                    "{0}\n\rSource: {1}\n\rDomain: {2}\n\rTargetSite: {3}\n\rStackTrace: {4}",
-                    exception.Message,
-                    exception.Source,
-                    context.Request.Headers["Host"],
-                    exception.TargetSite,
-                    exception.StackTrace);
-            await logger.ErrorAsync(message);
-
-            if (IsAjaxRequest(context.Request))
-            {
-                var result = JsonConvert.SerializeObject(new { error = exception.Message });
-                context.Response.ContentType = "application/json";
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                await context.Response.WriteAsync(result);
-            }
-            else
-            {
-                context.Response.Redirect("/error/500");
-            }
-        }
-
-        private static bool IsAjaxRequest(HttpRequest request)
-           => string.Equals(request.Query["X-Requested-With"], "XMLHttpRequest", StringComparison.OrdinalIgnoreCase) ||
-              string.Equals(request.Headers["X-Requested-With"], "XMLHttpRequest", StringComparison.OrdinalIgnoreCase);
     }
 }

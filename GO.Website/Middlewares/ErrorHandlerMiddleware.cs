@@ -1,12 +1,12 @@
 ﻿namespace GO.Website.Middlewares
 {
     using System;
-    using System.Globalization;
     using System.Net;
     using System.Threading.Tasks;
     using Fanex.Logging;
+    using Fanex.Logging.Extensions;
+    using Fanex.Logging.Extensions.Database;
     using Microsoft.AspNetCore.Http;
-    using Newtonsoft.Json;
 
     public class ErrorHandlerMiddleware
     {
@@ -33,26 +33,20 @@
 
         private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            string message = string.Format(
-                    CultureInfo.InvariantCulture,
-                    "{0}\n\rSource: {1}\n\rDomain: {2}\n\rTargetSite: {3}\n\rStackTrace: {4}",
-                    exception.Message,
-                    exception.Source,
-                    context.Request.Headers["Host"],
-                    exception.TargetSite,
-                    exception.StackTrace);
-            await logger.ErrorAsync(message);
+            var logMessage = new LogMessage(exception.Message)
+                .AddSection("Database Info", DatabaseInfoGetters.GetDbExceptionInfo(exception))
+                .AddSection("Server Info", CommonInfoGetters.GetServerInfo())
+                .AddSection("Exception Info", CommonInfoGetters.GetExceptionInfo(exception))
+                .ToString();
+            await logger.ErrorAsync(logMessage);
 
             if (IsAjaxRequest(context.Request))
             {
-                var result = JsonConvert.SerializeObject(new { error = exception.Message });
-                context.Response.ContentType = "application/json";
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                await context.Response.WriteAsync(result);
             }
             else
             {
-                context.Response.Redirect("/error/500");
+                context.Response.Redirect("/Error/InternalError");
             }
         }
 

@@ -10,9 +10,6 @@ namespace GO.Website
     using Fanex.Data.Repository;
     using Fanex.Data.SqlServer;
     using Fanex.Logging;
-    using Fanex.Logging.Extensions;
-    using Fanex.Logging.Extensions.AspNetCore;
-    using Fanex.Logging.Extensions.Database;
     using Fanex.Logging.Sentry;
     using GO.Core.Models;
     using GO.Core.Repository;
@@ -73,12 +70,6 @@ namespace GO.Website
                         Dsn = new Dsn(Configuration.GetSection("Sentry:Dsn").Value)
                     })
                 });
-
-            ExceptionHandler
-                .UseConfig(new LoggingConfiguration())
-                .GetHttpHeaderInfo()
-                .GetHttpSessionInfo()
-                .UseGetDbExceptionInfo(DatabaseInfoGetters.GetDbExceptionInfo);
 
             services.AddHttpClient(HttpClientName.DefaultHttpClient)
                 .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
