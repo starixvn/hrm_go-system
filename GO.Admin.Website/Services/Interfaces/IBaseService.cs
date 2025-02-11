@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Fanex.Data.Repository;
-    using HRM.UserControl.Client.Core.Models;
+    using GO.UserControl.Client.Core.Models;
 
     public interface IBaseService
     {

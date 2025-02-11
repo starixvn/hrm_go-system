@@ -4,7 +4,7 @@
     using GO.Admin.Website.Criteria.Site;
     using GO.Admin.Website.Models.Site;
     using GO.Admin.Website.Services;
-    using HRM.UserControl.Client.Core.Services;
+    using GO.UserControl.Client.Core.Services;
     using Microsoft.AspNetCore.Mvc;
 
     public class CommonController : BaseController

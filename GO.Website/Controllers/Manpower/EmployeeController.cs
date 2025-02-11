@@ -12,8 +12,8 @@
     using GO.Website.Filters;
     using GO.Website.Models;
     using GO.Website.Models.Manpower;
-    using HRM.UserControl.Client.Core.Enumerables;
-    using HRM.UserControl.Client.Core.Session;
+    using GO.UserControl.Client.Core.Enumerables;
+    using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
     using Services;
 

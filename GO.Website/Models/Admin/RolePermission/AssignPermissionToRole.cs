@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using HRM.UserControl.Client.Core.Models;
+    using GO.UserControl.Client.Core.Models;
 
     [Serializable]
     public class AssignPermissionToRole

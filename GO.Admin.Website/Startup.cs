@@ -10,12 +10,11 @@ namespace GO.Admin.Website
     using GO.Admin.Website.Middlewares;
     using GO.Admin.Website.Repositories;
     using GO.Admin.Website.Services;
-    using HRM.UserControl.Client.AspNetCore.Configurations;
-    using HRM.UserControl.Client.AspNetCore.Session;
-    using HRM.UserControl.Client.Core;
-    using HRM.UserControl.Client.Core.Configurations;
-    using HRM.UserControl.Client.Core.Services;
-    using HRM.UserControl.Client.Core.Session;
+    using GO.UserControl.Client.AspNetCore;
+    using GO.UserControl.Client.AspNetCore.Session;
+    using GO.UserControl.Client.Core;
+    using GO.UserControl.Client.Core.Services;
+    using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -25,14 +24,9 @@ namespace GO.Admin.Website
     using Microsoft.Extensions.Hosting;
     using Sentry;
 
-    public class Startup
+    public class Startup(IConfiguration configuration)
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get; } = configuration;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)

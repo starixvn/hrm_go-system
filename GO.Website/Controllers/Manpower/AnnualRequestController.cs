@@ -11,8 +11,8 @@
     using GO.Website.Models.Manpower;
     using GO.Website.Models.Manpower.AnnualRequest;
     using GO.Website.Services;
-    using HRM.UserControl.Client.Core.Enumerables;
-    using HRM.UserControl.Client.Core.Session;
+    using GO.UserControl.Client.Core.Enumerables;
+    using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("ManpowerForecast/AnnualRequest/[action]/{id?}")]

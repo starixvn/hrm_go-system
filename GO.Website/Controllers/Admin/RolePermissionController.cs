@@ -4,10 +4,10 @@
     using GO.Website.Constants;
     using GO.Website.Filters;
     using GO.Website.Models.Admin.RolePermission;
-    using HRM.UserControl.Client.Core.Enumerables;
-    using HRM.UserControl.Client.Core.Models;
-    using HRM.UserControl.Client.Core.Services;
-    using HRM.UserControl.Client.Core.Session;
+    using GO.UserControl.Client.Core.Enumerables;
+    using GO.UserControl.Client.Core.Models;
+    using GO.UserControl.Client.Core.Services;
+    using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("Admin/RolePermission/[action]")]

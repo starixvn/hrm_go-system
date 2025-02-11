@@ -8,11 +8,11 @@
     using GO.Core.Services;
     using GO.Website.Criteria;
     using GO.Website.Models;
-    using HRM.UserControl.Client.Core.Configurations;
-    using HRM.UserControl.Client.Core.Models;
-    using HRM.UserControl.Client.Core.Models.User;
-    using HRM.UserControl.Client.Core.Services;
-    using HRM.UserControl.Client.Core.Session;
+    using GO.UserControl.Client.Core;
+    using GO.UserControl.Client.Core.Models;
+    using GO.UserControl.Client.Core.Models.User;
+    using GO.UserControl.Client.Core.Services;
+    using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
 
     public class HomeController : BaseController

@@ -8,9 +8,9 @@
     using GO.Website.Criteria.Manpower.Period;
     using GO.Website.Models.Manpower;
     using GO.Website.Models.Manpower.Period;
-    using HRM.UserControl.Client.Core.Configurations;
-    using HRM.UserControl.Client.Core.Models.Role;
-    using HRM.UserControl.Client.Core.Services;
+    using GO.UserControl.Client.Core;
+    using GO.UserControl.Client.Core.Models.Role;
+    using GO.UserControl.Client.Core.Services;
     using Microsoft.AspNetCore.Mvc;
 
     public class CommonController : BaseController

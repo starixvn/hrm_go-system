@@ -1,6 +1,5 @@
 ﻿namespace GO.Admin.Website.Controllers
 {
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using GO.Admin.Website.Constants;
@@ -9,40 +8,22 @@
     using GO.Admin.Website.Models.Site;
     using GO.Admin.Website.Models.User;
     using GO.Admin.Website.Services;
-    using HRM.UserControl.Client.Core.Configurations;
-    using HRM.UserControl.Client.Core.Enumerables;
-    using HRM.UserControl.Client.Core.Models;
-    using HRM.UserControl.Client.Core.Models.User;
-    using HRM.UserControl.Client.Core.Services;
-    using HRM.UserControl.Client.Core.Session;
+    using GO.UserControl.Client.Core;
+    using GO.UserControl.Client.Core.Enumerables;
+    using GO.UserControl.Client.Core.Models.User;
+    using GO.UserControl.Client.Core.Services;
+    using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
 
     [UCPermission(FunctionKey = FunctionKey.UserManagement, Policy = Policy.Read)]
-    public class UserController : BaseController
+    public class UserController(
+        IUserControlSettings userControlSettings,
+        IUserControlSession userControlSession,
+        IBaseService baseService,
+        ICryptoService cryptoService,
+        IFunctionService functionService,
+        IUserService userService) : BaseController
     {
-        private readonly IUserControlSettings userControlSettings;
-        private readonly IUserControlSession userControlSession;
-        private readonly IBaseService baseService;
-        private readonly ICryptoService cryptoService;
-        private readonly IFunctionService functionService;
-        private readonly IUserService userService;
-
-        public UserController(
-            IUserControlSettings userControlSettings,
-            IUserControlSession userControlSession,
-            IBaseService baseService,
-            ICryptoService cryptoService,
-            IFunctionService functionService,
-            IUserService userService)
-        {
-            this.userControlSettings = userControlSettings;
-            this.userControlSession = userControlSession;
-            this.baseService = baseService;
-            this.cryptoService = cryptoService;
-            this.functionService = functionService;
-            this.userService = userService;
-        }
-
         public IActionResult Index()
         {
             var token = cryptoService.GenerateRijndaelKeyIV();
@@ -61,7 +42,7 @@
         [UCPermission(FunctionKey = FunctionKey.UserManagement, Policy = Policy.Host)]
         public async Task<IActionResult> Create([FromBody] CreateUserParam param)
         {
-            CommandResult commandResult = await userService.CreateAsync(param);
+            var commandResult = await userService.CreateAsync(param);
             return Json(commandResult);
         }
 
@@ -69,7 +50,7 @@
         [UCPermission(FunctionKey = FunctionKey.UserManagement, Policy = Policy.Host)]
         public async Task<IActionResult> ResetPassword([FromBody] UpdatePasswordParam param)
         {
-            CommandResult commandResult = await userService.ResetPasswordAsync(param);
+            var commandResult = await userService.ResetPasswordAsync(param);
             return Json(commandResult);
         }
 
@@ -91,7 +72,7 @@
         public async Task<IActionResult> AssignSite([FromBody] AssignSiteToUserCommand command)
         {
             command.CreatedBy = userControlSession.UserId;
-            CommandResult commandResult = await baseService.ExecuteNonQueryAsync(command);
+            var commandResult = await baseService.ExecuteNonQueryAsync(command);
             return Json(commandResult);
         }
 
@@ -119,7 +100,7 @@
         public async Task<IActionResult> UpdateUserSiteStatus([FromBody] UpdateUserSiteStatusCommand command)
         {
             command.ModifiedBy = userControlSession.UserId;
-            CommandResult commandResult = await baseService.ExecuteNonQueryAsync(command);
+            var commandResult = await baseService.ExecuteNonQueryAsync(command);
             return Json(commandResult);
         }
 
@@ -128,7 +109,7 @@
         public async Task<IActionResult> UpdateUserSiteRole([FromBody] UpdateUserSiteRoleCommand command)
         {
             command.ModifiedBy = userControlSession.UserId;
-            CommandResult commandResult = await baseService.ExecuteNonQueryAsync(command);
+            var commandResult = await baseService.ExecuteNonQueryAsync(command);
             return Json(commandResult);
         }
 
@@ -146,8 +127,8 @@
 
         public async Task<IActionResult> GetUserPermission(short siteId, int userId)
         {
-            IList<Function> functions = await functionService.GetHierarchyBySiteIdAsync(siteId, true);
-            IList<FunctionPermission> permissions = await userService.GetFunctionPermissionAsync(siteId, userId);
+            var functions = await functionService.GetHierarchyBySiteIdAsync(siteId, true);
+            var permissions = await userService.GetFunctionPermissionAsync(siteId, userId);
             return Json(new { functions, permissions });
         }
 
@@ -185,7 +166,7 @@
         public async Task<IActionResult> UpdateUserMapping([FromBody] UpdateUserMappingCommand command)
         {
             command.ModifiedBy = userControlSession.UserId;
-            CommandResult commandResult = await baseService.ExecuteNonQueryAsync(command);
+            var commandResult = await baseService.ExecuteNonQueryAsync(command);
             return Json(commandResult);
         }
     }

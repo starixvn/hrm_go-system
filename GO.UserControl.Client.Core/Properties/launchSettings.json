@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "HRM.UserControl.Client.Core": {
+    "GO.UserControl.Client.Core": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

@@ -6,29 +6,18 @@
     using GO.Admin.Website.Criteria.Function;
     using GO.Admin.Website.Filters;
     using GO.Admin.Website.Services;
-    using HRM.UserControl.Client.Core.Enumerables;
-    using HRM.UserControl.Client.Core.Models;
-    using HRM.UserControl.Client.Core.Services;
-    using HRM.UserControl.Client.Core.Session;
+    using GO.UserControl.Client.Core.Enumerables;
+    using GO.UserControl.Client.Core.Models;
+    using GO.UserControl.Client.Core.Services;
+    using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
 
     [UCPermission(FunctionKey = FunctionKey.FunctionManagement, Policy = Policy.Read)]
-    public class FunctionController : BaseController
+    public class FunctionController(
+        IBaseService baseService,
+        IFunctionService functionService,
+        IUserControlSession userControlSession) : BaseController
     {
-        private readonly IBaseService baseService;
-        private readonly IFunctionService functionService;
-        private readonly IUserControlSession userControlSession;
-
-        public FunctionController(
-            IBaseService baseService,
-            IFunctionService functionService,
-            IUserControlSession userControlSession)
-        {
-            this.baseService = baseService;
-            this.functionService = functionService;
-            this.userControlSession = userControlSession;
-        }
-
         public IActionResult Index()
         {
             bool isHost = userControlSession.HasPermissionOnFunction(FunctionKey.FunctionManagement, Policy.Host);

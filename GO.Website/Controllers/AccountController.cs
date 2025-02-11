@@ -9,38 +9,21 @@
     using GO.Website.Models;
     using GO.Website.Models.Account;
     using GO.Website.Services;
-    using HRM.UserControl.Client.Core.Configurations;
-    using HRM.UserControl.Client.Core.Services;
-    using HRM.UserControl.Client.Core.Session;
+    using GO.UserControl.Client.Core;
+    using GO.UserControl.Client.Core.Services;
+    using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Mvc;
 
-    public class AccountController : Controller
+    public class AccountController(
+        IUserControlSettings userControlSettings,
+        IUserControlSession userControlSession,
+        ITwoFactorAuthenticatorService twoFactorAuthService,
+        IUserOtpService userOtpService,
+        IUserService userService,
+        OtpConfig otpConfig) : Controller
     {
-        private readonly IUserControlSettings userControlSettings;
-        private readonly IUserControlSession userControlSession;
-        private readonly IUserOtpService userOtpService;
-        private readonly OtpConfig otpConfig;
-        private readonly ITwoFactorAuthenticatorService twoFactorAuthService;
-        private readonly IUserService userService;
-
-        public AccountController(
-            IUserControlSettings userControlSettings,
-            IUserControlSession userControlSession,
-            ITwoFactorAuthenticatorService twoFactorAuthService,
-            IUserOtpService userOtpService,
-            IUserService userService,
-            OtpConfig otpConfig)
-        {
-            this.userControlSettings = userControlSettings;
-            this.userControlSession = userControlSession;
-            this.twoFactorAuthService = twoFactorAuthService;
-            this.userOtpService = userOtpService;
-            this.userService = userService;
-            this.otpConfig = otpConfig;
-        }
-
         [GOAuthorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public IActionResult Setup2Fa()
         {

@@ -10,7 +10,7 @@
     using GO.Website.Models.Manpower.AnnualRequest;
     using GO.Website.Models.Manpower.Period;
     using GO.Website.Services;
-    using HRM.UserControl.Client.Core.Session;
+    using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
     using NSubstitute;
     using System;

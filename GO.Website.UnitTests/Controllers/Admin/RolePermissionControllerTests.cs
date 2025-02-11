@@ -4,9 +4,9 @@
     using System.Linq;
     using System.Threading.Tasks;
     using AutoFixture;
-    using HRM.UserControl.Client.Core.Models;
-    using HRM.UserControl.Client.Core.Services;
-    using HRM.UserControl.Client.Core.Session;
+    using GO.UserControl.Client.Core.Models;
+    using GO.UserControl.Client.Core.Services;
+    using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
     using Models.Admin.RolePermission;
     using NSubstitute;

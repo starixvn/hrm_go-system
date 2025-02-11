@@ -7,8 +7,8 @@
     using GO.Website.Controllers.Manpower;
     using GO.Website.Criteria.Manpower.Period;
     using GO.Website.Models.Manpower.Period;
-    using HRM.UserControl.Client.Core.Enumerables;
-    using HRM.UserControl.Client.Core.Session;
+    using GO.UserControl.Client.Core.Enumerables;
+    using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
     using NSubstitute;
     using System;

@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using AutoFixture;
-    using HRM.UserControl.Client.Core.Session;
+    using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
     using Models.Manpower;
     using Models.Report.Manpower;

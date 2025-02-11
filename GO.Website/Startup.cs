@@ -17,12 +17,11 @@ namespace GO.Website
     using GO.Website.Models;
     using GO.Website.Repositories;
     using GO.Website.Services;
-    using HRM.UserControl.Client.AspNetCore.Configurations;
-    using HRM.UserControl.Client.AspNetCore.Session;
-    using HRM.UserControl.Client.Core;
-    using HRM.UserControl.Client.Core.Configurations;
-    using HRM.UserControl.Client.Core.Services;
-    using HRM.UserControl.Client.Core.Session;
+    using GO.UserControl.Client.AspNetCore;
+    using GO.UserControl.Client.AspNetCore.Session;
+    using GO.UserControl.Client.Core;
+    using GO.UserControl.Client.Core.Services;
+    using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -165,7 +164,7 @@ namespace GO.Website
 
             services.AddSingleton<IUserControlSession, UserControlSession>();
             services.AddSingleton<IAuthService, AuthService>();
-            services.AddSingleton<HRM.UserControl.Client.Core.Services.ICryptoService, HRM.UserControl.Client.Core.Services.CryptoService>();
+            services.AddSingleton<GO.UserControl.Client.Core.Services.ICryptoService, GO.UserControl.Client.Core.Services.CryptoService>();
             services.AddSingleton<IUserService, UserService>();
             services.AddSingleton<IRoleService, RoleService>();
             services.AddSingleton<IFunctionService, FunctionService>();

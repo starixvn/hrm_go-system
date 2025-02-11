@@ -1,48 +1,32 @@
 ﻿namespace GO.Admin.Website.Controllers
 {
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using GO.Admin.Website.Constants;
     using GO.Admin.Website.Criteria.Role;
     using GO.Admin.Website.Filters;
     using GO.Admin.Website.Models;
     using GO.Admin.Website.Services;
-    using HRM.UserControl.Client.Core.Enumerables;
-    using HRM.UserControl.Client.Core.Models;
-    using HRM.UserControl.Client.Core.Models.Role;
-    using HRM.UserControl.Client.Core.Services;
-    using HRM.UserControl.Client.Core.Session;
+    using GO.UserControl.Client.Core.Enumerables;
+    using GO.UserControl.Client.Core.Services;
+    using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
 
     [UCPermission(FunctionKey = FunctionKey.RoleManagement, Policy = Policy.Read)]
-    public class RoleController : BaseController
+    public class RoleController(
+        IUserControlSession userControlSession,
+        IRoleService roleService,
+        IFunctionService functionService,
+        IBaseService baseService) : BaseController
     {
-        private readonly IUserControlSession userControlSession;
-        private readonly IRoleService roleService;
-        private readonly IFunctionService functionService;
-        private readonly IBaseService baseService;
-
-        public RoleController(
-            IUserControlSession userControlSession,
-            IRoleService roleService,
-            IFunctionService functionService,
-            IBaseService baseService)
-        {
-            this.userControlSession = userControlSession;
-            this.roleService = roleService;
-            this.functionService = functionService;
-            this.baseService = baseService;
-        }
-
         public IActionResult Index()
         {
-            bool isHost = userControlSession.HasPermissionOnFunction(FunctionKey.RoleManagement, Policy.Host);
+            var isHost = userControlSession.HasPermissionOnFunction(FunctionKey.RoleManagement, Policy.Host);
             return View(isHost);
         }
 
         public async Task<IActionResult> GetBySiteId(short siteId, bool? isActive = null)
         {
-            IList<Role> roles = await roleService.GetBySiteIdAsync(siteId, isActive);
+            var roles = await roleService.GetBySiteIdAsync(siteId, isActive);
             return Json(roles);
         }
 
@@ -51,7 +35,7 @@
         public async Task<IActionResult> Create([FromBody] CreateRoleCommand command)
         {
             command.CreatedBy = userControlSession.UserId;
-            CommandResult commandResult = await baseService.ExecuteNonQueryAsync(command);
+            var commandResult = await baseService.ExecuteNonQueryAsync(command);
             return Json(commandResult);
         }
 
@@ -60,7 +44,7 @@
         public async Task<IActionResult> Update([FromBody] UpdateRoleCommand command)
         {
             command.ModifiedBy = userControlSession.UserId;
-            CommandResult commandResult = await baseService.ExecuteNonQueryAsync(command);
+            var commandResult = await baseService.ExecuteNonQueryAsync(command);
             return Json(commandResult);
         }
 
@@ -69,7 +53,7 @@
         public async Task<IActionResult> UpdateStatus([FromBody] UpdateRoleStatusCommand command)
         {
             command.ModifiedBy = userControlSession.UserId;
-            CommandResult commandResult = await baseService.ExecuteNonQueryAsync(command);
+            var commandResult = await baseService.ExecuteNonQueryAsync(command);
             return Json(commandResult);
         }
 
@@ -83,7 +67,7 @@
         [UCPermission(FunctionKey = FunctionKey.RoleManagement, Policy = Policy.Host)]
         public async Task<IActionResult> AssignPermission([FromBody] AssignPermissionToRole model)
         {
-            CommandResult commandResult = await roleService.AssignPermissionAsync(model.SiteId, model.RoleId, model.Permissions);
+            var commandResult = await roleService.AssignPermissionAsync(model.SiteId, model.RoleId, model.Permissions);
             return Json(commandResult);
         }
 
