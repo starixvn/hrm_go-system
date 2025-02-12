@@ -20,31 +20,14 @@
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Mvc;
 
-    public class AuthController : Controller
+    public class AuthController(
+        IUserControlSettings userControlSettings,
+        IUserControlSession userControlSession,
+        IBaseService baseService,
+        IUserService userService,
+        ICryptoService cryptoService,
+        IAuthService authService) : Controller
     {
-        private readonly IUserControlSettings userControlSettings;
-        private readonly IUserControlSession userControlSession;
-        private readonly IBaseService baseService;
-        private readonly IUserService userService;
-        private readonly ICryptoService cryptoService;
-        private readonly IAuthService authService;
-
-        public AuthController(
-            IUserControlSettings userControlSettings,
-            IUserControlSession userControlSession,
-            IBaseService baseService,
-            IUserService userService,
-            ICryptoService cryptoService,
-            IAuthService authService)
-        {
-            this.userControlSettings = userControlSettings;
-            this.userControlSession = userControlSession;
-            this.baseService = baseService;
-            this.cryptoService = cryptoService;
-            this.userService = userService;
-            this.authService = authService;
-        }
-
         public IActionResult Login()
         {
             var token = cryptoService.GenerateRijndaelKeyIV();
@@ -59,7 +42,7 @@
             model.BrowserName = HttpContext.Request?.Headers["User-Agent"].ToString();
             model.NetSessionId = HttpContext.Session.Id;
 
-            LoginResult loginResult = await authService.LoginAsync(model);
+            var loginResult = await authService.LoginAsync(model);
             if (loginResult.IsSuccessfull)
             {
                 userControlSession.UserId = loginResult.UserId;
@@ -83,7 +66,7 @@
             var onUserIdValue = Cryptography.DecryptPassword(onUserId.Replace(" ", "+"));
             var timeValue = Cryptography.DecryptPassword(time.Replace(" ", "+"));
             var currentTime = await authService.SSOGetTimeAsync();
-            TimeSpan expiration = DateTime.ParseExact(currentTime, "yyyy-MM-dd HH:mm:ss.fff", null)
+            var expiration = DateTime.ParseExact(currentTime, "yyyy-MM-dd HH:mm:ss.fff", null)
                 - DateTime.ParseExact(timeValue, "yyyy-MM-dd HH:mm:ss.fff", null);
             const byte TimeExpiration = 30;
             if (expiration.TotalSeconds <= TimeExpiration)
@@ -98,7 +81,7 @@
                     BrowserName = HttpContext.Request?.Headers["User-Agent"].ToString(),
                     NetSessionId = HttpContext.Session.Id
                 };
-                LoginResult loginResult = authService.SSOLogin(ssoParam);
+                var loginResult = authService.SSOLogin(ssoParam);
                 if (loginResult.IsSuccessfull)
                 {
                     userControlSession.UserId = Convert.ToInt32(userIdValue);
@@ -142,10 +125,10 @@
             return Json(header);
         }
 
-        private IList<MenuItem> GetMenuTrees(IList<MenuItem> menus)
+        private static IList<MenuItem> GetMenuTrees(IList<MenuItem> menus)
         {
-            IList<MenuItem> menuTrees = menus.Where(menu => !menu.ParentId.HasValue).ToList();
-            foreach (MenuItem menu in menuTrees)
+            var menuTrees = menus.Where(menu => !menu.ParentId.HasValue).ToList();
+            foreach (var menu in menuTrees)
             {
                 menu.Childs = new List<MenuItem>();
                 GetChildMenus(menu, menus);
@@ -153,12 +136,12 @@
             return menuTrees;
         }
 
-        private void GetChildMenus(MenuItem menu, IList<MenuItem> menus)
+        private static void GetChildMenus(MenuItem menu, IList<MenuItem> menus)
         {
-            IList<MenuItem> menuItems = menus.Where(x => x.ParentId == menu.MenuItemId).ToList();
+            var menuItems = menus.Where(x => x.ParentId == menu.MenuItemId).ToList();
             if (menuItems.Any())
             {
-                foreach (MenuItem item in menuItems)
+                foreach (var item in menuItems)
                 {
                     menu.Childs.Add(item);
                     GetChildMenus(item, menus);

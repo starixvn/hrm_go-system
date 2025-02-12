@@ -14,23 +14,12 @@
     using Microsoft.AspNetCore.Mvc;
 
     [Authorize]
-    public class UserController : BaseController
+    public class UserController(
+        IHttpContextAccessor httpContextAccessor,
+        IBaseService baseService,
+        ICryptoService cryptoService,
+        IUserService userService) : BaseController(httpContextAccessor)
     {
-        private readonly IBaseService baseService;
-        private readonly ICryptoService cryptoService;
-        private readonly IUserService userService;
-
-        public UserController(
-            IHttpContextAccessor httpContextAccessor,
-            IBaseService baseService,
-            ICryptoService cryptoService,
-            IUserService userService) : base(httpContextAccessor)
-        {
-            this.baseService = baseService;
-            this.userService = userService;
-            this.cryptoService = cryptoService;
-        }
-
         [HttpGet]
         [Route("api/user/getMenuItem")]
         public async Task<IActionResult> GetMenuItem()

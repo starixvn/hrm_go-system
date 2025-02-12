@@ -16,22 +16,11 @@
     using GO.Website.Models.Todolist;
     using Newtonsoft.Json;
 
-    public class TodolistService : ITodolistService
+    public class TodolistService(
+        IHttpClientFactory clientFactory,
+        ILogger logger,
+        IBaseService baseService) : ITodolistService
     {
-        private readonly IHttpClientFactory clientFactory;
-        private readonly ILogger logger;
-        private readonly IBaseService baseService;
-
-        public TodolistService(
-            IHttpClientFactory clientFactory,
-            ILogger logger,
-            IBaseService baseService)
-        {
-            this.clientFactory = clientFactory;
-            this.logger = logger;
-            this.baseService = baseService;
-        }
-
         public async Task<IEnumerable<UserSite>> GetUserSiteByUserIdAsync(int userId)
         {
             var criteria = new GetUserSiteByUserIdCriteria
@@ -80,10 +69,10 @@
         public async Task<IList<TodolistItem>> GetTodolistAsync(IList<UserSite> usersites, IList<ApiSiteSetting> apiSiteSettings)
         {
             var todoitems = new List<TodolistItem>();
-            foreach (ApiSiteSetting apiSiteSetting in apiSiteSettings)
+            foreach (var apiSiteSetting in apiSiteSettings)
             {
-                string token = await GetTokenAsync(apiSiteSetting);
-                UserSite usersite = usersites.First(x => x.SiteId == apiSiteSetting.SiteId);
+                var token = await GetTokenAsync(apiSiteSetting);
+                var usersite = usersites.First(x => x.SiteId == apiSiteSetting.SiteId);
                 var username = !string.IsNullOrWhiteSpace(usersite.Username) ? usersite.Username : usersite.Code;
                 var url = string.Format("{0}{1}?userId={2}&username={3}", apiSiteSetting.BaseUrl, apiSiteSetting.TodolistUrl, usersite.UserId, username);
                 var items = await GetAsync<IList<TodolistItem>>(url, token);

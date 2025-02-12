@@ -10,36 +10,18 @@
     using GO.Website.Models;
     using GO.UserControl.Client.Core;
     using GO.UserControl.Client.Core.Models;
-    using GO.UserControl.Client.Core.Models.User;
     using GO.UserControl.Client.Core.Services;
     using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
 
-    public class HomeController : BaseController
+    public class HomeController(
+        IUserControlSettings userControlSettings,
+        IUserControlSession userControlSession,
+        IAuthService authService,
+        IUserService userService,
+        IBaseService baseService,
+        OtpConfig otpConfig) : BaseController
     {
-        private readonly IUserControlSettings userControlSettings;
-        private readonly IUserControlSession userControlSession;
-        private readonly IAuthService authService;
-        private readonly IUserService userService;
-        private readonly IBaseService baseService;
-        private readonly OtpConfig otpConfig;
-
-        public HomeController(
-            IUserControlSettings userControlSettings,
-            IUserControlSession userControlSession,
-            IAuthService authService,
-            IUserService userService,
-            IBaseService baseService,
-            OtpConfig otpConfig)
-        {
-            this.userControlSettings = userControlSettings;
-            this.userControlSession = userControlSession;
-            this.authService = authService;
-            this.baseService = baseService;
-            this.userService = userService;
-            this.otpConfig = otpConfig;
-        }
-
         public IActionResult Index()
         {
             return View();
@@ -75,7 +57,7 @@
 
         public IActionResult GetUserInfo()
         {
-            User user = userService.GetById(userControlSession.UserId);
+            var user = userService.GetById(userControlSession.UserId);
             user.UserId = 0;
             user.Password = string.Empty;
             return Json(user);
@@ -88,14 +70,14 @@
 
         public IActionResult GetMenus()
         {
-            IList<MenuItem> menus = GetMenuTrees(userControlSession.MenuItems);
+            var menus = GetMenuTrees(userControlSession.MenuItems);
             return Json(menus);
         }
 
         private IList<MenuItem> GetMenuTrees(IList<MenuItem> menus)
         {
-            IList<MenuItem> menuTrees = menus.Where(menu => !menu.ParentId.HasValue).ToList();
-            foreach (MenuItem menu in menuTrees)
+            var menuTrees = menus.Where(menu => !menu.ParentId.HasValue).ToList();
+            foreach (var menu in menuTrees)
             {
                 menu.Childs = new List<MenuItem>();
                 GetChildMenus(menu, menus);
@@ -105,10 +87,10 @@
 
         private void GetChildMenus(MenuItem menu, IList<MenuItem> menus)
         {
-            IList<MenuItem> menuItems = menus.Where(x => x.ParentId == menu.MenuItemId).ToList();
+            var menuItems = menus.Where(x => x.ParentId == menu.MenuItemId).ToList();
             if (menuItems.Any())
             {
-                foreach (MenuItem item in menuItems)
+                foreach (var item in menuItems)
                 {
                     menu.Childs.Add(item);
                     GetChildMenus(item, menus);

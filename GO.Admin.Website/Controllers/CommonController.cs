@@ -7,19 +7,10 @@
     using GO.UserControl.Client.Core.Services;
     using Microsoft.AspNetCore.Mvc;
 
-    public class CommonController : BaseController
+    public class CommonController(
+        IBaseService baseService,
+        IRoleService roleService) : BaseController
     {
-        private readonly IBaseService baseService;
-        private readonly IRoleService roleService;
-
-        public CommonController(
-            IBaseService baseService,
-            IRoleService roleService)
-        {
-            this.baseService = baseService;
-            this.roleService = roleService;
-        }
-
         public async Task<IActionResult> GetAllSite(GetAllSiteCriteria criteria)
         {
             var sites = await baseService.GetDataAsync<Site>(criteria);
