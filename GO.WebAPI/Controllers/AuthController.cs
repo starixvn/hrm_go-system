@@ -210,10 +210,10 @@
                 }
             }
 
-            return validUsers.OrderBy(x => !x.ParentUserId.HasValue).ToList();
+            return validUsers.OrderBy(x => !x.ParentUserId.HasValue ? 0 : 1).ToList();
         }
 
-        private async Task GetValidUserOnSiteAsync(IList<User> validUsers, User user, short siteId)
+        private async Task GetValidUserOnSiteAsync(List<User> validUsers, User user, short siteId)
         {
             var sites = await siteService.GetByUserIdAsync(user.UserId);
             if (sites.Any(site => site.SiteId == siteId && site.IsActive))
