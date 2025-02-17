@@ -9,22 +9,11 @@
     using GO.WebAPI.Models;
     using Microsoft.IdentityModel.Tokens;
 
-    public class JwtManagerService : IJwtManagerService
+    public class JwtManagerService(
+        IUserService userService,
+        ISiteService siteService,
+        AuthenticationSettings settings) : IJwtManagerService
     {
-        private readonly IUserService userService;
-        private readonly ISiteService siteService;
-        private readonly AuthenticationSettings settings;
-
-        public JwtManagerService(
-            IUserService userService,
-            ISiteService siteService,
-            AuthenticationSettings settings)
-        {
-            this.userService = userService;
-            this.siteService = siteService;
-            this.settings = settings;
-        }
-
         public async Task<JwtToken> GenerateTokenAsync(int userId, short siteId)
         {
             var jwtToken = new JwtToken();

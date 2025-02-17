@@ -5,7 +5,6 @@
     using System.Linq;
     using System.Threading.Tasks;
     using GO.Core.Extensions.XML;
-    using GO.Core.Models;
     using GO.Core.Services;
     using GO.WebAPI.Criteria.UnitHead;
     using GO.WebAPI.Models.UnitHead;
@@ -14,19 +13,12 @@
     using Microsoft.AspNetCore.Mvc;
 
     [Authorize]
-    public class UnitHeadController : BaseController
+    [Route("api/[controller]/[action]")]
+    public class UnitHeadController(
+        IHttpContextAccessor httpContextAccessor,
+        IBaseService baseService) : BaseController(httpContextAccessor)
     {
-        private readonly IBaseService baseService;
-
-        public UnitHeadController(
-            IHttpContextAccessor httpContextAccessor,
-            IBaseService baseService) : base(httpContextAccessor)
-        {
-            this.baseService = baseService;
-        }
-
         [HttpGet]
-        [Route("api/UnitHead/GetInfo")]
         public async Task<IActionResult> GetInfo()
         {
             var criteria = new GetUnitHeadInfoCriteria();
@@ -36,7 +28,6 @@
         }
 
         [HttpPost]
-        [Route("api/UnitHead/UpdateInfo")]
         public async Task<IActionResult> UpdateInfo([FromBody] IList<UnitHeadInfo> infos)
         {
             var command = new UpdateUnitHeadInfoCommand
@@ -45,13 +36,12 @@
                 ModifiedBy = UserId,
                 Value = infos != null && infos.Any() ? infos.ToXML().ToString() : string.Empty
             };
-            CommandResult commandResult = await baseService.ExecuteNonQueryAsync(command);
+            var commandResult = await baseService.ExecuteNonQueryAsync(command);
 
             return Json(commandResult);
         }
 
         [HttpGet]
-        [Route("api/UnitHead/GetSchedule")]
         public async Task<IActionResult> GetSchedule()
         {
             var criteria = new GetUnitHeadScheduleCriteria
@@ -65,7 +55,6 @@
         }
 
         [HttpPost]
-        [Route("api/UnitHead/UpdateSchedule")]
         public async Task<IActionResult> UpdateSchedule([FromBody] IList<UnitHeadSchedule> schedules)
         {
             var command = new UpdateUnitHeadScheduleCommand
@@ -74,7 +63,7 @@
                 ModifiedBy = UserId,
                 Value = schedules != null && schedules.Any() ? schedules.ToXML().ToString() : string.Empty
             };
-            CommandResult commandResult = await baseService.ExecuteNonQueryAsync(command);
+            var commandResult = await baseService.ExecuteNonQueryAsync(command);
 
             return Json(commandResult);
         }

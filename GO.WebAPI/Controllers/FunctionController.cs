@@ -9,19 +9,12 @@
     using Microsoft.AspNetCore.Mvc;
 
     [Authorize]
-    public class FunctionController : BaseController
+    [Route("api/[controller]/[action]")]
+    public class FunctionController(
+        IHttpContextAccessor httpContextAccessor,
+        IBaseService baseService) : BaseController(httpContextAccessor)
     {
-        private readonly IBaseService baseService;
-
-        public FunctionController(
-            IHttpContextAccessor httpContextAccessor,
-            IBaseService baseService) : base(httpContextAccessor)
-        {
-            this.baseService = baseService;
-        }
-
         [HttpGet]
-        [Route("api/function/getBySiteId")]
         public async Task<IActionResult> GetBySiteId(GetFunctionBySiteIdCriteria criteria)
         {
             var functions = await baseService.GetDataAsync<Function>(criteria);
@@ -29,7 +22,6 @@
         }
 
         [HttpGet]
-        [Route("api/function/getPermissionBySiteAndRoleId")]
         public async Task<IActionResult> GetBySiteAndRoleId(GetFunctionByRoleIdCriteria criteria)
         {
             var permissions = await baseService.GetDataAsync<FunctionPermission>(criteria);

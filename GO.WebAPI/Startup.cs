@@ -53,7 +53,7 @@ namespace GO.WebAPI
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(x =>
             {
-                byte[] secretKey = Encoding.ASCII.GetBytes(Configuration.GetSection("AuthenticationSettings:SecretKey").Value);
+                var secretKey = Encoding.ASCII.GetBytes(Configuration.GetSection("AuthenticationSettings:SecretKey").Value);
                 x.RequireHttpsMetadata = false;
                 x.SaveToken = true;
                 x.TokenValidationParameters = new TokenValidationParameters
@@ -74,7 +74,6 @@ namespace GO.WebAPI
             services.AddSingleton<IJwtManagerService, JwtManagerService>();
             services.AddSingleton<IUserService, UserService>();
             services.AddSingleton<ISiteService, SiteService>();
-            services.AddSingleton<IUserMappingService, UserMappingService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

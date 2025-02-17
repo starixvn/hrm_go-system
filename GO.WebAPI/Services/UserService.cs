@@ -1,21 +1,13 @@
 ﻿namespace GO.WebAPI.Services
 {
-    using System;
     using System.Threading.Tasks;
     using GO.Core.Models;
     using GO.Core.Services;
     using GO.Models.User;
     using GO.WebAPI.Criteria.User;
 
-    public class UserService : IUserService
+    public class UserService(IBaseService baseService) : IUserService
     {
-        private readonly IBaseService baseService;
-
-        public UserService(IBaseService baseService)
-        {
-            this.baseService = baseService;
-        }
-
         public async Task<User> GetByUsernameAsync(string username)
         {
             var criteria = new GetUserByUsernameCriteria
