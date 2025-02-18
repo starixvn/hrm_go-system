@@ -13,7 +13,9 @@
     using Microsoft.AspNetCore.Mvc;
 
     [UCPermission(FunctionKey = FunctionKey.MenuManagement, Policy = Policy.Read)]
-    public class MenuController(IBaseService baseService, IUserControlSession userControlSession) : Controller
+    public class MenuController(
+        IBaseService baseService,
+        IUserControlSession userControlSession) : Controller
     {
         public IActionResult Index()
         {
@@ -63,7 +65,7 @@
             return Json(commandResult);
         }
 
-        private static IList<Menu> GetHierarchyMenu(IList<Menu> menus)
+        private static List<Menu> GetHierarchyMenu(IList<Menu> menus)
         {
             var menuTrees = menus.Where(menu => !menu.ParentId.HasValue)
                 .OrderBy(x => x.DisplayOrder).ToList();

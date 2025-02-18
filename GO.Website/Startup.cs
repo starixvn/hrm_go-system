@@ -12,16 +12,16 @@ namespace GO.Website
     using GO.Core.Models;
     using GO.Core.Repository;
     using GO.Core.Services;
-    using GO.Website.Constants;
-    using GO.Website.Middlewares;
-    using GO.Website.Models;
-    using GO.Website.Repositories;
-    using GO.Website.Services;
     using GO.UserControl.Client.AspNetCore;
     using GO.UserControl.Client.AspNetCore.Session;
     using GO.UserControl.Client.Core;
     using GO.UserControl.Client.Core.Services;
     using GO.UserControl.Client.Core.Session;
+    using GO.Website.Constants;
+    using GO.Website.Middlewares;
+    using GO.Website.Models;
+    using GO.Website.Repositories;
+    using GO.Website.Services;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -77,7 +77,7 @@ namespace GO.Website
                 };
             }).AddJwtBearer(x =>
             {
-                byte[] secretKey = Encoding.ASCII.GetBytes(Configuration.GetSection("JwtAuthSettings:SecretKey").Value);
+                var secretKey = Encoding.ASCII.GetBytes(Configuration.GetSection("JwtAuthSettings:SecretKey").Value);
                 x.RequireHttpsMetadata = false;
                 x.SaveToken = true;
                 x.TokenValidationParameters = new TokenValidationParameters

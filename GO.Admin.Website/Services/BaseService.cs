@@ -7,19 +7,10 @@
     using GO.Admin.Website.Repositories;
     using GO.UserControl.Client.Core.Models;
 
-    public class BaseService : IBaseService
+    public class BaseService(
+        IDynamicRepository dynamicRepository,
+        IBaseRepository baseRepository) : IBaseService
     {
-        private readonly IDynamicRepository dynamicRepository;
-        private readonly IBaseRepository baseRepository;
-
-        public BaseService(
-            IDynamicRepository dynamicRepository,
-            IBaseRepository baseRepository)
-        {
-            this.dynamicRepository = dynamicRepository;
-            this.baseRepository = baseRepository;
-        }
-
         public async Task<IEnumerable<T>> GetDataAsync<T>(ICriteria criteria)
         {
             if (criteria != null && criteria.IsValid())

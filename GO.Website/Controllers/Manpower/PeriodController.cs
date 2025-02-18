@@ -4,29 +4,20 @@
     using System.Threading.Tasks;
     using GO.Core.Extensions.XML;
     using GO.Core.Services;
+    using GO.UserControl.Client.Core.Enumerables;
+    using GO.UserControl.Client.Core.Session;
     using GO.Website.Constants;
     using GO.Website.Criteria.Manpower.Period;
     using GO.Website.Filters;
     using GO.Website.Models.Manpower.Period;
-    using GO.UserControl.Client.Core.Enumerables;
-    using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("Manpower/Period/[action]/{id?}")]
     [GOPermission(FunctionKey = FunctionKey.ManpowerForecast_PeriodManagement, Policy = Policy.Read)]
-    public class PeriodController : BaseController
+    public class PeriodController(
+        IUserControlSession userControlSession,
+        IBaseService baseService) : BaseController
     {
-        private readonly IUserControlSession userControlSession;
-        private readonly IBaseService baseService;
-
-        public PeriodController(
-            IUserControlSession userControlSession,
-            IBaseService baseService)
-        {
-            this.userControlSession = userControlSession;
-            this.baseService = baseService;
-        }
-
         public IActionResult Index()
         {
             var isHost = userControlSession.HasPermissionOnFunction(FunctionKey.ManpowerForecast_PeriodManagement, Policy.Host);

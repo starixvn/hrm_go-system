@@ -50,7 +50,7 @@
         {
             var attributes = context.ActionDescriptor.FilterDescriptors.Where(x => x.Filter is GOPermissionAttribute)
                     .Select(x => x.Filter as GOPermissionAttribute).ToList();
-            bool hasPermission = false;
+            var hasPermission = false;
 
             foreach (var attribute in attributes)
             {

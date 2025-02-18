@@ -19,13 +19,13 @@
             using (var db = ObjectDbFactory.CreateInstance(command.GetSettingKey()))
             {
                 await db.ExecuteNonQueryAsync(command);
-                CommandResult commandResult = GetCommandResult(db.GetOutputParams());
+                var commandResult = GetCommandResult(db.GetOutputParams());
 
                 return commandResult;
             }
         }
 
-        private CommandResult GetCommandResult(Hashtable hash)
+        private static CommandResult GetCommandResult(Hashtable hash)
         {
             var errCode = hash["errCode"];
             var errMsg = hash["errMsg"];

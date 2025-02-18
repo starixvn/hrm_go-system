@@ -125,7 +125,7 @@
             return Json(header);
         }
 
-        private static IList<MenuItem> GetMenuTrees(IList<MenuItem> menus)
+        private static List<MenuItem> GetMenuTrees(IList<MenuItem> menus)
         {
             var menuTrees = menus.Where(menu => !menu.ParentId.HasValue).ToList();
             foreach (var menu in menuTrees)

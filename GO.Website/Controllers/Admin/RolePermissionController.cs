@@ -1,36 +1,25 @@
 ﻿namespace GO.Website.Controllers.Admin
 {
     using System.Threading.Tasks;
-    using GO.Website.Constants;
-    using GO.Website.Filters;
-    using GO.Website.Models.Admin.RolePermission;
     using GO.UserControl.Client.Core.Enumerables;
     using GO.UserControl.Client.Core.Models;
     using GO.UserControl.Client.Core.Services;
     using GO.UserControl.Client.Core.Session;
+    using GO.Website.Constants;
+    using GO.Website.Filters;
+    using GO.Website.Models.Admin.RolePermission;
     using Microsoft.AspNetCore.Mvc;
 
-    [Route("Admin/RolePermission/[action]")]
+    [Route("Admin/[controller]/[action]")]
     [GOPermission(FunctionKey = FunctionKey.AdminPageRolePermission, Policy = Policy.Read)]
-    public class RolePermissionController : BaseController
+    public class RolePermissionController(
+        IUserControlSession userControlSession,
+        IRoleService roleService,
+        IFunctionService functionService) : BaseController
     {
-        private readonly IUserControlSession userControlSession;
-        private readonly IRoleService roleService;
-        private readonly IFunctionService functionService;
-
-        public RolePermissionController(
-            IUserControlSession userControlSession,
-            IRoleService roleService,
-            IFunctionService functionService)
-        {
-            this.userControlSession = userControlSession;
-            this.roleService = roleService;
-            this.functionService = functionService;
-        }
-
         public IActionResult Index()
         {
-            bool isHost = userControlSession.HasPermissionOnFunction(FunctionKey.AdminPageRolePermission, Policy.Host);
+            var isHost = userControlSession.HasPermissionOnFunction(FunctionKey.AdminPageRolePermission, Policy.Host);
             return View("~/Views/Admin/RolePermission/Index.cshtml", isHost);
         }
 

@@ -6,12 +6,12 @@
     using System.Web;
     using Fanex.Data;
     using GO.Core.Services;
-    using GO.Website.Criteria;
-    using GO.Website.Models;
     using GO.UserControl.Client.Core;
     using GO.UserControl.Client.Core.Models;
     using GO.UserControl.Client.Core.Services;
     using GO.UserControl.Client.Core.Session;
+    using GO.Website.Criteria;
+    using GO.Website.Models;
     using Microsoft.AspNetCore.Mvc;
 
     public class HomeController(
@@ -74,7 +74,7 @@
             return Json(menus);
         }
 
-        private IList<MenuItem> GetMenuTrees(IList<MenuItem> menus)
+        private static List<MenuItem> GetMenuTrees(IList<MenuItem> menus)
         {
             var menuTrees = menus.Where(menu => !menu.ParentId.HasValue).ToList();
             foreach (var menu in menuTrees)
@@ -85,7 +85,7 @@
             return menuTrees;
         }
 
-        private void GetChildMenus(MenuItem menu, IList<MenuItem> menus)
+        private static void GetChildMenus(MenuItem menu, IList<MenuItem> menus)
         {
             var menuItems = menus.Where(x => x.ParentId == menu.MenuItemId).ToList();
             if (menuItems.Any())

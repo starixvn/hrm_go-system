@@ -6,14 +6,14 @@
     using System.Threading.Tasks;
     using Fanex.NexHR.ViewModels;
     using GO.Core.Services;
+    using GO.UserControl.Client.Core.Enumerables;
+    using GO.UserControl.Client.Core.Session;
     using GO.Website.Constants;
     using GO.Website.Criteria.Manpower;
     using GO.Website.Criteria.Report;
     using GO.Website.Filters;
     using GO.Website.Models;
     using GO.Website.Models.Manpower;
-    using GO.UserControl.Client.Core.Enumerables;
-    using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
     using Services;
 

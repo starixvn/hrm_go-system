@@ -9,12 +9,12 @@
     using Microsoft.AspNetCore.Mvc;
 
     [Authorize]
-    [Route("api/[controller]/[action]")]
     public class RoleController(
         IHttpContextAccessor httpContextAccessor,
         IBaseService baseService) : BaseController(httpContextAccessor)
     {
         [HttpGet]
+        [Route("api/role/getBySiteId")]
         public async Task<IActionResult> GetBySiteId(GetRoleBySiteIdCriteria criteria)
         {
             var roles = await baseService.GetDataAsync<Role>(criteria);
@@ -22,6 +22,7 @@
         }
 
         [HttpGet]
+        [Route("api/role/getByUserId")]
         public async Task<IActionResult> GetByUserId(int userId)
         {
             var criteria = new GetRoleByUserIdCriteria
@@ -34,6 +35,7 @@
         }
 
         [HttpPost]
+        [Route("api/role/assignPermission")]
         public async Task<IActionResult> AssignPermission([FromBody] AssignFunctionToRoleCommand command)
         {
             command.ModifiedBy = UserId;
