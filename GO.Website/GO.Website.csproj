@@ -33,6 +33,9 @@
         <Content Include="ExcelTemplates\EmployeeInfo.xlsx">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+        <Content Include="ExcelTemplates\GroupManpower.xlsx">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
         <Content Include="ExcelTemplates\ManpowerForecast.xlsx">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>

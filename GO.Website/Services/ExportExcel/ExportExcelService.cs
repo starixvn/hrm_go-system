@@ -41,6 +41,14 @@
             return excel.Export();
         }
 
+        public byte[] ExportGroupManpowerReport(IEnumerable<AnnualManpowerForecastRequest> requests, int year, string periodName)
+        {
+            const string ExcelTemplatePath = "ExcelTemplates/GroupManpower.xlsx";
+            var templatePath = Path.Combine(hostingEnvironment.ContentRootPath, ExcelTemplatePath);
+            var excel = new GroupManpowerReportExcel(templatePath, requests, year, periodName);
+            return excel.Export();
+        }
+
         public byte[] ExportEmployeeReport(IEnumerable<EmployeeInfo> employeeInfos)
         {
             const string ExcelTemplatePath = "ExcelTemplates/EmployeeInfo.xlsx";

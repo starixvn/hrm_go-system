@@ -13,5 +13,8 @@
 
         byte[] ExportManpowerForecastReport(IEnumerable<AnnualManpowerForecastRequest> requests, int year, string periodName);
         byte[] ExportEmployeeReport(IEnumerable<EmployeeInfo> employeeInfos);
+
+        byte[] ExportGroupManpowerReport(IEnumerable<AnnualManpowerForecastRequest> requests, int year,
+            string periodName);
     }
 }
