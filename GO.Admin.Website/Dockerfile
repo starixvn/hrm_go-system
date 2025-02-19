@@ -12,7 +12,7 @@ COPY --from=deps $NUGET_PACKAGES/. $NUGET_PACKAGES/
 
 WORKDIR /src
 
-COPY ["GO.Admin.Website.csproj", "GO.Admin.Website/"]
+COPY ["GO.Admin.Website/GO.Admin.Website.csproj", "GO.Admin.Website/"]
 
 RUN dotnet nuget add source https://nuget.nexdev.net/api/v2
 RUN dotnet restore -v n -r linux-x64 "GO.Admin.Website/GO.Admin.Website.csproj"
