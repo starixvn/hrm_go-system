@@ -28,7 +28,7 @@
         <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="NLog.Web.AspNetCore" Version="5.3.8" />
+        <PackageReference Include="NLog.Web.AspNetCore" Version="5.4.0" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\GO.Core\GO.Core.csproj" />
