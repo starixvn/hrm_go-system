@@ -2,9 +2,7 @@ namespace GO.Admin.Website
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
-    using Fanex.Data;
     using Fanex.Data.Repository;
     using Fanex.Data.SqlServer;
     using Fanex.Logging;
@@ -12,12 +10,11 @@ namespace GO.Admin.Website
     using GO.Admin.Website.Middlewares;
     using GO.Admin.Website.Repositories;
     using GO.Admin.Website.Services;
-    using HRM.UserControl.Client.AspNetCore.Configurations;
-    using HRM.UserControl.Client.AspNetCore.Session;
-    using HRM.UserControl.Client.Core;
-    using HRM.UserControl.Client.Core.Configurations;
-    using HRM.UserControl.Client.Core.Services;
-    using HRM.UserControl.Client.Core.Session;
+    using GO.UserControl.Client.AspNetCore;
+    using GO.UserControl.Client.AspNetCore.Session;
+    using GO.UserControl.Client.Core;
+    using GO.UserControl.Client.Core.Services;
+    using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -27,31 +24,14 @@ namespace GO.Admin.Website
     using Microsoft.Extensions.Hosting;
     using Sentry;
 
-    public class Startup
+    public class Startup(IConfiguration configuration)
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get; } = configuration;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connections = Configuration.GetSection("ConnectionStrings")
-                .GetChildren()
-                .AsEnumerable()
-                .Where(x => !string.IsNullOrWhiteSpace(x.GetValue<string>("Name")))
-                .ToDictionary(x => x.GetValue<string>("Name"),
-                    y => new ConnectionConfiguration(y.GetValue<string>("Name"), y.GetValue<string>("ConnectionString"), y.GetValue<string>("ProviderName")));
-
-            DbSettingProviderManager
-               .StartNewSession()
-               .Use(connections)
-               .WithSqlServer()
-               .UseDefaultDbSettingProvider("~/App_Data")
-               .Run();
+            services.AddFanexSql(Configuration);
 
             LogManager
                 .SetDefaultLogCategory(Configuration.GetSection("Sentry:LogCategory").Value)

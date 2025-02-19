@@ -2,11 +2,9 @@ namespace GO.Website
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Net.Http;
     using System.Text;
     using System.Threading.Tasks;
-    using Fanex.Data;
     using Fanex.Data.Repository;
     using Fanex.Data.SqlServer;
     using Fanex.Logging;
@@ -14,17 +12,16 @@ namespace GO.Website
     using GO.Core.Models;
     using GO.Core.Repository;
     using GO.Core.Services;
+    using GO.UserControl.Client.AspNetCore;
+    using GO.UserControl.Client.AspNetCore.Session;
+    using GO.UserControl.Client.Core;
+    using GO.UserControl.Client.Core.Services;
+    using GO.UserControl.Client.Core.Session;
     using GO.Website.Constants;
     using GO.Website.Middlewares;
     using GO.Website.Models;
     using GO.Website.Repositories;
     using GO.Website.Services;
-    using HRM.UserControl.Client.AspNetCore.Configurations;
-    using HRM.UserControl.Client.AspNetCore.Session;
-    using HRM.UserControl.Client.Core;
-    using HRM.UserControl.Client.Core.Configurations;
-    using HRM.UserControl.Client.Core.Services;
-    using HRM.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -35,31 +32,14 @@ namespace GO.Website
     using Microsoft.IdentityModel.Tokens;
     using Sentry;
 
-    public class Startup
+    public class Startup(IConfiguration configuration)
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get; } = configuration;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connections = Configuration.GetSection("ConnectionStrings")
-                .GetChildren()
-                .AsEnumerable()
-                .Where(x => !string.IsNullOrWhiteSpace(x.GetValue<string>("Name")))
-                .ToDictionary(x => x.GetValue<string>("Name"),
-                    y => new ConnectionConfiguration(y.GetValue<string>("Name"), y.GetValue<string>("ConnectionString"), y.GetValue<string>("ProviderName")));
-
-            DbSettingProviderManager
-               .StartNewSession()
-               .Use(connections)
-               .WithSqlServer()
-               .UseDefaultDbSettingProvider("~/App_Data")
-               .Run();
+            services.AddFanexSql(Configuration);
 
             LogManager
                 .SetDefaultLogCategory(Configuration.GetSection("Sentry:LogCategory").Value)
@@ -97,7 +77,7 @@ namespace GO.Website
                 };
             }).AddJwtBearer(x =>
             {
-                byte[] secretKey = Encoding.ASCII.GetBytes(Configuration.GetSection("JwtAuthSettings:SecretKey").Value);
+                var secretKey = Encoding.ASCII.GetBytes(Configuration.GetSection("JwtAuthSettings:SecretKey").Value);
                 x.RequireHttpsMetadata = false;
                 x.SaveToken = true;
                 x.TokenValidationParameters = new TokenValidationParameters
@@ -179,7 +159,7 @@ namespace GO.Website
 
             services.AddSingleton<IUserControlSession, UserControlSession>();
             services.AddSingleton<IAuthService, AuthService>();
-            services.AddSingleton<HRM.UserControl.Client.Core.Services.ICryptoService, HRM.UserControl.Client.Core.Services.CryptoService>();
+            services.AddSingleton<GO.UserControl.Client.Core.Services.ICryptoService, GO.UserControl.Client.Core.Services.CryptoService>();
             services.AddSingleton<IUserService, UserService>();
             services.AddSingleton<IRoleService, RoleService>();
             services.AddSingleton<IFunctionService, FunctionService>();

@@ -9,17 +9,10 @@
     using Microsoft.AspNetCore.Mvc;
 
     [Authorize]
-    public class FunctionController : BaseController
+    public class FunctionController(
+        IHttpContextAccessor httpContextAccessor,
+        IBaseService baseService) : BaseController(httpContextAccessor)
     {
-        private readonly IBaseService baseService;
-
-        public FunctionController(
-            IHttpContextAccessor httpContextAccessor,
-            IBaseService baseService) : base(httpContextAccessor)
-        {
-            this.baseService = baseService;
-        }
-
         [HttpGet]
         [Route("api/function/getBySiteId")]
         public async Task<IActionResult> GetBySiteId(GetFunctionBySiteIdCriteria criteria)

@@ -1,9 +1,7 @@
 namespace GO.WebAPI
 {
     using System.Collections.Generic;
-    using System.Linq;
     using System.Text;
-    using Fanex.Data;
     using Fanex.Data.Repository;
     using Fanex.Data.SqlServer;
     using Fanex.Logging;
@@ -24,30 +22,13 @@ namespace GO.WebAPI
     using Microsoft.IdentityModel.Tokens;
     using Sentry;
 
-    public class Startup
+    public class Startup(IConfiguration configuration)
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get; } = configuration;
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var connections = Configuration.GetSection("ConnectionStrings")
-                .GetChildren()
-                .AsEnumerable()
-                .Where(x => !string.IsNullOrWhiteSpace(x.GetValue<string>("Name")))
-                .ToDictionary(x => x.GetValue<string>("Name"),
-                    y => new ConnectionConfiguration(y.GetValue<string>("Name"), y.GetValue<string>("ConnectionString"), y.GetValue<string>("ProviderName")));
-
-            DbSettingProviderManager
-               .StartNewSession()
-               .Use(connections)
-               .WithSqlServer()
-               .UseDefaultDbSettingProvider(resourcePath: $"~/App_Data/SpNames.xml")
-               .Run();
+            services.AddFanexSql(Configuration);
 
             LogManager
                 .SetDefaultLogCategory(Configuration.GetSection("Sentry:LogCategory").Value)
@@ -72,7 +53,7 @@ namespace GO.WebAPI
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(x =>
             {
-                byte[] secretKey = Encoding.ASCII.GetBytes(Configuration.GetSection("AuthenticationSettings:SecretKey").Value);
+                var secretKey = Encoding.ASCII.GetBytes(Configuration.GetSection("AuthenticationSettings:SecretKey").Value);
                 x.RequireHttpsMetadata = false;
                 x.SaveToken = true;
                 x.TokenValidationParameters = new TokenValidationParameters
@@ -93,7 +74,6 @@ namespace GO.WebAPI
             services.AddSingleton<IJwtManagerService, JwtManagerService>();
             services.AddSingleton<IUserService, UserService>();
             services.AddSingleton<ISiteService, SiteService>();
-            services.AddSingleton<IUserMappingService, UserMappingService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

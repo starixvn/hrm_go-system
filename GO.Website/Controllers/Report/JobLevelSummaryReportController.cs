@@ -5,16 +5,18 @@
     using System.Linq;
     using System.Threading.Tasks;
     using GO.Core.Services;
+    using GO.UserControl.Client.Core.Enumerables;
     using GO.Website.Constants;
     using GO.Website.Criteria.Report;
     using GO.Website.Filters;
     using GO.Website.Models.Report.Manpower;
     using GO.Website.Services;
-    using HRM.UserControl.Client.Core.Enumerables;
     using Microsoft.AspNetCore.Mvc;
 
     [GOPermission(FunctionKey = FunctionKey.JobLevelSummaryReport, Policy = Policy.Read)]
-    public class JobLevelSummaryReportController : BaseController
+    public class JobLevelSummaryReportController(
+        IBaseService baseService,
+        IExportExcelService excelService) : BaseController
     {
         private const byte LengthJobLevelType = 2;
 
@@ -30,17 +32,6 @@
             { "Supervisor", new[] { "M", "P" } },
             { "Employee", new[] { "E" } }
         };
-
-        private readonly IBaseService baseService;
-        private readonly IExportExcelService excelService;
-
-        public JobLevelSummaryReportController(
-            IBaseService baseService,
-            IExportExcelService excelService)
-        {
-            this.baseService = baseService;
-            this.excelService = excelService;
-        }
 
         public IActionResult Index()
         {

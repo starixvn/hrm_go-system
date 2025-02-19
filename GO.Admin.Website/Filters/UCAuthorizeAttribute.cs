@@ -1,8 +1,8 @@
 ﻿namespace GO.Admin.Website.Filters
 {
     using System;
-    using HRM.UserControl.Client.Core;
-    using HRM.UserControl.Client.Core.Session;
+    using GO.UserControl.Client.Core;
+    using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;

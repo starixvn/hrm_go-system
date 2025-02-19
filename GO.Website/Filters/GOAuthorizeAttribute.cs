@@ -1,8 +1,8 @@
 ﻿namespace GO.Website.Filters
 {
     using System;
-    using HRM.UserControl.Client.Core;
-    using HRM.UserControl.Client.Core.Session;
+    using GO.UserControl.Client.Core;
+    using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -24,7 +24,7 @@
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            if (session.UserId  <= 0 || session.JwtToken == null || session.JwtToken.IsExpired)
+            if (session.UserId <= 0 || session.JwtToken == null || session.JwtToken.IsExpired)
             {
                 if (IsAjaxRequest(context.HttpContext.Request))
                 {

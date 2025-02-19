@@ -4,6 +4,8 @@
     using System.Linq;
     using System.Threading.Tasks;
     using GO.Core.Services;
+    using GO.UserControl.Client.Core.Enumerables;
+    using GO.UserControl.Client.Core.Session;
     using GO.Website.Constants;
     using GO.Website.Criteria.Manpower;
     using GO.Website.Criteria.Manpower.AnnualRequest;
@@ -11,30 +13,15 @@
     using GO.Website.Models.Manpower;
     using GO.Website.Models.Manpower.AnnualRequest;
     using GO.Website.Services;
-    using HRM.UserControl.Client.Core.Enumerables;
-    using HRM.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("ManpowerForecast/AnnualRequest/[action]/{id?}")]
-    public class AnnualRequestController : BaseController
+    public class AnnualRequestController(
+        IUserControlSession userControlSession,
+        IManpowerForecastService manpowerForecastService,
+        IBaseService baseService,
+        IExportExcelService excelService) : BaseController
     {
-        private readonly IUserControlSession userControlSession;
-        private readonly IManpowerForecastService manpowerForecastService;
-        private readonly IBaseService baseService;
-        private readonly IExportExcelService excelService;
-
-        public AnnualRequestController(
-            IUserControlSession userControlSession,
-            IManpowerForecastService manpowerForecastService,
-            IBaseService baseService,
-            IExportExcelService excelService)
-        {
-            this.userControlSession = userControlSession;
-            this.manpowerForecastService = manpowerForecastService;
-            this.baseService = baseService;
-            this.excelService = excelService;
-        }
-
         [GOPermission(FunctionKey = FunctionKey.MyAnnualManpowerForecastRequestForm, Policy = Policy.Host)]
         public async Task<IActionResult> Create()
         {

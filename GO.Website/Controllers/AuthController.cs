@@ -1,34 +1,21 @@
 ﻿namespace GO.Website.Controllers
 {
     using System.Threading.Tasks;
-    using HRM.UserControl.Client.Core.Configurations;
-    using HRM.UserControl.Client.Core.Models;
-    using HRM.UserControl.Client.Core.Models.Auth;
-    using HRM.UserControl.Client.Core.Services;
-    using HRM.UserControl.Client.Core.Session;
+    using GO.UserControl.Client.Core;
+    using GO.UserControl.Client.Core.Models;
+    using GO.UserControl.Client.Core.Models.Auth;
+    using GO.UserControl.Client.Core.Services;
+    using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Mvc;
 
-    public class AuthController : Controller
+    public class AuthController(
+        IUserControlSettings userControlSettings,
+        IUserControlSession userControlSession,
+        ICryptoService cryptoService,
+        IAuthService authService) : Controller
     {
-        private readonly IUserControlSettings userControlSettings;
-        private readonly IUserControlSession userControlSession;
-        private readonly ICryptoService cryptoService;
-        private readonly IAuthService authService;
-
-        public AuthController(
-            IUserControlSettings userControlSettings,
-            IUserControlSession userControlSession,
-            ICryptoService cryptoService,
-            IAuthService authService)
-        {
-            this.userControlSettings = userControlSettings;
-            this.userControlSession = userControlSession;
-            this.cryptoService = cryptoService;
-            this.authService = authService;
-        }
-
         public IActionResult Login()
         {
             var token = cryptoService.GenerateRijndaelKeyIV();

@@ -1,7 +1,6 @@
 ﻿namespace GO.WebAPI.Controllers
 {
     using System.Threading.Tasks;
-    using GO.Core.Models;
     using GO.Core.Services;
     using GO.Models.Role;
     using GO.WebAPI.Criteria.Role;
@@ -10,17 +9,10 @@
     using Microsoft.AspNetCore.Mvc;
 
     [Authorize]
-    public class RoleController : BaseController
+    public class RoleController(
+        IHttpContextAccessor httpContextAccessor,
+        IBaseService baseService) : BaseController(httpContextAccessor)
     {
-        private readonly IBaseService baseService;
-
-        public RoleController(
-            IHttpContextAccessor httpContextAccessor,
-            IBaseService baseService) : base(httpContextAccessor)
-        {
-            this.baseService = baseService;
-        }
-
         [HttpGet]
         [Route("api/role/getBySiteId")]
         public async Task<IActionResult> GetBySiteId(GetRoleBySiteIdCriteria criteria)
@@ -47,7 +39,7 @@
         public async Task<IActionResult> AssignPermission([FromBody] AssignFunctionToRoleCommand command)
         {
             command.ModifiedBy = UserId;
-            CommandResult commandResult = await baseService.ExecuteNonQueryAsync(command);
+            var commandResult = await baseService.ExecuteNonQueryAsync(command);
             return Json(commandResult);
         }
     }

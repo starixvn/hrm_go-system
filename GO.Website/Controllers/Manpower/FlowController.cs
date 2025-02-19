@@ -2,32 +2,23 @@
 {
     using System.Linq;
     using System.Threading.Tasks;
+    using Constants;
     using Filters;
     using GO.Core.Extensions.XML;
     using GO.Core.Services;
-    using Constants;
+    using GO.UserControl.Client.Core.Enumerables;
+    using GO.UserControl.Client.Core.Session;
     using GO.Website.Criteria.Manpower;
-    using Models;
     using GO.Website.Models.Manpower;
-    using HRM.UserControl.Client.Core.Enumerables;
-    using HRM.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
+    using Models;
 
     [Route("Manpower/Flow/[action]")]
     [GOPermission(FunctionKey = FunctionKey.ManpowerForecast_FlowManagement, Policy = Policy.Read)]
-    public class FlowController : BaseController
+    public class FlowController(
+        IUserControlSession userControlSession,
+        IBaseService baseService) : BaseController
     {
-        private readonly IUserControlSession userControlSession;
-        private readonly IBaseService baseService;
-
-        public FlowController(
-            IUserControlSession userControlSession,
-            IBaseService baseService)
-        {
-            this.userControlSession = userControlSession;
-            this.baseService = baseService;
-        }
-
         public IActionResult Index()
         {
             var isHost = userControlSession.HasPermissionOnFunction(FunctionKey.ManpowerForecast_FlowManagement, Policy.Host);

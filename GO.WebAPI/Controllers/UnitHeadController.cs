@@ -5,7 +5,6 @@
     using System.Linq;
     using System.Threading.Tasks;
     using GO.Core.Extensions.XML;
-    using GO.Core.Models;
     using GO.Core.Services;
     using GO.WebAPI.Criteria.UnitHead;
     using GO.WebAPI.Models.UnitHead;
@@ -14,17 +13,10 @@
     using Microsoft.AspNetCore.Mvc;
 
     [Authorize]
-    public class UnitHeadController : BaseController
+    public class UnitHeadController(
+        IHttpContextAccessor httpContextAccessor,
+        IBaseService baseService) : BaseController(httpContextAccessor)
     {
-        private readonly IBaseService baseService;
-
-        public UnitHeadController(
-            IHttpContextAccessor httpContextAccessor,
-            IBaseService baseService) : base(httpContextAccessor)
-        {
-            this.baseService = baseService;
-        }
-
         [HttpGet]
         [Route("api/UnitHead/GetInfo")]
         public async Task<IActionResult> GetInfo()
@@ -45,7 +37,7 @@
                 ModifiedBy = UserId,
                 Value = infos != null && infos.Any() ? infos.ToXML().ToString() : string.Empty
             };
-            CommandResult commandResult = await baseService.ExecuteNonQueryAsync(command);
+            var commandResult = await baseService.ExecuteNonQueryAsync(command);
 
             return Json(commandResult);
         }
@@ -74,7 +66,7 @@
                 ModifiedBy = UserId,
                 Value = schedules != null && schedules.Any() ? schedules.ToXML().ToString() : string.Empty
             };
-            CommandResult commandResult = await baseService.ExecuteNonQueryAsync(command);
+            var commandResult = await baseService.ExecuteNonQueryAsync(command);
 
             return Json(commandResult);
         }

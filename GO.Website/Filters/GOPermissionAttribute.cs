@@ -3,9 +3,9 @@
     using System;
     using System.Linq;
     using System.Net;
-    using HRM.UserControl.Client.Core;
-    using HRM.UserControl.Client.Core.Enumerables;
-    using HRM.UserControl.Client.Core.Session;
+    using GO.UserControl.Client.Core;
+    using GO.UserControl.Client.Core.Enumerables;
+    using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
@@ -50,7 +50,7 @@
         {
             var attributes = context.ActionDescriptor.FilterDescriptors.Where(x => x.Filter is GOPermissionAttribute)
                     .Select(x => x.Filter as GOPermissionAttribute).ToList();
-            bool hasPermission = false;
+            var hasPermission = false;
 
             foreach (var attribute in attributes)
             {

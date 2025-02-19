@@ -8,28 +8,18 @@
     using GO.Admin.Website.Filters;
     using GO.Admin.Website.Models.Site;
     using GO.Admin.Website.Services;
-    using HRM.UserControl.Client.Core.Enumerables;
-    using HRM.UserControl.Client.Core.Models;
-    using HRM.UserControl.Client.Core.Session;
+    using GO.UserControl.Client.Core.Enumerables;
+    using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
 
     [UCPermission(FunctionKey = FunctionKey.SiteManagement, Policy = Policy.Read)]
-    public class SiteController : BaseController
+    public class SiteController(
+        IUserControlSession userControlSession,
+        IBaseService baseService) : BaseController
     {
-        private readonly IUserControlSession userControlSession;
-        private readonly IBaseService baseService;
-
-        public SiteController(
-            IUserControlSession userControlSession,
-            IBaseService baseService)
-        {
-            this.userControlSession = userControlSession;
-            this.baseService = baseService;
-        }
-
         public IActionResult Index()
         {
-            bool isHost = userControlSession.HasPermissionOnFunction(FunctionKey.SiteManagement, Policy.Host);
+            var isHost = userControlSession.HasPermissionOnFunction(FunctionKey.SiteManagement, Policy.Host);
             return View(isHost);
         }
 
@@ -71,7 +61,7 @@
         public async Task<IActionResult> UpdateStatus([FromBody] UpdateSiteStatusCommand command)
         {
             command.ModifiedBy = userControlSession.UserId;
-            CommandResult commandResult = await baseService.ExecuteNonQueryAsync(command);
+            var commandResult = await baseService.ExecuteNonQueryAsync(command);
             return Json(commandResult);
         }
 

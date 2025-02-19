@@ -8,39 +8,24 @@
     using System.Web;
     using Fanex.Data;
     using GO.Core.Models;
+    using GO.UserControl.Client.Core.Services;
+    using GO.UserControl.Client.Core.Session;
     using GO.Website.Models;
     using GO.Website.Models.Todolist;
     using GO.Website.Services;
-    using HRM.UserControl.Client.Core.Services;
-    using HRM.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json;
 
-    public class TodolistController : Controller
+    public class TodolistController(
+        List<ApiSiteSetting> apiSiteSettings,
+        IUserControlSession userControlSession,
+        IAuthService authService,
+        ITodolistService todolistService,
+        IFeedbackService feedbackService) : Controller
     {
-        private readonly List<ApiSiteSetting> apiSiteSettings;
-        private readonly IUserControlSession userControlSession;
-        private readonly IAuthService authService;
-        private readonly ITodolistService todolistService;
-        private readonly IFeedbackService feedbackService;
-
-        public TodolistController(
-            List<ApiSiteSetting> apiSiteSettings,
-            IUserControlSession userControlSession,
-            IAuthService authService,
-            ITodolistService todolistService,
-            IFeedbackService feedbackService)
-        {
-            this.apiSiteSettings = apiSiteSettings;
-            this.userControlSession = userControlSession;
-            this.authService = authService;
-            this.todolistService = todolistService;
-            this.feedbackService = feedbackService;
-        }
-
         public async Task<IActionResult> GetTodolistBlock()
         {
-            IEnumerable<UserSite> usersites = await todolistService.GetUserSiteByUserIdAsync(userControlSession.UserId);
+            var usersites = await todolistService.GetUserSiteByUserIdAsync(userControlSession.UserId);
             var result = new
             {
                 hrm = apiSiteSettings.Any(x => x.IsHrmSystem && usersites.Any(y => y.SiteId == x.SiteId)),
@@ -53,32 +38,32 @@
 
         public async Task<IActionResult> GetHrmTodolist()
         {
-            IEnumerable<UserSite> usersites = await todolistService.GetUserSiteByUserIdAsync(userControlSession.UserId);
-            IList<ApiSiteSetting> hrmsites = apiSiteSettings.Where(x => x.IsHrmSystem && usersites.Any(y => y.SiteId == x.SiteId)).ToList();
-            IList<TodolistItem> todoitems = await todolistService.GetTodolistAsync(usersites.ToList(), hrmsites);
+            var usersites = await todolistService.GetUserSiteByUserIdAsync(userControlSession.UserId);
+            var hrmsites = apiSiteSettings.Where(x => x.IsHrmSystem && usersites.Any(y => y.SiteId == x.SiteId)).ToList();
+            var todoitems = await todolistService.GetTodolistAsync(usersites.ToList(), hrmsites);
             return Json(todoitems);
         }
 
         public async Task<IActionResult> GetEpaTodolist()
         {
-            IEnumerable<UserSite> usersites = await todolistService.GetUserSiteByUserIdAsync(userControlSession.UserId);
-            IList<ApiSiteSetting> epas = apiSiteSettings.Where(x => x.IsEpaSystem && usersites.Any(y => y.SiteId == x.SiteId)).ToList();
-            IList<TodolistItem> todoitems = await todolistService.GetTodolistAsync(usersites.ToList(), epas);
+            var usersites = await todolistService.GetUserSiteByUserIdAsync(userControlSession.UserId);
+            var epas = apiSiteSettings.Where(x => x.IsEpaSystem && usersites.Any(y => y.SiteId == x.SiteId)).ToList();
+            var todoitems = await todolistService.GetTodolistAsync(usersites.ToList(), epas);
             return Json(todoitems);
         }
 
         public async Task<IActionResult> GetHrppTodolist()
         {
-            IEnumerable<UserSite> usersites = await todolistService.GetUserSiteByUserIdAsync(userControlSession.UserId);
-            IList<ApiSiteSetting> hrpps = apiSiteSettings.Where(x => x.IsHrppSystem && usersites.Any(y => y.SiteId == x.SiteId)).ToList();
-            IList<TodolistItem> todoitems = await todolistService.GetTodolistAsync(usersites.ToList(), hrpps);
+            var usersites = await todolistService.GetUserSiteByUserIdAsync(userControlSession.UserId);
+            var hrpps = apiSiteSettings.Where(x => x.IsHrppSystem && usersites.Any(y => y.SiteId == x.SiteId)).ToList();
+            var todoitems = await todolistService.GetTodolistAsync(usersites.ToList(), hrpps);
             return Json(todoitems);
         }
 
         public async Task<IActionResult> GetEpa360Todolist()
         {
             var site = apiSiteSettings.FirstOrDefault(x => x.IsEpa360System);
-            IList<TodolistItem> todoitems = await feedbackService.GetTodolistByUserIdAsync(userControlSession.UserId);
+            var todoitems = await feedbackService.GetTodolistByUserIdAsync(userControlSession.UserId);
             if (site != null)
             {
                 foreach (var item in todoitems)
@@ -95,7 +80,7 @@
         {
             var userId = HttpUtility.UrlEncode(Cryptography.EncryptPassword(userControlSession.UserId.ToString()));
             var onUserId = HttpUtility.UrlEncode(Cryptography.EncryptPassword(userControlSession.OnUserId.ToString()));
-            IEnumerable<UserSite> usersites = await todolistService.GetUserSiteByUserIdAsync(userControlSession.UserId);
+            var usersites = await todolistService.GetUserSiteByUserIdAsync(userControlSession.UserId);
             if (param.Action.IsRedirect)
             {
                 var usersite = usersites.FirstOrDefault(x => x.SiteId == param.SiteId);

@@ -2,13 +2,15 @@
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
     </PropertyGroup>
-
     <ItemGroup>
+        <None Remove="App_Data\SpNames.LOCAL.xml" />
+        <None Remove="App_Data\SpNames.PROD.xml" />
         <None Remove="App_Data\SpNames.xml" />
         <None Remove="logs\log.txt" />
     </ItemGroup>
-
     <ItemGroup>
+        <Content Include="App_Data\SpNames.LOCAL.xml" />
+        <Content Include="App_Data\SpNames.PROD.xml" />
         <Content Include="App_Data\SpNames.xml">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
@@ -19,7 +21,6 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
-
     <ItemGroup>
         <PackageReference Include="Fanex.Logging.Extensions.AspNetCore" Version="1.0.1" />
         <PackageReference Include="Fanex.Logging.Extensions.Database" Version="1.0.8" />
@@ -27,9 +28,8 @@
         <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="NLog.Web.AspNetCore" Version="5.3.8" />
+        <PackageReference Include="NLog.Web.AspNetCore" Version="5.4.0" />
     </ItemGroup>
-
     <ItemGroup>
         <ProjectReference Include="..\GO.Core\GO.Core.csproj" />
         <ProjectReference Include="..\GO.Models\GO.Models.csproj" />

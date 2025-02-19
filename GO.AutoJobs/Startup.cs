@@ -1,8 +1,6 @@
 ﻿namespace GO.AutoJobs
 {
     using System.Collections.Generic;
-    using System.Linq;
-    using Fanex.Data;
     using Fanex.Data.Repository;
     using Fanex.Data.SqlServer;
     using Fanex.Logging;
@@ -22,14 +20,9 @@
     using Microsoft.Extensions.Hosting;
     using Sentry;
 
-    public class Startup
+    public class Startup(IConfiguration configuration)
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get; } = configuration;
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -64,19 +57,7 @@
 
         private static void AddConfiguration(IServiceCollection services, IConfiguration configuration)
         {
-            var connections = configuration.GetSection("ConnectionStrings")
-                .GetChildren()
-                .AsEnumerable()
-                .Where(x => !string.IsNullOrWhiteSpace(x.GetValue<string>("Name")))
-                .ToDictionary(x => x.GetValue<string>("Name"),
-                y => new ConnectionConfiguration(y.GetValue<string>("Name"), y.GetValue<string>("ConnectionString"), y.GetValue<string>("ProviderName")));
-
-            DbSettingProviderManager
-                .StartNewSession()
-                .Use(connections)
-                .WithSqlServer()
-                .UseDefaultDbSettingProvider("~/App_Data/SpNames.xml")
-                .Run();
+            services.AddFanexSql(configuration);
 
             LogManager
                 .SetDefaultLogCategory(configuration.GetSection("Sentry:LogCategory").Value)

@@ -8,26 +8,18 @@
     using GO.Admin.Website.Filters;
     using GO.Admin.Website.Models.Menu;
     using GO.Admin.Website.Services;
-    using HRM.UserControl.Client.Core.Enumerables;
-    using HRM.UserControl.Client.Core.Models;
-    using HRM.UserControl.Client.Core.Session;
+    using GO.UserControl.Client.Core.Enumerables;
+    using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
 
     [UCPermission(FunctionKey = FunctionKey.MenuManagement, Policy = Policy.Read)]
-    public class MenuController : Controller
+    public class MenuController(
+        IBaseService baseService,
+        IUserControlSession userControlSession) : Controller
     {
-        private readonly IBaseService baseService;
-        private readonly IUserControlSession userControlSession;
-
-        public MenuController(IBaseService baseService, IUserControlSession userControlSession)
-        {
-            this.baseService = baseService;
-            this.userControlSession = userControlSession;
-        }
-
         public IActionResult Index()
         {
-            bool isHost = userControlSession.HasPermissionOnFunction(FunctionKey.MenuManagement, Policy.Host);
+            var isHost = userControlSession.HasPermissionOnFunction(FunctionKey.MenuManagement, Policy.Host);
             return View(isHost);
         }
 
@@ -69,15 +61,15 @@
         public async Task<IActionResult> UpdateStatus([FromBody] UpdateMenuStatusCommand command)
         {
             command.ModifiedBy = userControlSession.UserId;
-            CommandResult commandResult = await baseService.ExecuteNonQueryAsync(command);
+            var commandResult = await baseService.ExecuteNonQueryAsync(command);
             return Json(commandResult);
         }
 
-        private IList<Menu> GetHierarchyMenu(IList<Menu> menus)
+        private static List<Menu> GetHierarchyMenu(IList<Menu> menus)
         {
-            IList<Menu> menuTrees = menus.Where(menu => !menu.ParentId.HasValue)
+            var menuTrees = menus.Where(menu => !menu.ParentId.HasValue)
                 .OrderBy(x => x.DisplayOrder).ToList();
-            foreach (Menu menu in menuTrees)
+            foreach (var menu in menuTrees)
             {
                 menu.Level = 0;
                 GetChildMenus(menu, menus);
@@ -86,15 +78,15 @@
             return menuTrees;
         }
 
-        private void GetChildMenus(Menu menu, IList<Menu> menus)
+        private static void GetChildMenus(Menu menu, IList<Menu> menus)
         {
-            IList<Menu> menuItems = menus.Where(x => x.ParentId == menu.MenuItemId)
+            var menuItems = menus.Where(x => x.ParentId == menu.MenuItemId)
                 .OrderBy(x => x.DisplayOrder).ToList();
             if (menuItems.Any())
             {
                 menu.Childs ??= new List<Menu>();
 
-                foreach (Menu item in menuItems)
+                foreach (var item in menuItems)
                 {
                     item.Level = (byte)(item.Level + 1);
                     menu.Childs.Add(item);

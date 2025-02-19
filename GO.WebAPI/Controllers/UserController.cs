@@ -14,25 +14,15 @@
     using Microsoft.AspNetCore.Mvc;
 
     [Authorize]
-    public class UserController : BaseController
+    [Route("api/user")]
+    public class UserController(
+        IHttpContextAccessor httpContextAccessor,
+        IBaseService baseService,
+        ICryptoService cryptoService,
+        IUserService userService) : BaseController(httpContextAccessor)
     {
-        private readonly IBaseService baseService;
-        private readonly ICryptoService cryptoService;
-        private readonly IUserService userService;
-
-        public UserController(
-            IHttpContextAccessor httpContextAccessor,
-            IBaseService baseService,
-            ICryptoService cryptoService,
-            IUserService userService) : base(httpContextAccessor)
-        {
-            this.baseService = baseService;
-            this.userService = userService;
-            this.cryptoService = cryptoService;
-        }
-
         [HttpGet]
-        [Route("api/user/getMenuItem")]
+        [Route("getMenuItem")]
         public async Task<IActionResult> GetMenuItem()
         {
             var criteria = new GetMenuItemByUserIdCriteria
@@ -45,7 +35,7 @@
         }
 
         [HttpGet]
-        [Route("api/user/getFunctionPermission")]
+        [Route("getFunctionPermission")]
         public async Task<IActionResult> GetFunctionPermission(GetFunctionByUserIdCriteria criteria)
         {
             var functions = await baseService.GetDataAsync<FunctionPermission>(criteria);
@@ -53,7 +43,7 @@
         }
 
         [HttpGet]
-        [Route("api/user/getAll")]
+        [Route("getAll")]
         public async Task<IActionResult> GetBySiteId(GetUserBySiteIdCriteria criteria)
         {
             criteria.SiteId = SiteId;
@@ -62,58 +52,58 @@
         }
 
         [HttpGet]
-        [Route("api/user/getById/{id:int}")]
+        [Route("getById/{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
-            User user = await userService.GetByIdAsync(id);
+            var user = await userService.GetByIdAsync(id);
             return Json(user);
         }
 
         [HttpPost]
-        [Route("api/user/create")]
+        [Route("create")]
         public async Task<IActionResult> Create([FromBody] CreateUserCommand command)
         {
             command.SiteId = SiteId;
             command.CreatedBy = UserId;
             if (!string.IsNullOrWhiteSpace(command.BCryptPassword))
             {
-                string[] keyiv = command.Token.Split(":");
+                var keyiv = command.Token.Split(":");
                 var rijndaelKey = keyiv[0];
                 var rijndaelIV = keyiv[1];
                 command.BCryptPassword = cryptoService.Decrypt(command.BCryptPassword, rijndaelKey, rijndaelIV);
                 command.BCryptPassword = BCrypt.Net.BCrypt.HashPassword(command.BCryptPassword);
             }
 
-            CommandResult commandResult = await baseService.ExecuteNonQueryAsync(command);
+            var commandResult = await baseService.ExecuteNonQueryAsync(command);
             commandResult.ObjectId = command.UserId;
             return Json(commandResult);
         }
 
         [HttpPost]
-        [Route("api/user/update")]
+        [Route("update")]
         public async Task<IActionResult> Update([FromBody] UpdateUserInfoCommand command)
         {
             command.SiteId = SiteId;
             command.ModifiedBy = UserId;
-            CommandResult commandResult = await baseService.ExecuteNonQueryAsync(command);
+            var commandResult = await baseService.ExecuteNonQueryAsync(command);
             return Json(commandResult);
         }
 
         [HttpPost]
-        [Route("api/user/assignRole")]
+        [Route("assignRole")]
         public async Task<IActionResult> AssignRole([FromBody] AssignRoleToUserCommand command)
         {
             command.SiteId = SiteId;
             command.ModifiedBy = UserId;
-            CommandResult commandResult = await baseService.ExecuteNonQueryAsync(command);
+            var commandResult = await baseService.ExecuteNonQueryAsync(command);
             return Json(commandResult);
         }
 
         [HttpPost]
-        [Route("api/user/updatePassword")]
+        [Route("updatePassword")]
         public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordParam param)
         {
-            string[] keyiv = param.Token.Split(":");
+            var keyiv = param.Token.Split(":");
             var rijndaelKey = keyiv[0];
             var rijndaelIV = keyiv[1];
             param.OldPassword = cryptoService.Decrypt(param.OldPassword, rijndaelKey, rijndaelIV);
@@ -141,10 +131,10 @@
         }
 
         [HttpPost]
-        [Route("api/user/resetPassword")]
+        [Route("resetPassword")]
         public async Task<IActionResult> ResetPassword([FromBody] UpdatePasswordParam param)
         {
-            string[] keyiv = param.Token.Split(":");
+            var keyiv = param.Token.Split(":");
             var rijndaelKey = keyiv[0];
             var rijndaelIV = keyiv[1];
             param.Password = cryptoService.Decrypt(param.Password, rijndaelKey, rijndaelIV);
@@ -156,18 +146,18 @@
                 IsResetPassword = true,
                 ModifiedBy = UserId
             };
-            CommandResult commandResult = await baseService.ExecuteNonQueryAsync(command);
+            var commandResult = await baseService.ExecuteNonQueryAsync(command);
 
             return Json(commandResult);
         }
 
         [HttpPost]
-        [Route("api/user/delete")]
+        [Route("delete")]
         public async Task<IActionResult> Delete([FromBody] DeleteUserCommand command)
         {
             command.SiteId = SiteId;
             command.ModifiedBy = UserId;
-            CommandResult commandResult = await baseService.ExecuteNonQueryAsync(command);
+            var commandResult = await baseService.ExecuteNonQueryAsync(command);
             return Json(commandResult);
         }
 

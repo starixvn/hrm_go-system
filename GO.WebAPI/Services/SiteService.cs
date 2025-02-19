@@ -6,15 +6,8 @@
     using GO.Models;
     using GO.WebAPI.Criteria.Site;
 
-    public class SiteService : ISiteService
+    public class SiteService(IBaseService baseService) : ISiteService
     {
-        private readonly IBaseService baseService;
-
-        public SiteService(IBaseService baseService)
-        {
-            this.baseService = baseService;
-        }
-
         public async Task<SiteModel> GetByIdAsync(short siteId)
         {
             var criteria = new GetSiteByIdCriteria

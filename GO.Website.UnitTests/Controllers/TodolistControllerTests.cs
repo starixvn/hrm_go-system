@@ -7,8 +7,8 @@
     using GO.Website.Models;
     using GO.Website.Models.Todolist;
     using GO.Website.Services;
-    using HRM.UserControl.Client.Core.Services;
-    using HRM.UserControl.Client.Core.Session;
+    using GO.UserControl.Client.Core.Services;
+    using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
     using NSubstitute;
     using System.Collections.Generic;
