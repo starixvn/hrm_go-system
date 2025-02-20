@@ -8,6 +8,7 @@
     public class EmployeeInfo
     {
         public int EmpId { get; set; }
+        public int? UserId { get; set; }
         public string Code { get; set; }
         public string FullName { get; set; }
         public string Nickname { get; set; }
@@ -23,7 +24,7 @@
         public byte Gender { get; set; }
         public string JobTitle { get; set; }
         public string JobLevel { get; set; }
-        public DateTime? GroupDate { get; set; }
+        public DateTime? JoinedDate { get; set; }
         public DateTime? CompanyDate { get; set; }
         public DateTime? ConfirmedDate { get; set; }
         public DateTime? ResignedDate { get; set; }

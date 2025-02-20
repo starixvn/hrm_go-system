@@ -13,7 +13,7 @@
         [SpParam(Ignored = true)]
         public IList<EmployeeInfo> EmployeeInfos { get; set; }
 
-        public override string GetSettingKey() => "HRM_SyncEmployeeInfo";
+        public override string GetSettingKey() => "HRM_API_SyncEmployeeInfo";
 
         public override bool IsValid() => !string.IsNullOrWhiteSpace(EmployeeInfoXml) && CompanyId > 0;
     }
