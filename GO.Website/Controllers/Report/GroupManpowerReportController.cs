@@ -1,4 +1,7 @@
-﻿namespace GO.Website.Controllers.Report
+﻿using GO.UserControl.Client.Core.Enumerables;
+using GO.UserControl.Client.Core.Session;
+
+namespace GO.Website.Controllers.Report
 {
     using System;
     using System.Collections.Generic;
@@ -9,8 +12,6 @@
     using GO.Website.Models.Manpower;
     using GO.Website.Models.Report.Manpower;
     using GO.Website.Services;
-    using HRM.UserControl.Client.Core.Enumerables;
-    using HRM.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Mvc;
 
     [GOPermission(FunctionKey = FunctionKey.ManpowerForecastReport, Policy = Policy.Read)]
