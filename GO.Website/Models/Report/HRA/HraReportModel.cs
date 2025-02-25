@@ -14,20 +14,6 @@ public class UnitReport
     public string Unit { get; set; }
     public string Company { get; set; }
     public string Country { get; set; }
-
+    public string LocationCode { get; set; }
     public IEnumerable<ReportModel> Details { get; set; }
-}
-
-public class CompanyReport
-{
-
-    public List<ReportModel> Details { get; set; }
-}
-
-public class DetailsReport
-{
-    public string Company { get; set; }
-   // public string Country { get; set; }
-   // public string Country { get; set; }
-    public List<ReportModel> Details { get; set; }
 }

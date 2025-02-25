@@ -1,29 +1,20 @@
-﻿namespace GO.Website.Controllers.Report;
+﻿using GO.UserControl.Client.Core.Enumerables;
+
+namespace GO.Website.Controllers.Report;
 
 using System;
 using System.Threading.Tasks;
-using GO.Website.Constants;
-using GO.Website.Criteria.Report.HRA;
-using GO.Website.Criteria.Report.Manpower;
-using GO.Website.Filters;
-using GO.Website.Models.Report.Manpower;
-using GO.Website.Services;
+using Constants;
+using Filters;
+using Services;
 using Microsoft.AspNetCore.Mvc;
 
-//[GOPermission(FunctionKey = FunctionKey.HRAReport, Policy = Policy.Read)]
-public class HRAReportController : Controller
+[GOPermission(FunctionKey = FunctionKey.HRAReport, Policy = Policy.Read)]
+public class HRAReportController(
+    IHraReportService hraReportService,
+    IExportExcelService excelService)
+    : Controller
 {
-    private readonly IHraReportService hraReportService;
-    private readonly IExportExcelService excelService;
-
-    public HRAReportController(
-        IHraReportService hraReportService,
-        IExportExcelService excelService)
-    {
-        this.hraReportService = hraReportService;
-        this.excelService = excelService;
-    }
-
     public IActionResult Index()
     {
         return View("~/Views/Report/HRAReport.cshtml");

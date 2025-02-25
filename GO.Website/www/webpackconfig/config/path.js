@@ -24,7 +24,8 @@ const cssPaths = {
     role_permission: ['./www/sources/css/pages/admin/role-permission.scss'],
     role_assignment: ['./www/sources/css/pages/admin/role-assignment.scss'],
     report_manpower: ['./www/sources/css/pages/report/manpower.scss'],
-    report_group_manpower: ['./www/sources/css/pages/report/group-manpower.scss']
+    report_group_manpower: ['./www/sources/css/pages/report/group-manpower.scss'],
+    report_hra: ['./www/sources/css/pages/report/hra.scss']
 };
 
 const scriptPaths = {
@@ -50,8 +51,8 @@ const scriptPaths = {
     role_permission: ['./www/sources/js/pages/admin/role-permission/index.js'],
     role_assignment: ['./www/sources/js/pages/admin/role-assignment/index.js'],
     report_manpower: ['./www/sources/js/pages/report/manpower/index.js'],
-    report_group_manpower: ['./www/sources/js/pages/report/group-manpower/index.js']
-
+    report_group_manpower: ['./www/sources/js/pages/report/group-manpower/index.js'],
+    report_hra: ['./www/sources/js/pages/report/hra/index.js']
 };
 
 module.exports = {

@@ -23,7 +23,8 @@ public class HRAReportService(IBaseService baseService) : IHraReportService
         var report = new HraReportModel
         {
             ReportByUnit = CalculateReportByUnit(employeeInfos, year),
-            ReportByCompany = CalculateReportByCompany(employeeInfos, year)
+            ReportByCompany = CalculateReportByCompany(employeeInfos, year),
+            ReportByDetails = CalculateReportByDetails(employeeInfos, year)
         };
 
         return report;
@@ -36,7 +37,6 @@ public class HRAReportService(IBaseService baseService) : IHraReportService
         return (await baseService.GetDataAsync<EmployeeInfo>(criteria)).ToList();
     }
 
-    #region CountByMonth
     public List<UnitReport> CalculateReportByUnit(IEnumerable<EmployeeInfo> employeeInfos, int year)
     {
         return employeeInfos
@@ -45,12 +45,12 @@ public class HRAReportService(IBaseService baseService) : IHraReportService
             .Select(groupByUnit => new UnitReport
             {
                 Unit = groupByUnit.Key,
-                Details = CountByMonth(groupByUnit.Key, groupByUnit.ToList(), year)
+                Details = CountByMonth(groupByUnit.ToList(), year)
             })
             .ToList();
     }
 
-    public IEnumerable<ReportModel> CountByMonth(string unit, List<EmployeeInfo> employeesByUnit, int year)
+    public IEnumerable<ReportModel> CountByMonth(List<EmployeeInfo> employeesByUnit, int year)
     {
         for (var i = 1; i <= 12; i++)
         {
@@ -66,23 +66,38 @@ public class HRAReportService(IBaseService baseService) : IHraReportService
             };
         }
     }
-    #endregion
 
-    #region CountByCompany
     public List<UnitReport> CalculateReportByCompany(IEnumerable<EmployeeInfo> employeeInfos, int year)
     {
         return employeeInfos
             .GroupBy(x => new {x.Country, x.Company})
             .OrderBy(a => a.Key.Country).ThenBy(a=> a.Key.Company)
-            .Select(groupByCompany => new UnitReport
+            .Select(group => new UnitReport
             {
-                Company = groupByCompany.Key.Company,
-                Country = groupByCompany.Key.Country,
-                Details = CountByMonth(groupByCompany.Key.Company, groupByCompany.ToList(), year)
+                Company = group.Key.Company,
+                Country = group.Key.Country,
+                Details = CountByMonth(group.ToList(), year)
             })
             .ToList();
     }
-    #endregion
+
+    public List<UnitReport> CalculateReportByDetails(IEnumerable<EmployeeInfo> employeeInfos, int year)
+    {
+        return employeeInfos
+            .GroupBy(x => new { x.Unit, x.LocationCode, x.Company, x.UserType })
+            .OrderBy(a => a.Key.Unit)
+            .ThenBy(a => a.Key.LocationCode)
+            .ThenBy(a => a.Key.Company)
+            .ThenBy(a =>a.Key.UserType)
+            .Select(group => new UnitReport
+            {
+                Company = $"{group.Key.UserType} {group.Key.Company}",
+                Unit = group.Key.Unit,
+                LocationCode = group.Key.LocationCode,
+                Details = CountByMonth(group.ToList(), year)
+            })
+            .ToList();
+    }
 
     private static bool IsInMonth(DateTime? date, DateTime fromDate, DateTime toDate) => date >= fromDate && date <= toDate;
 }
