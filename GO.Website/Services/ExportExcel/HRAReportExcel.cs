@@ -71,7 +71,10 @@ public class HraReportExcel(string templatePath, HraReportModel hrAs)
             WriteDataToCell(worksheet, rowIdx + 2, colIdx, dataByMonth.ConfirmedResign);
             WriteDataToCell(worksheet, rowIdx + 3, colIdx, dataByMonth.CurrentHeadCount);
 
-            if ((month + 1) % 2 != 0) continue;
+            if ((month + 1) % 2 != 0)
+            {
+                continue;
+            }
             var backgroundColor = Color.FromArgb(217, 231, 253);
             worksheet.Cells[rowIdx, colIdx, rowIdx + 3, colIdx].Style.Fill.PatternType = ExcelFillStyle.Solid;
             worksheet.Cells[rowIdx, colIdx, rowIdx + 3, colIdx].Style.Fill.BackgroundColor

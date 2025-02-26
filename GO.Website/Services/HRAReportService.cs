@@ -60,7 +60,8 @@ public class HRAReportService(IBaseService baseService) : IHraReportService
             {
                 Month = i,
                 NewHire = employeesByUnit.Count(x => IsInMonth(x.JoinedDate, fromDate, toDate)),
-                ProbationResign = employeesByUnit.Count(x => IsInMonth(x.ResignedDate, fromDate, toDate) && x.ResignedDate <= x.ConfirmedDate),
+                ProbationResign = employeesByUnit.Count(x => IsInMonth(x.ResignedDate, fromDate, toDate) &&
+                    (x.ConfirmedDate is null || x.ResignedDate <= x.ConfirmedDate)),
                 ConfirmedResign = employeesByUnit.Count(x => IsInMonth(x.ResignedDate, fromDate, toDate) && x.ResignedDate > x.ConfirmedDate),
                 CurrentHeadCount = employeesByUnit.Count(x=> x.JoinedDate <= toDate && (x.ResignedDate is null || x.ResignedDate > toDate))
             };
