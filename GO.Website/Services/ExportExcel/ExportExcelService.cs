@@ -9,15 +9,8 @@
     using Microsoft.AspNetCore.Hosting;
     using EmployeeInfo = Models.Manpower.EmployeeInfo;
 
-    public class ExportExcelService : IExportExcelService
+    public class ExportExcelService(IWebHostEnvironment hostingEnvironment) : IExportExcelService
     {
-        private readonly IWebHostEnvironment hostingEnvironment;
-
-        public ExportExcelService(IWebHostEnvironment hostingEnvironment)
-        {
-            this.hostingEnvironment = hostingEnvironment;
-        }
-
         public byte[] ExportAnnualManpowerForecastRequestForm(AnnualManpowerForecastRequest request)
         {
             const string excelTemplatePath = "ExcelTemplates/AnnualManpowerForecastRequestForm.xlsx";
@@ -39,14 +32,6 @@
             const string excelTemplatePath = "ExcelTemplates/ManpowerForecast.xlsx";
             var templatePath = Path.Combine(hostingEnvironment.ContentRootPath, excelTemplatePath);
             var excel = new ManpowerForecastReportExcel(templatePath, requests, year, periodName);
-            return excel.Export();
-        }
-
-        public byte[] ExportGroupManpowerReport(IEnumerable<AnnualManpowerForecastRequest> requests, int year, string periodName)
-        {
-            const string ExcelTemplatePath = "ExcelTemplates/GroupManpower.xlsx";
-            var templatePath = Path.Combine(hostingEnvironment.ContentRootPath, ExcelTemplatePath);
-            var excel = new GroupManpowerReportExcel(templatePath, requests, year, periodName);
             return excel.Export();
         }
 

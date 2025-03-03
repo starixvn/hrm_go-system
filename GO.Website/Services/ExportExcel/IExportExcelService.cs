@@ -16,8 +16,5 @@
         byte[] ExportEmployeeReport(IEnumerable<EmployeeInfo> employeeInfos);
 
         byte[] ExportHRAReport(HraReportModel data);
-
-        byte[] ExportGroupManpowerReport(IEnumerable<AnnualManpowerForecastRequest> requests, int year,
-            string periodName);
     }
 }
