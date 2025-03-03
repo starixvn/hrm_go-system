@@ -84,7 +84,7 @@ public class HraReportExcel(string templatePath, HraReportModel hrAs)
 
     private static void WriteDataToCell(ExcelWorksheet worksheet, int rowIdx, int colIdx, dynamic value)
     {
-        worksheet.Cells[rowIdx, colIdx].Value = value;
+        worksheet.Cells[rowIdx, colIdx].Value = value ?? string.Empty;
         worksheet.Cells[rowIdx, colIdx].Style.Border.BorderAround(ExcelBorderStyle.Thin);
     }
 

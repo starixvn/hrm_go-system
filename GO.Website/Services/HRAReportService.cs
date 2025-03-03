@@ -56,15 +56,25 @@ public class HRAReportService(IBaseService baseService) : IHraReportService
         {
             var fromDate = new DateTime(year, i, 1);
             var toDate = new DateTime(year, i, DateTime.DaysInMonth(year, i));
-            yield return new ReportModel
+            if (fromDate > DateTime.Now.Date)
             {
-                Month = i,
-                NewHire = employeesByUnit.Count(x => IsInMonth(x.JoinedDate, fromDate, toDate)),
-                ProbationResign = employeesByUnit.Count(x => IsInMonth(x.ResignedDate, fromDate, toDate) &&
-                    (x.ConfirmedDate is null || x.ResignedDate <= x.ConfirmedDate)),
-                ConfirmedResign = employeesByUnit.Count(x => IsInMonth(x.ResignedDate, fromDate, toDate) && x.ResignedDate > x.ConfirmedDate),
-                CurrentHeadCount = employeesByUnit.Count(x=> x.JoinedDate <= toDate && (x.ResignedDate is null || x.ResignedDate > toDate))
-            };
+                yield return new ReportModel();
+            }
+            else
+            {
+                yield return new ReportModel
+                {
+                    Month = i,
+                    NewHire = employeesByUnit.Count(x => IsInMonth(x.JoinedDate, fromDate, toDate)),
+                    ProbationResign = employeesByUnit.Count(x => IsInMonth(x.ResignedDate, fromDate, toDate) &&
+                                                                 (x.ConfirmedDate is null ||
+                                                                  x.ResignedDate <= x.ConfirmedDate)),
+                    ConfirmedResign = employeesByUnit.Count(x =>
+                        IsInMonth(x.ResignedDate, fromDate, toDate) && x.ResignedDate > x.ConfirmedDate),
+                    CurrentHeadCount = employeesByUnit.Count(x =>
+                        x.JoinedDate <= toDate && (x.ResignedDate is null || x.ResignedDate > toDate))
+                };
+            }
         }
     }
 
