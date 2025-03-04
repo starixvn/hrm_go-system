@@ -34,6 +34,7 @@ function generateConfig(environment) {
             [`${jsPath}/pages/admin/role-permission`]: pathConfig.scriptPaths.role_permission,
             [`${jsPath}/pages/admin/role-assignment`]: pathConfig.scriptPaths.role_assignment,
             [`${jsPath}/pages/report/manpower/index`]: pathConfig.scriptPaths.report_manpower,
+            [`${jsPath}/pages/report/hra/index`]: pathConfig.scriptPaths.report_hra,
 
             /*css*/
             [`${cssPath}/main`]: pathConfig.cssPaths.main,
@@ -55,7 +56,7 @@ function generateConfig(environment) {
             [`${cssPath}/pages/admin/role-permission`]: pathConfig.cssPaths.role_permission,
             [`${cssPath}/pages/admin/role-assignment`]: pathConfig.cssPaths.role_assignment,
             [`${cssPath}/pages/report/manpower/index`]: pathConfig.cssPaths.report_manpower,
-
+            [`${cssPath}/pages/report/hra/index`]: pathConfig.cssPaths.report_hra,
         },
         output: {
             path: pathConfig.projectRoot,

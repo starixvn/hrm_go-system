@@ -23,7 +23,8 @@ const cssPaths = {
     annual_manpower_forecast_request_summary: ['./www/sources/css/pages/manpower/annual-request/summary.scss'],
     role_permission: ['./www/sources/css/pages/admin/role-permission.scss'],
     role_assignment: ['./www/sources/css/pages/admin/role-assignment.scss'],
-    report_manpower: ['./www/sources/css/pages/report/manpower.scss']
+    report_manpower: ['./www/sources/css/pages/report/manpower.scss'],
+    report_hra: ['./www/sources/css/pages/report/hra.scss']
 };
 
 const scriptPaths = {
@@ -48,8 +49,8 @@ const scriptPaths = {
     annual_manpower_forecast_request_summary: ['./www/sources/js/pages/manpower/annual-request/summary/index.js'],
     role_permission: ['./www/sources/js/pages/admin/role-permission/index.js'],
     role_assignment: ['./www/sources/js/pages/admin/role-assignment/index.js'],
-    report_manpower: ['./www/sources/js/pages/report/manpower/index.js']
-
+    report_manpower: ['./www/sources/js/pages/report/manpower/index.js'],
+    report_hra: ['./www/sources/js/pages/report/hra/index.js']
 };
 
 module.exports = {

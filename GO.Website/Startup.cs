@@ -176,6 +176,8 @@ namespace GO.Website
             services.AddSingleton<IManpowerForecastService, ManpowerForecastService>();
             services.AddSingleton<IUserOtpService, UserOtpService>();
             services.AddSingleton<ITwoFactorAuthenticatorService, TwoFactorAuthenticatorService>();
+
+            services.AddSingleton<IHraReportService, HRAReportService>();
         }
     }
 }
