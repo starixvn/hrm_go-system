@@ -2,12 +2,12 @@
 {
     public interface IUserControlSettings
     {
-        short SiteId { get; }
+        short SiteId { get; set; }
 
-        string AccessToken { get; }
+        string AccessToken { get; set; }
 
-        string ServiceUrl { get; }
+        string ServiceUrl { get; set; }
 
-        bool EnableReCheckin { get; }
+        bool EnableReCheckin { get; set; }
     }
 }

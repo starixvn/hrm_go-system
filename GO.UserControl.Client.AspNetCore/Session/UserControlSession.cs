@@ -10,15 +10,8 @@
     using Microsoft.AspNetCore.Http;
     using Newtonsoft.Json;
 
-    public class UserControlSession : IUserControlSession
+    public class UserControlSession(IHttpContextAccessor accessor) : IUserControlSession
     {
-        private readonly IHttpContextAccessor accessor;
-
-        public UserControlSession(IHttpContextAccessor accessor)
-        {
-            this.accessor = accessor;
-        }
-
         public int UserId
         {
             get => accessor.HttpContext.Session?.GetInt32(SessionKey.SessionUserId) ?? 0;
@@ -64,20 +57,12 @@
             var result = false;
             if (Functions != null && Functions.Any(x => x.FunctionKey == functionKey))
             {
-                switch (policy)
+                result = policy switch
                 {
-                    case Policy.Read:
-                        result = Functions.Any(x => x.FunctionKey == functionKey && (x.IsRead || x.IsHost));
-                        break;
-
-                    case Policy.Host:
-                        result = Functions.Any(x => x.FunctionKey == functionKey && x.IsHost);
-                        break;
-
-                    default:
-                        result = false;
-                        break;
-                }
+                    Policy.Read => Functions.Any(x => x.FunctionKey == functionKey && (x.IsRead || x.IsHost)),
+                    Policy.Host => Functions.Any(x => x.FunctionKey == functionKey && x.IsHost),
+                    _ => false
+                };
             }
 
             return result;

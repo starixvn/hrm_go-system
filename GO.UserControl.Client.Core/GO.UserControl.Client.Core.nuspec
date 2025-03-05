@@ -2,7 +2,7 @@
 <package>
     <metadata>
         <id>GO.UserControl.Client.Core</id>
-        <version>1.0.1</version>
+        <version>1.0.3</version>
         <authors>tim.trinh</authors>
         <description>GO.UserControl.Client.Core</description>
         <copyright>2024</copyright>

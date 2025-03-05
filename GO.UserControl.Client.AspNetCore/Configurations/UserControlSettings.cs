@@ -18,11 +18,11 @@
             EnableReCheckin = GetValue<bool>("GO.UserControl.Client:EnableReCheckin");
         }
 
-        public short SiteId { get; }
+        public short SiteId { get; set; }
 
-        public string AccessToken { get; }
+        public string AccessToken { get; set; }
 
-        public string ServiceUrl { get; }
+        public string ServiceUrl { get; set; }
 
         public bool EnableReCheckin { get; set; }
 
