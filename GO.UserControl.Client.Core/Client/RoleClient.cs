@@ -2,8 +2,8 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using GO.UserControl.Client.Core.Models;
-    using GO.UserControl.Client.Core.Models.Role;
+    using Models;
+    using Models.Role;
 
     public class RoleClient : BaseHttpClient, IRoleClient
     {

@@ -2,16 +2,28 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using GO.UserControl.Client.Core.Constants;
-    using GO.UserControl.Client.Core.Enumerables;
-    using GO.UserControl.Client.Core.Models;
-    using GO.UserControl.Client.Core.Models.Auth;
+    using Core.Constants;
+    using Core.Enumerables;
+    using Core.Models;
+    using Core.Models.Auth;
     using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Http;
     using Newtonsoft.Json;
 
     public class UserControlSession(IHttpContextAccessor accessor) : IUserControlSession
     {
+        public short SiteId
+        {
+            get => accessor.HttpContext.Session?.Get<short>(SessionKey.SessionSiteId) ?? 0;
+            set => accessor.HttpContext.Session.Set<short>(SessionKey.SessionSiteId, value);
+        }
+
+        public string AccessToken
+        {
+            get => accessor.HttpContext.Session?.GetString(SessionKey.SessionAccessToken);
+            set => accessor.HttpContext.Session.SetString(SessionKey.SessionAccessToken, value);
+        }
+
         public int UserId
         {
             get => accessor.HttpContext.Session?.GetInt32(SessionKey.SessionUserId) ?? 0;
@@ -22,12 +34,6 @@
         {
             get => accessor.HttpContext.Session?.Get<long>(SessionKey.SessionOnUserId) ?? 0;
             set => accessor.HttpContext.Session.Set<long>(SessionKey.SessionOnUserId, value);
-        }
-
-        public short SiteId
-        {
-            get => accessor.HttpContext.Session?.Get<short>(SessionKey.SessionSiteId) ?? 0;
-            set => accessor.HttpContext.Session.Set<short>(SessionKey.SessionSiteId, value);
         }
 
         public JwtToken JwtToken

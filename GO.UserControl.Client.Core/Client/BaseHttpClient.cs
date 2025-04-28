@@ -8,22 +8,12 @@
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using GO.UserControl.Client.Core;
-    using GO.UserControl.Client.Core.Session;
     using Jose;
     using Newtonsoft.Json;
 
     public class BaseHttpClient
     {
-        private static readonly HttpClient httpClient = new HttpClient();
-        private readonly IUserControlSettings settings;
-        private readonly IUserControlSession session;
-
-        public BaseHttpClient()
-        {
-            settings = UserControlClientManager.UserControlSettings;
-            session = UserControlClientManager.UserControlSession;
-        }
+        private readonly HttpClient httpClient = new HttpClient();
 
         protected T Get<T>(string requestUrl)
         {
@@ -44,7 +34,7 @@
                     return default;
                 }
             }
-        }    
+        }
 
         protected async Task<T> GetAsync<T>(string requestUrl)
         {
@@ -126,30 +116,32 @@
 
         private HttpRequestMessage CreateRequest(string endPoint, HttpMethod method)
         {
-            Uri url = new Uri($"{settings.ServiceUrl}{endPoint}");
+            var url = new Uri($"{UserControlClient.ServiceUrl}{endPoint}");
             var request = new HttpRequestMessage(method, url);
             request.Headers.Accept.Clear();
-            string siteIdentity = GenerateSiteIdentity();
+            var siteIdentity = GenerateSiteIdentity();
             request.Headers.Add("SiteIdentity", $"Bearer {siteIdentity}");
-            if (session.JwtToken != null && !string.IsNullOrWhiteSpace(session.JwtToken.Token))
+            if (UserControlClient.Session.JwtToken != null && !string.IsNullOrWhiteSpace(UserControlClient.Session.JwtToken.Token))
             {
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", session.JwtToken.Token);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", UserControlClient.Session.JwtToken.Token);
             }
 
             return request;
         }
 
-        private string GenerateSiteIdentity()
+        private static string GenerateSiteIdentity()
         {
+            var siteId = UserControlClient.Session.SiteId == 0 ? UserControlClient.SiteId : UserControlClient.Session.SiteId;
+            var accessToken = string.IsNullOrWhiteSpace(UserControlClient.Session.AccessToken) ? UserControlClient.AccessToken : UserControlClient.Session.AccessToken;
             var data = new Dictionary<string, object>
             {
-                {nameof(settings.SiteId), settings.SiteId },
-                {nameof(settings.AccessToken), settings.AccessToken }
+                {nameof(UserControlClient.Session.SiteId), siteId },
+                {nameof(UserControlClient.Session.AccessToken), accessToken }
             };
-            return JWT.Encode(data, Encoding.UTF8.GetBytes(settings.AccessToken), JwsAlgorithm.HS256);
+            return JWT.Encode(data, Encoding.UTF8.GetBytes(accessToken), JwsAlgorithm.HS256);
         }
 
-        private void ThrowExceptionWhenNotSuccess(HttpResponseMessage response)
+        private static void ThrowExceptionWhenNotSuccess(HttpResponseMessage response)
         {
             if (!response.IsSuccessStatusCode)
             {

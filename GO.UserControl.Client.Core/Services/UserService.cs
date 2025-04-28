@@ -2,18 +2,13 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using GO.UserControl.Client.Core.Client;
-    using GO.UserControl.Client.Core.Models;
-    using GO.UserControl.Client.Core.Models.User;
+    using Client;
+    using Models;
+    using Models.User;
 
     public class UserService : IUserService
     {
-        private readonly UserClient userClient;
-
-        public UserService()
-        {
-            userClient = new UserClient();
-        }
+        private readonly UserClient userClient = new UserClient();
 
         public IList<MenuItem> GetMenuItem()
             => userClient.GetMenuItem();

@@ -2,18 +2,13 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using GO.UserControl.Client.Core.Client;
-    using GO.UserControl.Client.Core.Models;
-    using GO.UserControl.Client.Core.Models.Role;
+    using Client;
+    using Models;
+    using Models.Role;
 
     public class RoleService : IRoleService
     {
-        private readonly RoleClient roleClient;
-
-        public RoleService()
-        {
-            roleClient = new RoleClient();
-        }
+        private readonly RoleClient roleClient = new RoleClient();
 
         public IList<Role> GetBySiteId(short siteId, bool? isActive = true)
             => roleClient.GetBySiteId(siteId, isActive);

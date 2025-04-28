@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>
@@ -6,7 +6,9 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="GO.UserControl.Client.Core" Version="1.0.3" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.4" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GO.UserControl.Client.Core\GO.UserControl.Client.Core.csproj" />
   </ItemGroup>
 </Project>
