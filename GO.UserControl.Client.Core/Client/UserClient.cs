@@ -2,8 +2,8 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using GO.UserControl.Client.Core.Models;
-    using GO.UserControl.Client.Core.Models.User;
+    using Models;
+    using Models.User;
 
     public class UserClient : BaseHttpClient, IUserClient
     {

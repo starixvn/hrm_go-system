@@ -2,21 +2,26 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using GO.UserControl.Client.Core.Constants;
-    using GO.UserControl.Client.Core.Enumerables;
-    using GO.UserControl.Client.Core.Models;
-    using GO.UserControl.Client.Core.Models.Auth;
+    using Core.Constants;
+    using Core.Enumerables;
+    using Core.Models;
+    using Core.Models.Auth;
     using GO.UserControl.Client.Core.Session;
     using Microsoft.AspNetCore.Http;
     using Newtonsoft.Json;
 
-    public class UserControlSession : IUserControlSession
+    public class UserControlSession(IHttpContextAccessor accessor) : IUserControlSession
     {
-        private readonly IHttpContextAccessor accessor;
-
-        public UserControlSession(IHttpContextAccessor accessor)
+        public short SiteId
         {
-            this.accessor = accessor;
+            get => accessor.HttpContext.Session?.Get<short>(SessionKey.SessionSiteId) ?? 0;
+            set => accessor.HttpContext.Session.Set<short>(SessionKey.SessionSiteId, value);
+        }
+
+        public string AccessToken
+        {
+            get => accessor.HttpContext.Session?.GetString(SessionKey.SessionAccessToken);
+            set => accessor.HttpContext.Session.SetString(SessionKey.SessionAccessToken, value);
         }
 
         public int UserId
@@ -29,12 +34,6 @@
         {
             get => accessor.HttpContext.Session?.Get<long>(SessionKey.SessionOnUserId) ?? 0;
             set => accessor.HttpContext.Session.Set<long>(SessionKey.SessionOnUserId, value);
-        }
-
-        public short SiteId
-        {
-            get => accessor.HttpContext.Session?.Get<short>(SessionKey.SessionSiteId) ?? 0;
-            set => accessor.HttpContext.Session.Set<short>(SessionKey.SessionSiteId, value);
         }
 
         public JwtToken JwtToken
@@ -64,20 +63,12 @@
             var result = false;
             if (Functions != null && Functions.Any(x => x.FunctionKey == functionKey))
             {
-                switch (policy)
+                result = policy switch
                 {
-                    case Policy.Read:
-                        result = Functions.Any(x => x.FunctionKey == functionKey && (x.IsRead || x.IsHost));
-                        break;
-
-                    case Policy.Host:
-                        result = Functions.Any(x => x.FunctionKey == functionKey && x.IsHost);
-                        break;
-
-                    default:
-                        result = false;
-                        break;
-                }
+                    Policy.Read => Functions.Any(x => x.FunctionKey == functionKey && (x.IsRead || x.IsHost)),
+                    Policy.Host => Functions.Any(x => x.FunctionKey == functionKey && x.IsHost),
+                    _ => false
+                };
             }
 
             return result;

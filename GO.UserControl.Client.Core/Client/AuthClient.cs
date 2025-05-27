@@ -2,8 +2,8 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using GO.UserControl.Client.Core.Enumerables;
-    using GO.UserControl.Client.Core.Models.Auth;
+    using Enumerables;
+    using Models.Auth;
 
     public class AuthClient : BaseHttpClient, IAuthClient
     {

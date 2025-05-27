@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>GO.UserControl.Client.AspNetCore</id>
-    <version>1.0.0</version>
+    <version>1.0.3</version>
     <authors>tim.trinh</authors>
     <description>GO.UserControl.Client.AspNetCore</description>
     <copyright>2024</copyright>

@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using GO.UserControl.Client.Core.Models;
+    using Models;
 
     public class FunctionClient : BaseHttpClient, IFunctionClient
     {

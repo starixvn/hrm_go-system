@@ -30,8 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GO.UserControl.Client.Core, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\GO.UserControl.Client.Core.1.0.2\lib\netstandard2.0\GO.UserControl.Client.Core.dll</HintPath>
+    <Reference Include="GO.UserControl.Client.Core, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\GO.UserControl.Client.Core.1.0.3\lib\netstandard2.0\GO.UserControl.Client.Core.dll</HintPath>
     </Reference>
     <Reference Include="jose-jwt, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\jose-jwt.5.0.0\lib\net472\jose-jwt.dll</HintPath>

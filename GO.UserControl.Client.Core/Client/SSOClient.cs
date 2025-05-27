@@ -1,7 +1,7 @@
 ﻿namespace GO.UserControl.Client.Core.Client
 {
     using System.Threading.Tasks;
-    using GO.UserControl.Client.Core.Models.Auth;
+    using Models.Auth;
 
     public class SSOClient : BaseHttpClient, ISSOClient
     {

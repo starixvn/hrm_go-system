@@ -1,20 +1,14 @@
 ﻿namespace GO.UserControl.Client.Core.Services
 {
     using System.Threading.Tasks;
-    using GO.UserControl.Client.Core.Client;
-    using GO.UserControl.Client.Core.Enumerables;
-    using GO.UserControl.Client.Core.Models.Auth;
+    using Client;
+    using Enumerables;
+    using Models.Auth;
 
     public class AuthService : IAuthService
     {
-        private readonly AuthClient authClient;
-        private readonly SSOClient ssoClient;
-
-        public AuthService()
-        {
-            authClient = new AuthClient();
-            ssoClient = new SSOClient();
-        }
+        private readonly AuthClient authClient = new AuthClient();
+        private readonly SSOClient ssoClient = new SSOClient();
 
         public LoginResult Login(LoginParam loginParam)
             => authClient.Login(loginParam);

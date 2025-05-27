@@ -77,13 +77,18 @@
 
         public bool CompareStringToHash(string plainText, string encrypt, int saltSize = 8)
         {
-            byte[] encryptBuffer = Convert.FromBase64String(encrypt);
-            int encryptLength = encryptBuffer.Length;
+            if (string.IsNullOrEmpty(encrypt))
+            {
+                return false;
+            }
 
-            byte[] saltBuffer = new byte[saltSize];
+            var encryptBuffer = Convert.FromBase64String(encrypt);
+            var encryptLength = encryptBuffer.Length;
+
+            var saltBuffer = new byte[saltSize];
             Array.Copy(encryptBuffer, encryptLength - saltSize, saltBuffer, 0, saltSize);
 
-            string hash = ComputeHash(plainText, saltBuffer);
+            var hash = ComputeHash(plainText, saltBuffer);
             return string.Equals(encrypt, hash);
         }
 
