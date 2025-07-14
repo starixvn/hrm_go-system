@@ -8,5 +8,6 @@
         public string ConversationId { get; set; }
         public List<string> ConversationIds { get; set; }
         public string Message { get; set; }
+        public string ReplyMarkup { get; set; }
     }
 }

@@ -38,7 +38,7 @@
             var errorMessage = string.Empty;
             try
             {
-                await SendToLestalk(model.BotId, model.ConversationId, model.Message);
+                await SendToLestalk(model.BotId, model.ConversationId, model.Message, model.ReplyMarkup);
             }
             catch (Exception ex)
             {
@@ -49,7 +49,7 @@
             return Ok(errorMessage);
         }
 
-        private async Task SendToLestalk(int botId, string conversationId, string message)
+        private async Task SendToLestalk(int botId, string conversationId, string message, string replyMarkup)
         {
             var sendResult = new SendNotificationResult
             {
@@ -58,7 +58,7 @@
 
             var outGoingMsg = new OutgoingMessage
             {
-                MessageType = MessageTypeNumber.Html,
+                MessageType = MessageTypeNumber.Text,
                 Text = message
             };
 
@@ -66,7 +66,7 @@
             var botConfigs = webhookConfigurations.FirstOrDefault(config => config.BotId == botId);
             if (botConfigs != null && botConfigs.IsAllowedSet)
             {
-                PushMessageResult result = await letstalkService(botConfigs.BotId).PushMulticastAsync(conversationIds, outGoingMsg);
+                PushMessageResult result = await letstalkService(botConfigs.BotId).PushMulticastAsync(conversationIds, outGoingMsg, replyMarkup);
                 if (result.IsSuccess && !result.BlockList.Any())
                 {
                     sendResult.Status = SendNotificationStatus.Sent;

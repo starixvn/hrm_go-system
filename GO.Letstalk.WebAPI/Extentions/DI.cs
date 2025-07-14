@@ -1,4 +1,6 @@
-﻿namespace GO.Letstalk.WebAPI.Extentions
+﻿using GO.Letstalk.WebAPI.EventHandler;
+
+namespace GO.Letstalk.WebAPI.Extentions
 {
     using System;
     using System.Collections.Generic;
@@ -23,6 +25,7 @@
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<ICryptographyService, CryptographyService>();
             services.AddSingleton<IJwtService, JwtService>();
+            services.AddSingleton<ILetsTalkEventHandler, LetsTalkEventHandler>();
 
             services.AddSingleton<Func<int, ILetstalkService>>(serviceProvider => botId =>
             {

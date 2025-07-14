@@ -4,21 +4,31 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using GO.Letstalk.WebAPI.EventHandler;
     using GO.Letstalk.WebAPI.Models;
     using GO.Letstalk.WebAPI.Services;
     using Microsoft.AspNetCore.Mvc;
 
     public class LetstalkWebhookController : ControllerBase
     {
+        private readonly ILetsTalkEventHandler eventHandler;
         private readonly Func<int, ILetstalkService> letstalkService;
         private readonly List<WebhookConfiguration> webhookConfigurations;
 
         public LetstalkWebhookController(
+            ILetsTalkEventHandler eventHandler,
             Func<int, ILetstalkService> letstalkService,
             List<WebhookConfiguration> webhookConfigurations)
         {
+            this.eventHandler = eventHandler;
             this.letstalkService = letstalkService;
             this.webhookConfigurations = webhookConfigurations;
+        }
+
+        [Route("api/webhook/{id}")]
+        public async Task WebhookReceiver(int id)
+        {
+            await eventHandler.ReceiveAsync(Request, id);
         }
 
         [Route("api/setwebhook/{id}")]

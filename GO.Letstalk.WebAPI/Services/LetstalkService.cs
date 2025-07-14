@@ -32,18 +32,20 @@
             this.botConfig = botConfig;
         }
 
-        public async Task<PushMessageResult> PushMulticastAsync(IEnumerable<string> accountIds, OutgoingMessage message)
+        public async Task<PushMessageResult> PushMulticastAsync(IEnumerable<string> accountIds, OutgoingMessage message, string replyMarkup = null)
         {
             ValidateInputParam(nameof(accountIds), accountIds);
             ValidateInputParam(nameof(message), message);
             ValidateMultiCastMessage(message);
 
+            var replyMarkupObj = string.IsNullOrWhiteSpace(replyMarkup) ? null : JsonConvert.DeserializeObject<ReplyMarkup>(replyMarkup);
             var token = await GetSignAccessTokenAsync();
             var result = await httpClientService.PostAsync<PushMessageResult>(
                 $"bot/v3/message/multicast",
                 new Dictionary<string, object>
                 {
                     { "msg", message },
+                    { "replyMarkup", replyMarkupObj },
                     { "receivers", accountIds.ToArray() },
                     { "forcePush", 1 }
                 },
