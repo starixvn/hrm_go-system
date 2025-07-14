@@ -1,44 +1,36 @@
-ARG CI_REGISTRY_IMAGE
-
-FROM $CI_REGISTRY_IMAGE:builder AS deps
-
-RUN mkdir -p /src/packages
-
 FROM hub.nexdev.net/base/dotnet/core/sdk:8.0-alpine AS builder
-
-ENV NUGET_PACKAGES=/src/packages
-
-COPY --from=deps $NUGET_PACKAGES/. $NUGET_PACKAGES/
 
 WORKDIR /src
 
-COPY ["GO.Letstalk.WebAPI/GO.Letstalk.WebAPI.csproj", "GO.Letstalk.WebAPI/"]
+COPY GO.Letstalk.WebAPI/*.csproj GO.Letstalk.WebAPI/
 
+# Copy the rest of the source code
 RUN dotnet nuget add source https://nuget.nexdev.net/api/v2
-RUN dotnet restore -v n -r linux-x64 "GO.Letstalk.WebAPI/GO.Letstalk.WebAPI.csproj"
+# Restore dependencies
+RUN --mount=type=cache,target=/root/.nuget/packages \
+    dotnet restore -v n -r linux-x64 GO.Letstalk.WebAPI/GO.Letstalk.WebAPI.csproj
 
-COPY ["GO.Letstalk.WebAPI/", "GO.Letstalk.WebAPI/"]
+# Copy source codes
+COPY GO.Letstalk.WebAPI/ GO.Letstalk.WebAPI/
 
+# Publish the application
 WORKDIR /src/GO.Letstalk.WebAPI
+RUN --mount=type=cache,target=/root/.nuget/packages \
+    dotnet publish -r linux-x64 --self-contained false -c Release -o /app
 
-RUN dotnet publish -r linux-x64 --self-contained false -o /app
-
-FROM hub.nexdev.net/base/dotnet/core/aspnet:8.0-slim AS base
-
-RUN sed -i 's/\[openssl_init\]/# [openssl_init]/' /etc/ssl/openssl.cnf
-RUN printf "\n\n[openssl_init]\nssl_conf = ssl_sect" >> /etc/ssl/openssl.cnf
-RUN printf "\n\n[ssl_sect]\nsystem_default = ssl_default_sect" >> /etc/ssl/openssl.cnf
-RUN printf "\n\n[ssl_default_sect]\nMinProtocol = TLSv1\nCipherString = DEFAULT@SECLEVEL=0\n" >> /etc/ssl/openssl.cnf
-
-# Don’t run as root
-RUN adduser --disabled-password \
-  --home /app \
-  --gecos '' dotnetuser && chown -R dotnetuser /app && chown -R dotnetuser /tmp
-USER dotnetuser
-#
+FROM hub.nexdev.net/base/dotnet/core/aspnet:8.0-alpine AS base
 
 WORKDIR /app
 COPY --from=builder /app .
-ENV TZ="Asia/Bangkok"
 
-ENTRYPOINT ["dotnet", "GO.WebAPI.dll"]
+ENV TZ="Asia/Bangkok"
+ENV COMPlus_EnableDiagnostics=0
+
+# Don�t run as root
+RUN adduser --disabled-password \
+    --home /app \
+    --gecos '' dotnetuser && chown -R dotnetuser /app && chown -R dotnetuser /tmp
+USER dotnetuser
+#
+
+ENTRYPOINT ["dotnet", "GO.Letstalk.WebAPI.dll"]
