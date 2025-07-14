@@ -22,6 +22,7 @@ public class LetsTalkEventHandler(
     Func<int, ILetstalkService> letstalkService,
     ICryptographyService cryptographyService,
     IJwtService jwtService,
+    IHRMConnector hrmConnector,
     List<BotConfig> botConfigs)
     : ILetsTalkEventHandler
 {
@@ -75,12 +76,18 @@ public class LetsTalkEventHandler(
         var dataEvent = JsonConvert.DeserializeObject<PostBackEvent>(decryptedDataEvent);
         if (!string.IsNullOrEmpty(dataEvent.PostBack.Data))
         {
+            var result = await hrmConnector.Send(dataEvent.PostBack.Data);
+            var message = "Successfully!";
+            if (!result.IsSuccessful)
+            {
+                message =  $"{result.Message} This request has been processed.";
+            }
             await letstalkService(botConfig.BotAccountId).PushMulticastAsync([hookEvent.Source.UserId],
-                new()
-                {
-                    Text = $"Hello, Your data is {dataEvent.PostBack.Data}",
-                    MessageType = MessageTypeNumber.Text
-                });
+                    new()
+                    {
+                        Text = message,
+                        MessageType = MessageTypeNumber.Text
+                    });
         }
     }
 

@@ -21,22 +21,12 @@ namespace GO.Letstalk.WebAPI.Extentions
             var botConfigs = configuration.GetSection("LetstalkBotConfigurations").Get<List<BotConfig>>();
             services.AddSingleton(botConfigs);
 
-            services.AddHttpClient("IgnoreSSL", client =>
-            {
-                // Configure the HttpClient if needed
-            }).ConfigurePrimaryHttpMessageHandler(() =>
-            {
-                return new HttpClientHandler
-                {
-                    ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
-                };
-            });
-
             services.AddHttpClient();
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<ICryptographyService, CryptographyService>();
             services.AddSingleton<IJwtService, JwtService>();
             services.AddSingleton<ILetsTalkEventHandler, LetsTalkEventHandler>();
+            services.AddSingleton<IHRMConnector, HRMConnector>();
 
             services.AddSingleton<Func<int, ILetstalkService>>(serviceProvider => botId =>
             {

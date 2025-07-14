@@ -62,7 +62,7 @@
                     request.Content = content;
                 }
 
-                var client = clientFactory.CreateClient("IgnoreSSL");
+                var client = clientFactory.CreateClient();
                 using (var response = await client.SendAsync(request, HttpCompletionOption.ResponseContentRead, CancellationToken.None))
                 {
                     if (response.IsSuccessStatusCode)
