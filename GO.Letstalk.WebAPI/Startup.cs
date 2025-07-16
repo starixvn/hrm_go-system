@@ -48,6 +48,7 @@ namespace GO.Letstalk.WebAPI
             });
 
             services.AddSingleton(Configuration.GetSection("JwtAuthSettings").Get<JwtAuthSettings>());
+            services.AddSingleton(Configuration.GetSection("HRMSettings").Get<HRMSettings>());
 
             services.RegisterDI(Configuration);
 
