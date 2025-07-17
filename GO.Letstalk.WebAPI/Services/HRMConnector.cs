@@ -10,7 +10,14 @@ namespace GO.Letstalk.WebAPI.Services
         public async Task<CommandResult> Send(string callbackUrl)
         {
             var commandResult = new CommandResult();
-            var httpClient = httpClientFactory.CreateClient();
+
+            // Create HttpClient with SSL certificate validation bypass
+            var handler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
+            };
+            using var httpClient = new HttpClient(handler);
+
             if (!string.IsNullOrEmpty(hrmSettings.ApiKey))
             {
                 httpClient.DefaultRequestHeaders.Add("X-API-Key", hrmSettings.ApiKey);
