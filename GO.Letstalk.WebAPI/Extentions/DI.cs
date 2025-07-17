@@ -1,4 +1,5 @@
-﻿using GO.Letstalk.WebAPI.EventHandler;
+﻿using Fanex.Logging;
+using GO.Letstalk.WebAPI.EventHandler;
 
 namespace GO.Letstalk.WebAPI.Extentions
 {
@@ -27,6 +28,7 @@ namespace GO.Letstalk.WebAPI.Extentions
             services.AddSingleton<IJwtService, JwtService>();
             services.AddSingleton<ILetsTalkEventHandler, LetsTalkEventHandler>();
             services.AddSingleton<IHRMConnector, HRMConnector>();
+            services.AddSingleton<ILogger, Logger>();
 
             services.AddSingleton<Func<int, ILetstalkService>>(serviceProvider => botId =>
             {
