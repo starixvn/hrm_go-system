@@ -15,10 +15,7 @@ namespace GO.Letstalk.WebAPI.Services
             {
                 return await SendNexHRMAsync(callbackUrl);
             }
-            else
-            {
-                return await SendHRMAsync(callbackUrl);
-            }
+            return await SendHRMAsync(callbackUrl);
         }
 
         private async Task<CommandResult> SendHRMAsync(string callbackUrl)
@@ -92,7 +89,7 @@ namespace GO.Letstalk.WebAPI.Services
             try
             {
                 var uri = new Uri(callbackUrl);
-                return $"{uri.Scheme}://{uri.Host}";
+                return $"{uri.Scheme}://{uri.Authority}";
             }
             catch (UriFormatException)
             {
@@ -100,7 +97,6 @@ namespace GO.Letstalk.WebAPI.Services
                 return parts[0];
             }
         }
-
         private async Task<string> GetTokenNexHRMAsync(string baseUrl)
         {
             var url = new Uri($"{baseUrl}/Token/GetToken?username={hrmSettings.NexHRId}&password={hrmSettings.NexHRPassword}");

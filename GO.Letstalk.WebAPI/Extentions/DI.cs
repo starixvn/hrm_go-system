@@ -26,7 +26,7 @@ namespace GO.Letstalk.WebAPI.Extentions
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<ICryptographyService, CryptographyService>();
             services.AddSingleton<IJwtService, JwtService>();
-            services.AddSingleton<ILetsTalkEventHandler, LetsTalkEventHandler>();
+            services.AddScoped<ILetsTalkEventHandler, LetsTalkEventHandler>();
             services.AddSingleton<IHRMConnector, HRMConnector>();
             services.AddSingleton<ILogger, Logger>();
 
