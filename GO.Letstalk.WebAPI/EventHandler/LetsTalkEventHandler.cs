@@ -41,9 +41,9 @@ public class LetsTalkEventHandler(
             }
 
             var rawData = jwtService.Decode(botConfig.SecureKey, requestJson.Trim());
+            await logger.InfoAsync($"Receive webhook with raw data: {rawData}");
             var data = JObject.Parse(rawData);
             var hookEvent = data.ToObject<HookEvent>();
-            Console.WriteLine(hookEvent);
             await EventHandlerAsync(hookEvent, botConfig);
         }
     }
@@ -77,7 +77,8 @@ public class LetsTalkEventHandler(
         var decryptedDataEvent = cryptographyService.Decrypt(hookEvent.PayloadObject.HashContent, botConfig.ChatKey, hookEvent.PayloadObject.HashContentKey);
         var dataEvent = JsonConvert.DeserializeObject<PostBackEvent>(decryptedDataEvent);
         await logger.InfoAsync($"Receive webhook with data: {decryptedDataEvent}");
-        if (!string.IsNullOrEmpty(dataEvent.PostBack.Data))
+
+        if (dataEvent.PostBack != null && !string.IsNullOrEmpty(dataEvent.PostBack.Data))
         {
             var result = await hrmConnector.Send(dataEvent.PostBack.Data);
             var message = "Successfully!";
