@@ -1,33 +1,32 @@
-﻿namespace GO.Letstalk.WebAPI.Services
+﻿namespace GO.Letstalk.WebAPI.Services;
+
+using System.Collections.Generic;
+using System.Text;
+using Jose;
+
+public class JwtService : IJwtService
 {
-    using System.Collections.Generic;
-    using System.Text;
-    using Jose;
-
-    public class JwtService : IJwtService
+    public string Decode(string secretKey, string token)
     {
-        public string Decode(string secretKey, string token)
-        {
-            var signingKey = Encoding.UTF8.GetBytes(secretKey);
+        var signingKey = Encoding.UTF8.GetBytes(secretKey);
 
-            var encodedPayload = JWT.Decode(
-                token,
-                signingKey,
-                JwsAlgorithm.HS512);
+        var encodedPayload = JWT.Decode(
+            token,
+            signingKey,
+            JwsAlgorithm.HS512);
 
-            return encodedPayload;
-        }
+        return encodedPayload;
+    }
 
-        public string Encode(string secretKey, IDictionary<string, object> data)
-        {
-            var signingKey = Encoding.UTF8.GetBytes(secretKey);
+    public string Encode(string secretKey, IDictionary<string, object> data)
+    {
+        var signingKey = Encoding.UTF8.GetBytes(secretKey);
 
-            var encodedPayload = JWT.Encode(
-                data,
-                signingKey,
-                JwsAlgorithm.HS512);
+        var encodedPayload = JWT.Encode(
+            data,
+            signingKey,
+            JwsAlgorithm.HS512);
 
-            return encodedPayload;
-        }
+        return encodedPayload;
     }
 }
