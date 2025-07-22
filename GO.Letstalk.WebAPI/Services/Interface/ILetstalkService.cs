@@ -8,7 +8,7 @@
 
     public interface ILetstalkService
     {
-        Task<PushMessageResult> PushMulticastAsync(IEnumerable<string> accountIds, OutgoingMessage message);
+        Task<PushMessageResult> PushMulticastAsync(IEnumerable<string> accountIds, OutgoingMessage message, string replyMarkup = null);
 
         Task<PushMessageResult> PushRoomAsync(string chatroomToken, string message, DateTime? expiredTime = null);
 

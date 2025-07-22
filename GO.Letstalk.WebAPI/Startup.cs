@@ -1,6 +1,9 @@
 namespace GO.Letstalk.WebAPI
 {
+    using System.Collections.Generic;
     using System.Text;
+    using Fanex.Logging.Sentry;
+    using Fanex.Logging;
     using GO.Letstalk.WebAPI.Extentions;
     using GO.Letstalk.WebAPI.Models;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -11,6 +14,7 @@ namespace GO.Letstalk.WebAPI
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.IdentityModel.Tokens;
+    using Sentry;
 
     public class Startup
     {
@@ -23,6 +27,16 @@ namespace GO.Letstalk.WebAPI
 
         public void ConfigureServices(IServiceCollection services)
         {
+            LogManager
+                .SetDefaultLogCategory(Configuration.GetSection("Sentry:LogCategory").Value)
+                .Use(new List<ILogEngine>
+                {
+                    new SentryLogging(new SentryEngineOptions
+                    {
+                        Dsn = new Dsn(Configuration.GetSection("Sentry:Dsn").Value)
+                    })
+                });
+
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders =
@@ -48,6 +62,7 @@ namespace GO.Letstalk.WebAPI
             });
 
             services.AddSingleton(Configuration.GetSection("JwtAuthSettings").Get<JwtAuthSettings>());
+            services.AddSingleton(Configuration.GetSection("HRMSettings").Get<HRMSettings>());
 
             services.RegisterDI(Configuration);
 
@@ -59,6 +74,10 @@ namespace GO.Letstalk.WebAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else {
+                app.UseMiddleware<ErrorHandler>();
+                app.UseHsts();
             }
 
             app.UseCors(x => x

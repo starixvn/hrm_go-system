@@ -1,0 +1,17 @@
+namespace GO.Letstalk.WebAPI.Models
+{
+    public class CommandResult
+    {
+        public CommandResult()
+        {
+            Code = 1;
+            Message = "Invalid Data";
+        }
+
+        public int Code { get; set; }
+
+        public bool IsSuccessful => Code == 0;
+
+        public string Message { get; set; }
+    }
+}
