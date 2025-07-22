@@ -76,7 +76,7 @@ public class LetsTalkEventHandler(
         hookEvent.PayloadObject = JsonConvert.DeserializeObject<Payload>(hookEvent.EncodedPayload);
         var decryptedDataEvent = cryptographyService.Decrypt(hookEvent.PayloadObject.HashContent, botConfig.ChatKey, hookEvent.PayloadObject.HashContentKey);
         var dataEvent = JsonConvert.DeserializeObject<PostBackEvent>(decryptedDataEvent);
-        logger.Info($"Receive webhook with data: {decryptedDataEvent}");
+        await logger.InfoAsync($"Receive webhook with data: {decryptedDataEvent}");
         if (!string.IsNullOrEmpty(dataEvent.PostBack.Data))
         {
             var result = await hrmConnector.Send(dataEvent.PostBack.Data);
