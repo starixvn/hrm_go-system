@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Fanex.Logging;
 using GO.Letstalk.WebAPI.Constants;
 using GO.Letstalk.WebAPI.Enums;
 using GO.Letstalk.WebAPI.Models;
@@ -20,6 +21,7 @@ public interface ILetsTalkEventHandler
 
 public class LetsTalkEventHandler(
     Func<int, ILetstalkService> letstalkService,
+    ILogger logger,
     ICryptographyService cryptographyService,
     IJwtService jwtService,
     IHRMConnector hrmConnector,
@@ -74,13 +76,14 @@ public class LetsTalkEventHandler(
         hookEvent.PayloadObject = JsonConvert.DeserializeObject<Payload>(hookEvent.EncodedPayload);
         var decryptedDataEvent = cryptographyService.Decrypt(hookEvent.PayloadObject.HashContent, botConfig.ChatKey, hookEvent.PayloadObject.HashContentKey);
         var dataEvent = JsonConvert.DeserializeObject<PostBackEvent>(decryptedDataEvent);
+        logger.Info($"Receive webhook with data: {decryptedDataEvent}");
         if (!string.IsNullOrEmpty(dataEvent.PostBack.Data))
         {
             var result = await hrmConnector.Send(dataEvent.PostBack.Data);
             var message = "Successfully!";
             if (!result.IsSuccessful)
             {
-                message =  $"{result.Message} This request has been processed.";
+                message = $"{result.Message} This request has been processed.";
             }
             await letstalkService(botConfig.BotAccountId).PushMulticastAsync([hookEvent.Source.UserId],
                     new()
