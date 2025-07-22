@@ -1,15 +1,12 @@
-﻿namespace GO.Letstalk.WebAPI.Controllers
-{
-    using GO.Letstalk.WebAPI.Extentions;
-    using Microsoft.AspNetCore.Mvc;
+﻿namespace GO.Letstalk.WebAPI.Controllers;
 
-    public class WhoamiController : Controller
+using GO.Letstalk.WebAPI.Extentions;
+using Microsoft.AspNetCore.Mvc;
+
+public class WhoamiController : Controller
+{
+    public IActionResult Index()
     {
-        [Route("Whoami")]
-        [Route("Whoami.aspx")]
-        public IActionResult Whoami()
-        {
-            return Content(WhoamiHelper.GetContent(HttpContext));
-        }
+        return Content(WhoamiHelper.GetContent(HttpContext));
     }
 }
