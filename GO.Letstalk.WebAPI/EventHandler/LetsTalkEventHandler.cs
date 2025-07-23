@@ -85,6 +85,7 @@ public class LetsTalkEventHandler(
             if (!result.IsSuccessful)
             {
                 message = $"{result.Message} This request has been processed.";
+                await logger.InfoAsync($"Callback: {dataEvent.PostBack.Data}. Message Reply: {message}. Code {result.Code}");
             }
             await letstalkService(botConfig.BotAccountId).PushMulticastAsync([hookEvent.Source.UserId],
                     new()
