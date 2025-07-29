@@ -17,6 +17,8 @@ namespace GO.Letstalk.WebAPI.EventHandler;
 public interface ILetsTalkEventHandler
 {
     Task ReceiveAsync(HttpRequest request, int botId);
+
+    Task<PostBackEvent> TestReceiveAsync(HttpRequest request, int botId);
 }
 
 public class LetsTalkEventHandler(
@@ -48,6 +50,32 @@ public class LetsTalkEventHandler(
         }
     }
 
+    public async Task<PostBackEvent> TestReceiveAsync(HttpRequest request, int botId)
+    {
+        try
+        {
+            CheckValidBot(botConfigs, botId);
+            var botConfig = botConfigs.Find(config => config.BotAccountId == botId);
+            string requestJson;
+            using (TextReader reader = new StreamReader(request.Body))
+            {
+                requestJson = await reader.ReadToEndAsync();
+            }
+
+            var data = JObject.Parse(requestJson);
+            var hookEvent = data.ToObject<HookEvent>();
+            hookEvent.PayloadObject = JsonConvert.DeserializeObject<Payload>(hookEvent.EncodedPayload);
+            var decryptedDataEvent = cryptographyService.Decrypt(hookEvent.PayloadObject.HashContent, botConfig.ChatKey, hookEvent.PayloadObject.HashContentKey);
+            var dataEvent = JsonConvert.DeserializeObject<PostBackEvent>(decryptedDataEvent);
+            return dataEvent;
+        }
+        catch (Exception ex)
+        {
+            await logger.ErrorAsync($"Letstalk Error TestReceiveAsync: {ex.Message}");
+            return null;
+        }
+    }
+
     private async Task EventHandlerAsync(HookEvent hookEvent, BotConfig botConfig)
     {
         switch (hookEvent.Type)
@@ -76,24 +104,36 @@ public class LetsTalkEventHandler(
         hookEvent.PayloadObject = JsonConvert.DeserializeObject<Payload>(hookEvent.EncodedPayload);
         var decryptedDataEvent = cryptographyService.Decrypt(hookEvent.PayloadObject.HashContent, botConfig.ChatKey, hookEvent.PayloadObject.HashContentKey);
         var dataEvent = JsonConvert.DeserializeObject<PostBackEvent>(decryptedDataEvent);
-        await logger.InfoAsync($"Receive webhook with data: {decryptedDataEvent}");
 
+        var message = "Can not handle this message, please contact administrator!";
         if (dataEvent.PostBack != null && !string.IsNullOrEmpty(dataEvent.PostBack.Data))
         {
-            var result = await hrmConnector.Send(dataEvent.PostBack.Data);
-            var message = "Successfully!";
-            if (!result.IsSuccessful)
+            try
             {
-                message = $"{result.Message} This request has been processed.";
+                message = "Successfully!";
+                var result = await hrmConnector.Send(dataEvent.PostBack.Data);
+                if (!result.IsSuccessful)
+                {
+                    message = $"{result.Message} This request has been processed.";
+                }
+
+                await logger.InfoAsync($"Letstalk Action Completed: {result.IsSuccessful}, Callback: {dataEvent.PostBack.Data}, message: {message}, CommandResult: {JsonConvert.SerializeObject(result)}");
             }
-            await letstalkService(botConfig.BotAccountId).PushMulticastAsync([hookEvent.Source.UserId],
-                    new()
-                    {
-                        Text = message,
-                        MessageType = MessageTypeNumber.Text
-                    });
-            await logger.InfoAsync($"Letstalk Action Completed: {result.IsSuccessful}, Callback: {dataEvent.PostBack.Data}, message: {message}, CommandResult: {JsonConvert.SerializeObject(result)}");
+            catch (Exception ex)
+            {
+                await logger.ErrorAsync($"Letstalk Error sending webhook to HRM: {ex.Message}, dataEvent: {decryptedDataEvent}");
+            }
         }
+        else
+        {
+            await logger.ErrorAsync($"Letstalk Empty Callback Data: dataEvent: {decryptedDataEvent}");
+        }
+        await letstalkService(botConfig.BotAccountId).PushMulticastAsync([hookEvent.Source.UserId],
+            new()
+            {
+                Text = message,
+                MessageType = MessageTypeNumber.Text
+            });
     }
 
     #endregion Receive message
