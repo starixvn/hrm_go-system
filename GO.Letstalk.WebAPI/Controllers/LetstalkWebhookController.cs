@@ -20,6 +20,13 @@ public class LetstalkWebhookController(
         await eventHandler.ReceiveAsync(Request, id);
     }
 
+    [Route("api/testwebhook/{id}")]
+    public async Task<IActionResult> TestWebhookReceiver(int id)
+    {
+        var res = await eventHandler.TestReceiveAsync(Request, id);
+        return Ok(res);
+    }
+
     [Route("api/setwebhook/{id}")]
     public async Task<IActionResult> SetWebhook(int id)
     {
