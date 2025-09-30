@@ -1,59 +1,69 @@
-﻿namespace GO.WebAPI.Services
+﻿namespace GO.WebAPI.Services;
+
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using GO.Core.Models;
+using GO.Core.Services;
+using GO.Models;
+using GO.Models.User;
+using GO.WebAPI.Criteria.User;
+
+public class UserService(IBaseService baseService) : IUserService
 {
-    using System.Threading.Tasks;
-    using GO.Core.Models;
-    using GO.Core.Services;
-    using GO.Models.User;
-    using GO.WebAPI.Criteria.User;
-
-    public class UserService(IBaseService baseService) : IUserService
+    public async Task<User> GetByUsernameAsync(string username)
     {
-        public async Task<User> GetByUsernameAsync(string username)
+        var criteria = new GetUserByUsernameCriteria
         {
-            var criteria = new GetUserByUsernameCriteria
-            {
-                Username = username
-            };
-            return await baseService.GetDataEntityAsync<User>(criteria);
-        }
+            Username = username
+        };
+        return await baseService.GetDataEntityAsync<User>(criteria);
+    }
 
-        public async Task<User> GetByIdAsync(int userId)
+    public async Task<User> GetByIdAsync(int userId)
+    {
+        var criteria = new GetUserByIdCriteria
         {
-            var criteria = new GetUserByIdCriteria
-            {
-                UserId = userId
-            };
-            return await baseService.GetDataEntityAsync<User>(criteria);
-        }
+            UserId = userId
+        };
+        return await baseService.GetDataEntityAsync<User>(criteria);
+    }
 
-        public async Task<CommandResult> UpdatePasswordAsync(UpdateUserPasswordCommand command)
+    public async Task<IEnumerable<SiteModel>> GetSiteAccessAsync(int userId)
+    {
+        var criteria = new GetSiteAccessByUserIdCriteria
         {
-            return await baseService.ExecuteNonQueryAsync(command);
-        }
+            UserId = userId
+        };
+        return await baseService.GetDataAsync<SiteModel>(criteria);
+    }
 
-        public async Task<CommandResult> UserCheckInAsync(UserCheckInCommand command)
-        {
-            return await baseService.ExecuteNonQueryAsync(command);
-        }
+    public async Task<CommandResult> UpdatePasswordAsync(UpdateUserPasswordCommand command)
+    {
+        return await baseService.ExecuteNonQueryAsync(command);
+    }
 
-        public async Task<CommandResult> UserReCheckInAsync(UserReCheckInCommand command)
-        {
-            return await baseService.ExecuteNonQueryAsync(command);
-        }
+    public async Task<CommandResult> UserCheckInAsync(UserCheckInCommand command)
+    {
+        return await baseService.ExecuteNonQueryAsync(command);
+    }
 
-        public async Task<CommandResult> UserLogoutAsync(UserLogoutCommand command)
-        {
-            return await baseService.ExecuteNonQueryAsync(command);
-        }
+    public async Task<CommandResult> UserReCheckInAsync(UserReCheckInCommand command)
+    {
+        return await baseService.ExecuteNonQueryAsync(command);
+    }
 
-        public async Task<CommandResult> SSOCheckInAsync(SSOCheckInCommand command)
-        {
-            return await baseService.ExecuteNonQueryAsync(command);
-        }
+    public async Task<CommandResult> UserLogoutAsync(UserLogoutCommand command)
+    {
+        return await baseService.ExecuteNonQueryAsync(command);
+    }
 
-        public async Task<CommandResult> LogUserLoginAsync(InsertLogUserLoginCommand command)
-        {
-            return await baseService.ExecuteNonQueryAsync(command);
-        }
+    public async Task<CommandResult> SSOCheckInAsync(SSOCheckInCommand command)
+    {
+        return await baseService.ExecuteNonQueryAsync(command);
+    }
+
+    public async Task<CommandResult> LogUserLoginAsync(InsertLogUserLoginCommand command)
+    {
+        return await baseService.ExecuteNonQueryAsync(command);
     }
 }

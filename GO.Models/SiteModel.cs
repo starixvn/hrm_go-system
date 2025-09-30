@@ -12,6 +12,7 @@
         public string AccessToken { get; set; }
 
         public string SiteUrl { get; set; }
+        public string SSOUrl { get; set; }
 
         public bool IsActive { get; set; }
     }
