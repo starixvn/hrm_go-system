@@ -9,6 +9,7 @@ using GO.Admin.Website.Criteria.Company;
 using GO.Admin.Website.Filters;
 using GO.Admin.Website.Models;
 using GO.Admin.Website.Services;
+using GO.UserControl.Client.Core;
 using GO.UserControl.Client.Core.Models;
 using GO.UserControl.Client.Core.Models.Auth;
 using GO.UserControl.Client.Core.Services;
@@ -42,6 +43,7 @@ public class AuthController(
         if (loginResult.IsSuccessfull)
         {
             session.UserId = loginResult.UserId;
+            session.SiteId = UserControlClient.SiteId;
             session.OnUserId = loginResult.OnUserId;
             session.JwtToken = loginResult.JwtToken;
             session.MenuItems = await userService.GetMenuItemAsync();

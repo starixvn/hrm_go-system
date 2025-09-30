@@ -9,12 +9,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="App_Data\SpNames.LOCAL.xml">
-          <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </Content>
-        <Content Include="App_Data\SpNames.PROD.xml">
-          <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </Content>
         <Content Include="App_Data\SpNames.xml">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>

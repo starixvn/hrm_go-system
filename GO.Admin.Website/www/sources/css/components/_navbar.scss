@@ -24,7 +24,6 @@
             img {
                 height: 24px;
                 width: auto;
-                margin: 0 37px;
                 position: relative;
                 left: 1px;
             }
@@ -46,8 +45,6 @@
             }
 
             &:hover {
-
-
                 ul.dropdown-menu {
                     display: block;
                 }
@@ -113,7 +110,6 @@
 
             &:hover {
                 cursor: pointer;
-
 
                 > a {
                     color: #0047BA;

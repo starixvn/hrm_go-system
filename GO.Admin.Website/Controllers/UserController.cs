@@ -129,42 +129,4 @@ public class UserController(
         var permissions = await userService.GetFunctionPermissionAsync(siteId, userId);
         return Json(new { functions, permissions });
     }
-
-    public async Task<IActionResult> UserMapping(int id)
-    {
-        var user = await userService.GetByIdAsync(id);
-        if (user == null)
-        {
-            return RedirectToAction("PageNotFound", "Error");
-        }
-
-        user.Password = string.Empty;
-        ViewBag.IsHost = session.HasPermissionOnFunction(FunctionKey.UserManagement, Policy.Host);
-        return View("UserMapping", user);
-    }
-
-    public async Task<IActionResult> GetUserMappingByUserId(int id)
-    {
-        var criteria = new GetMappingByUserIdCriteria { UserId = id };
-        var mappings = await baseService.GetDataAsync<UserMapping>(criteria);
-        mappings = mappings.Where(x => x.SiteId != session.SiteId).ToList();
-
-        return Json(mappings);
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> SearchUserMapping([FromBody] SearchUserMappingCriteria criteria)
-    {
-        var users = await baseService.GetDataAsync<Models.User.User>(criteria);
-        return Json(users);
-    }
-
-    [HttpPost]
-    [UCPermission(FunctionKey = FunctionKey.UserManagement, Policy = Policy.Host)]
-    public async Task<IActionResult> UpdateUserMapping([FromBody] UpdateUserMappingCommand command)
-    {
-        command.ModifiedBy = session.UserId;
-        var commandResult = await baseService.ExecuteNonQueryAsync(command);
-        return Json(commandResult);
-    }
 }
