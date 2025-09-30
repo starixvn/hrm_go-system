@@ -1,44 +1,33 @@
-﻿namespace GO.Admin.Website.Filters
+﻿namespace GO.Admin.Website.Filters;
+
+using System;
+using GO.UserControl.Client.Core.Session;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.DependencyInjection;
+
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+public class UCAuthorizeAttribute : AuthorizeAttribute, IAuthorizationFilter
 {
-    using System;
-    using GO.UserControl.Client.Core;
-    using GO.UserControl.Client.Core.Session;
-    using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Filters;
-
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false)]
-    public class UCAuthorizeAttribute : AuthorizeAttribute, IAuthorizationFilter
+    public void OnAuthorization(AuthorizationFilterContext context)
     {
-        private readonly IUserControlSession session;
-
-        public UCAuthorizeAttribute() : this(null)
+        var session = context.HttpContext.RequestServices.GetRequiredService<IUserControlSession>();
+        if (session.UserId <= 0 || session.JwtToken == null || session.JwtToken.IsExpired)
         {
-        }
-
-        internal UCAuthorizeAttribute(IUserControlSession session)
-        {
-            this.session = session ?? UserControlClientManager.UserControlSession;
-        }
-
-        public void OnAuthorization(AuthorizationFilterContext context)
-        {
-            if (session.UserId  <= 0 || session.JwtToken == null || session.JwtToken.IsExpired)
+            if (IsAjaxRequest(context.HttpContext.Request))
             {
-                if (IsAjaxRequest(context.HttpContext.Request))
-                {
-                    context.Result = new UnauthorizedResult();
-                }
-                else
-                {
-                    context.Result = new RedirectToActionResult("logout", "auth", null);
-                }
+                context.Result = new UnauthorizedResult();
+            }
+            else
+            {
+                context.Result = new RedirectToActionResult("logout", "auth", null);
             }
         }
-
-        private static bool IsAjaxRequest(HttpRequest request)
-           => string.Equals(request.Query["X-Requested-With"], "XMLHttpRequest", StringComparison.OrdinalIgnoreCase) ||
-              string.Equals(request.Headers["X-Requested-With"], "XMLHttpRequest", StringComparison.OrdinalIgnoreCase);
     }
+
+    private static bool IsAjaxRequest(HttpRequest request)
+        => string.Equals(request.Query["X-Requested-With"], "XMLHttpRequest", StringComparison.OrdinalIgnoreCase) ||
+           string.Equals(request.Headers["X-Requested-With"], "XMLHttpRequest", StringComparison.OrdinalIgnoreCase);
 }
