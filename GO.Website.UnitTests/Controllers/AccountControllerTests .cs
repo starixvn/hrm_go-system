@@ -5,7 +5,6 @@
     using GO.Website.Controllers;
     using GO.Website.Models;
     using GO.Website.Services;
-    using GO.UserControl.Client.Core;
     using GO.UserControl.Client.Core.Models.User;
     using GO.UserControl.Client.Core.Services;
     using GO.UserControl.Client.Core.Session;
@@ -17,7 +16,6 @@
 
     public class AccountControllerTests
     {
-        private IUserControlSettings userControlSettings;
         private IUserControlSession userControlSession;
         private IUserOtpService userOtpService;
         private OtpConfig otpConfig;
@@ -247,7 +245,6 @@
 
         private AccountController GetController()
         {
-            userControlSettings = Substitute.For<IUserControlSettings>();
             userControlSession = Substitute.For<IUserControlSession>();
             userOtpService = Substitute.For<IUserOtpService>();
             otpConfig = fixture.Create<OtpConfig>();
@@ -255,7 +252,6 @@
             userService = Substitute.For<IUserService>();
 
             return new AccountController(
-                userControlSettings,
                 userControlSession,
                 twoFactorAuthService,
                 userOtpService,

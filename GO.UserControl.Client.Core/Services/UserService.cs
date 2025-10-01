@@ -34,8 +34,8 @@
         public async Task<User> GetByIdAsync(int id)
             => await userClient.GetByIdAsync(id);
 
-        public IList<Site> GetSiteId(int userId)
-            => userClient.GetSiteId(userId);
+        public IList<Site> GetSite(int userId)
+            => userClient.GetSite(userId);
 
         public async Task<IList<Site>> GetSiteAsync(int userId)
             => await userClient.GetSiteAsync(userId);

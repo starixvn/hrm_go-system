@@ -6,7 +6,6 @@
     using System.Threading.Tasks;
     using AutoFixture;
     using Core.Services;
-    using GO.UserControl.Client.Core;
     using GO.UserControl.Client.Core.Models;
     using GO.UserControl.Client.Core.Models.User;
     using GO.UserControl.Client.Core.Services;
@@ -20,7 +19,6 @@
 
     public class RoleAssignmentControllerTests
     {
-        private IUserControlSettings userControlSettings;
         private IUserControlSession userControlSession;
         private IBaseService baseService;
         private IUserService userService;
@@ -87,13 +85,11 @@
 
         private RoleAssignmentController GetController()
         {
-            userControlSettings = Substitute.For<IUserControlSettings>();
             userControlSession = Substitute.For<IUserControlSession>();
             baseService = Substitute.For<IBaseService>();
             userService = Substitute.For<IUserService>();
 
             return new RoleAssignmentController(
-                userControlSettings,
                 userControlSession,
                 baseService,
                 userService

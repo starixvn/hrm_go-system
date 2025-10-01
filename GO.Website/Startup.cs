@@ -12,8 +12,6 @@ namespace GO.Website
     using GO.Core.Models;
     using GO.Core.Repository;
     using GO.Core.Services;
-    using GO.UserControl.Client.AspNetCore;
-    using GO.UserControl.Client.AspNetCore.Session;
     using GO.UserControl.Client.Core;
     using GO.UserControl.Client.Core.Services;
     using GO.UserControl.Client.Core.Session;
@@ -102,11 +100,10 @@ namespace GO.Website
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            UserControlClientManager
-                   .UseSettings(app.ApplicationServices.GetService<IUserControlSettings>())
-                   .UseSession(app.ApplicationServices.GetService<IUserControlSession>());
+            UserControlClient
+                .UseSession(app.ApplicationServices.GetService<IUserControlSession>(), Configuration);
 
             if (env.IsDevelopment())
             {
@@ -153,7 +150,6 @@ namespace GO.Website
             services.AddSingleton(otpConfig);
 
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddSingleton<IUserControlSettings>(new UserControlSettings(Configuration));
             services.AddSingleton<ILogger, Logger>();
             services.AddSingleton<IDynamicRepository, DynamicRepository>();
 

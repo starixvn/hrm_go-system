@@ -11,7 +11,6 @@
     using Microsoft.AspNetCore.Mvc;
 
     public class AuthController(
-        IUserControlSettings userControlSettings,
         IUserControlSession userControlSession,
         ICryptoService cryptoService,
         IAuthService authService) : Controller
@@ -37,7 +36,7 @@
             }
 
             userControlSession.UserId = loginResult.UserId;
-            userControlSession.SiteId = userControlSettings.SiteId;
+            userControlSession.SiteId = UserControlClient.SiteId;
             userControlSession.OnUserId = loginResult.OnUserId;
             userControlSession.JwtToken = loginResult.JwtToken;
 

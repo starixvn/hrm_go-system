@@ -31,7 +31,7 @@
         public async Task<User> GetByIdAsync(int id)
             => await GetAsync<User>(string.Format(RelativePaths.GetUserByIdPath, id));
 
-        public IList<Site> GetSiteId(int userId)
+        public IList<Site> GetSite(int userId)
             => Get<IList<Site>>(string.Format(RelativePaths.GetSiteByUserIdPath, userId));
 
         public async Task<IList<Site>> GetSiteAsync(int userId)

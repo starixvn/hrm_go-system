@@ -23,7 +23,7 @@
 
         Task<User> GetByIdAsync(int id);
 
-        IList<Site> GetSiteId(int userId);
+        IList<Site> GetSite(int userId);
 
         Task<IList<Site>> GetSiteAsync(int userId);
 

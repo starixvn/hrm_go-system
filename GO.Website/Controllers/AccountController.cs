@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Security.Claims;
     using System.Threading.Tasks;
-    using GO.UserControl.Client.Core;
     using GO.UserControl.Client.Core.Services;
     using GO.UserControl.Client.Core.Session;
     using GO.Website.Criteria.Account;
@@ -17,7 +16,6 @@
     using Microsoft.AspNetCore.Mvc;
 
     public class AccountController(
-        IUserControlSettings userControlSettings,
         IUserControlSession userControlSession,
         ITwoFactorAuthenticatorService twoFactorAuthService,
         IUserOtpService userOtpService,
@@ -131,7 +129,7 @@
         protected internal virtual async Task DoLoginAsync(int userId)
         {
             userControlSession.MenuItems = await userService.GetMenuItemAsync();
-            userControlSession.Functions = await userService.GetFunctionPermissionAsync(userControlSettings.SiteId, userControlSession.UserId);
+            userControlSession.Functions = await userService.GetFunctionPermissionAsync(userControlSession.SiteId, userControlSession.UserId);
             var claims = new List<Claim>
             {
                 new(ClaimTypes.NameIdentifier, userId.ToString())
