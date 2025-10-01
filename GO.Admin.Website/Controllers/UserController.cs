@@ -125,7 +125,7 @@ public class UserController(
 
     public async Task<IActionResult> GetUserPermission(short siteId, int userId)
     {
-        var functions = await functionService.GetHierarchyBySiteIdAsync(siteId, true);
+        var functions = await functionService.GetHierarchyBySiteIdAsync(siteId);
         var permissions = await userService.GetFunctionPermissionAsync(siteId, userId);
         return Json(new { functions, permissions });
     }
