@@ -23,9 +23,9 @@
 
         Task<User> GetByIdAsync(int id);
 
-        Site GetSiteId(int userId);
+        IList<Site> GetSiteId(int userId);
 
-        Task<Site> GetSiteAsync(int userId);
+        Task<IList<Site>> GetSiteAsync(int userId);
 
         CommandResult Create(CreateUserParam param);
 

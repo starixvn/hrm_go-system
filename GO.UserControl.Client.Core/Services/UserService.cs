@@ -34,10 +34,10 @@
         public async Task<User> GetByIdAsync(int id)
             => await userClient.GetByIdAsync(id);
 
-        public Site GetSiteId(int userId)
+        public IList<Site> GetSiteId(int userId)
             => userClient.GetSiteId(userId);
 
-        public async Task<Site> GetSiteAsync(int userId)
+        public async Task<IList<Site>> GetSiteAsync(int userId)
             => await userClient.GetSiteAsync(userId);
 
         public CommandResult Create(CreateUserParam param)

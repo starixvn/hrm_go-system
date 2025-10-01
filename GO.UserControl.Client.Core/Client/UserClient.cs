@@ -31,11 +31,11 @@
         public async Task<User> GetByIdAsync(int id)
             => await GetAsync<User>(string.Format(RelativePaths.GetUserByIdPath, id));
 
-        public Site GetSiteId(int userId)
-            => Get<Site>(string.Format(RelativePaths.GetSiteByUserIdPath, userId));
+        public IList<Site> GetSiteId(int userId)
+            => Get<IList<Site>>(string.Format(RelativePaths.GetSiteByUserIdPath, userId));
 
-        public async Task<Site> GetSiteAsync(int userId)
-            => await GetAsync<Site>(string.Format(RelativePaths.GetSiteByUserIdPath, userId));
+        public async Task<IList<Site>> GetSiteAsync(int userId)
+            => await GetAsync<IList<Site>>(string.Format(RelativePaths.GetSiteByUserIdPath, userId));
 
         public CommandResult Create(CreateUserParam param)
             => Post<CreateUserParam, CommandResult>(RelativePaths.CreateUserPath, param);
