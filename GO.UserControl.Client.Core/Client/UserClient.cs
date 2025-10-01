@@ -31,6 +31,12 @@
         public async Task<User> GetByIdAsync(int id)
             => await GetAsync<User>(string.Format(RelativePaths.GetUserByIdPath, id));
 
+        public Site GetSiteId(int userId)
+            => Get<Site>(string.Format(RelativePaths.GetSiteByUserIdPath, userId));
+
+        public async Task<Site> GetSiteAsync(int userId)
+            => await GetAsync<Site>(string.Format(RelativePaths.GetSiteByUserIdPath, userId));
+
         public CommandResult Create(CreateUserParam param)
             => Post<CreateUserParam, CommandResult>(RelativePaths.CreateUserPath, param);
 
@@ -85,6 +91,7 @@
             public const string GetFunctionPermissionPath = "api/user/getFunctionPermission?siteId={0}&userId={1}";
             public const string GetUserBySiteIdPath = "api/user/getBySiteId?keyword={0}&statusId={1}";
             public const string GetUserByIdPath = "api/user/getById/{0}";
+            public const string GetSiteByUserIdPath = "api/user/getSites/{0}";
             public const string CreateUserPath = "api/user/create";
             public const string UpdateUserInfoPath = "api/user/update";
             public const string AssignRoleToUserPath = "api/user/assignRole";
