@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GO.Core", "GO.Core\GO.Core.csproj", "{5DCAF336-1651-42A2-9834-306939A2EDDD}"
 EndProject
@@ -21,11 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GO.Website.UnitTests", "GO.Website.UnitTests\GO.Website.UnitTests.csproj", "{C1B0CB4C-B10D-40DC-8D85-DDE65F3CCE99}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GO.UserControl.Client.AspNetCore", "GO.UserControl.Client.AspNetCore\GO.UserControl.Client.AspNetCore.csproj", "{80012BB0-D51F-4537-8369-5358BD5A0168}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GO.UserControl.Client.Core", "GO.UserControl.Client.Core\GO.UserControl.Client.Core.csproj", "{1D10B6EB-077C-4063-9467-412DA94036AA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GO.UserControl.Client.AspNetMvc", "GO.UserControl.Client.AspNetMvc\GO.UserControl.Client.AspNetMvc.csproj", "{A0D67693-5265-4920-BF8B-BD16072891D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,18 +61,10 @@ Global
 		{C1B0CB4C-B10D-40DC-8D85-DDE65F3CCE99}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1B0CB4C-B10D-40DC-8D85-DDE65F3CCE99}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1B0CB4C-B10D-40DC-8D85-DDE65F3CCE99}.Release|Any CPU.Build.0 = Release|Any CPU
-		{80012BB0-D51F-4537-8369-5358BD5A0168}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{80012BB0-D51F-4537-8369-5358BD5A0168}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{80012BB0-D51F-4537-8369-5358BD5A0168}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{80012BB0-D51F-4537-8369-5358BD5A0168}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1D10B6EB-077C-4063-9467-412DA94036AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1D10B6EB-077C-4063-9467-412DA94036AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D10B6EB-077C-4063-9467-412DA94036AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D10B6EB-077C-4063-9467-412DA94036AA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A0D67693-5265-4920-BF8B-BD16072891D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A0D67693-5265-4920-BF8B-BD16072891D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A0D67693-5265-4920-BF8B-BD16072891D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A0D67693-5265-4920-BF8B-BD16072891D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
