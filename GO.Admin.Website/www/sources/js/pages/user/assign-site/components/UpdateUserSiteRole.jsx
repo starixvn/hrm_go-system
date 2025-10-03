@@ -107,10 +107,6 @@ export class UpdateUserSiteRole extends Component {
 
     render() {
         const { updateUserSiteRoleModalDialog, siteRoles } = this.props;
-        if (siteRoles.length === 0) {
-            return null;
-        }
-
         const initialValues = {
             siteId: updateUserSiteRoleModalDialog.site.siteId,
             siteName: updateUserSiteRoleModalDialog.site.siteName,
