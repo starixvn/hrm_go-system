@@ -129,6 +129,7 @@ export class UpdateUserSiteRole extends Component {
                     innerRef={el => this.formik = el}
                     initialValues={initialValues}
                     onSubmit={this.handleSubmit}
+                    enableReinitialize
                 >
                     {this.renderForm}
                 </Formik>
