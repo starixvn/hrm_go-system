@@ -6,74 +6,99 @@
     using Models;
     using Models.User;
 
-    public class UserService : IUserService
+    public class UserService : BaseHttpClient, IUserService
     {
-        private readonly UserClient userClient = new UserClient();
-
         public IList<MenuItem> GetMenuItem()
-            => userClient.GetMenuItem();
+            => Get<IList<MenuItem>>(RelativePaths.GetMenuItemPath);
 
         public async Task<IList<MenuItem>> GetMenuItemAsync()
-             => await userClient.GetMenuItemAsync();
+            => await GetAsync<IList<MenuItem>>(RelativePaths.GetMenuItemPath);
 
         public IList<FunctionPermission> GetFunctionPermission(short siteId, int userId)
-            => userClient.GetFunctionPermission(siteId, userId);
+            => Get<IList<FunctionPermission>>(string.Format(RelativePaths.GetFunctionPermissionPath, siteId, userId));
 
         public async Task<IList<FunctionPermission>> GetFunctionPermissionAsync(short siteId, int userId)
-             => await userClient.GetFunctionPermissionAsync(siteId, userId);
+            => await GetAsync<IList<FunctionPermission>>(string.Format(RelativePaths.GetFunctionPermissionPath, siteId, userId));
 
         public IList<User> GetUserBySiteId(string keyword = null, byte? statusId = null)
-            => userClient.GetUserBySiteId(keyword, statusId);
+            => Get<IList<User>>(string.Format(RelativePaths.GetUserBySiteIdPath, keyword, statusId));
 
         public async Task<IList<User>> GetUserBySiteIdAsync(string keyword = null, byte? statusId = null)
-            => await userClient.GetUserBySiteIdAsync(keyword, statusId);
+            => await GetAsync<IList<User>>(string.Format(RelativePaths.GetUserBySiteIdPath, keyword, statusId));
 
         public User GetById(int id)
-            => userClient.GetById(id);
+            => Get<User>(string.Format(RelativePaths.GetUserByIdPath, id));
 
         public async Task<User> GetByIdAsync(int id)
-            => await userClient.GetByIdAsync(id);
+            => await GetAsync<User>(string.Format(RelativePaths.GetUserByIdPath, id));
 
         public IList<Site> GetSite(int userId)
-            => userClient.GetSite(userId);
+            => Get<IList<Site>>(string.Format(RelativePaths.GetSiteByUserIdPath, userId));
 
         public async Task<IList<Site>> GetSiteAsync(int userId)
-            => await userClient.GetSiteAsync(userId);
+            => await GetAsync<IList<Site>>(string.Format(RelativePaths.GetSiteByUserIdPath, userId));
 
         public CommandResult Create(CreateUserParam param)
-            => userClient.Create(param);
+            => Post<CreateUserParam, CommandResult>(RelativePaths.CreateUserPath, param);
 
         public async Task<CommandResult> CreateAsync(CreateUserParam param)
-            => await userClient.CreateAsync(param);
+            => await PostAsync<CreateUserParam, CommandResult>(RelativePaths.CreateUserPath, param);
 
         public CommandResult UpdateInfo(UpdateUserInfoParam param)
-            => userClient.UpdateInfo(param);
+            => Post<UpdateUserInfoParam, CommandResult>(RelativePaths.UpdateUserInfoPath, param);
 
         public async Task<CommandResult> UpdateInfoAsync(UpdateUserInfoParam param)
-            => await userClient.UpdateInfoAsync(param);
+            => await PostAsync<UpdateUserInfoParam, CommandResult>(RelativePaths.UpdateUserInfoPath, param);
 
         public CommandResult AssignRole(AssignRoleParam param)
-            => userClient.AssignRole(param);
+            => Post<AssignRoleParam, CommandResult>(RelativePaths.AssignRoleToUserPath, param);
 
         public async Task<CommandResult> AssignRoleAsync(AssignRoleParam param)
-            => await userClient.AssignRoleAsync(param);
+            => await PostAsync<AssignRoleParam, CommandResult>(RelativePaths.AssignRoleToUserPath, param);
 
         public CommandResult UpdatePassword(UpdatePasswordParam param)
-            => userClient.UpdatePassword(param);
+            => Post<UpdatePasswordParam, CommandResult>(RelativePaths.UpdatePasswordPath, param);
 
         public async Task<CommandResult> UpdatePasswordAsync(UpdatePasswordParam param)
-            => await userClient.UpdatePasswordAsync(param);
+            => await PostAsync<UpdatePasswordParam, CommandResult>(RelativePaths.UpdatePasswordPath, param);
 
         public CommandResult ResetPassword(UpdatePasswordParam param)
-            => userClient.ResetPassword(param);
+            => Post<UpdatePasswordParam, CommandResult>(RelativePaths.ResetPasswordPath, param);
 
         public async Task<CommandResult> ResetPasswordAsync(UpdatePasswordParam param)
-            => await userClient.ResetPasswordAsync(param);
+            => await PostAsync<UpdatePasswordParam, CommandResult>(RelativePaths.ResetPasswordPath, param);
 
         public CommandResult Delete(int userId)
-            => userClient.Delete(userId);
+        {
+            var data = new Dictionary<string, object>
+            {
+                {"userId", userId }
+            };
+            return Post<Dictionary<string, object>, CommandResult>(RelativePaths.DeleteUserPath, data);
+        }
 
         public async Task<CommandResult> DeleteAsync(int userId)
-            => await userClient.DeleteAsync(userId);
+        {
+            var data = new Dictionary<string, object>
+            {
+                {"userId", userId }
+            };
+            return await PostAsync<Dictionary<string, object>, CommandResult>(RelativePaths.DeleteUserPath, data);
+        }
+
+        private static class RelativePaths
+        {
+            public const string GetMenuItemPath = "api/user/getMenuItem";
+            public const string GetFunctionPermissionPath = "api/user/getFunctionPermission?siteId={0}&userId={1}";
+            public const string GetUserBySiteIdPath = "api/user/getBySiteId?keyword={0}&statusId={1}";
+            public const string GetUserByIdPath = "api/user/getById/{0}";
+            public const string GetSiteByUserIdPath = "api/user/getSites/{0}";
+            public const string CreateUserPath = "api/user/create";
+            public const string UpdateUserInfoPath = "api/user/update";
+            public const string AssignRoleToUserPath = "api/user/assignRole";
+            public const string UpdatePasswordPath = "api/user/updatePassword";
+            public const string ResetPasswordPath = "api/user/resetPassword";
+            public const string DeleteUserPath = "api/user/delete";
+        }
     }
 }

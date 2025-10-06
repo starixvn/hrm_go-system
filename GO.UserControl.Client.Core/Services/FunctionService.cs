@@ -6,39 +6,37 @@
     using Client;
     using Models;
 
-    public class FunctionService : IFunctionService
+    public class FunctionService : BaseHttpClient, IFunctionService
     {
-        private readonly FunctionClient functionClient = new FunctionClient();
-
         public IList<Function> GetBySiteId(short siteId, bool? isActive = true)
         {
-            var functions = functionClient.GetBySiteId(siteId, isActive);
+            var functions = Get<IList<Function>>(string.Format(RelativePaths.GetFunctionBySiteIdPath, siteId, isActive));
             return functions.OrderBy(x => x.DisplayOrder).ToList();
         }
 
         public async Task<IList<Function>> GetBySiteIdAsync(short siteId, bool? isActive = true)
         {
-            var functions = await functionClient.GetBySiteIdAsync(siteId, isActive);
+            var functions = await GetAsync<IList<Function>>(string.Format(RelativePaths.GetFunctionBySiteIdPath, siteId, isActive));
             return functions.OrderBy(x => x.DisplayOrder).ToList();
         }
 
         public IList<Function> GetHierarchyBySiteId(short siteId, bool? isActive = true)
         {
-            var functions = functionClient.GetBySiteId(siteId, isActive);
+            var functions = GetBySiteId(siteId, isActive);
             return GetHierarchyFunction(functions);
         }
 
         public async Task<IList<Function>> GetHierarchyBySiteIdAsync(short siteId, bool? isActive = true)
         {
-            var functions = await functionClient.GetBySiteIdAsync(siteId, isActive);
+            var functions = await GetBySiteIdAsync(siteId, isActive);
             return GetHierarchyFunction(functions);
         }
 
         public IList<FunctionPermission> GetPermissionBySiteAndRoleId(short siteId, short roleId)
-            => functionClient.GetPermissionBySiteAndRoleId(siteId, roleId);
+            => Get<IList<FunctionPermission>>(string.Format(RelativePaths.GetFunctionPermissionByRoleIdPath, siteId, roleId));
 
         public async Task<IList<FunctionPermission>> GetPermissionBySiteAndRoleIdAsync(short siteId, short roleId)
-            => await functionClient.GetPermissionBySiteAndRoleIdAsync(siteId, roleId);
+            => await GetAsync<IList<FunctionPermission>>(string.Format(RelativePaths.GetFunctionPermissionByRoleIdPath, siteId, roleId));
 
         private static IList<Function> GetHierarchyFunction(IList<Function> functions)
         {
@@ -68,6 +66,12 @@
                     GetChildFunctions(item, functions);
                 }
             }
+        }
+
+        private static class RelativePaths
+        {
+            public const string GetFunctionBySiteIdPath = "api/function/getBySiteId?siteId={0}&isActive={1}";
+            public const string GetFunctionPermissionByRoleIdPath = "api/function/getPermissionBySiteAndRoleId?siteId={0}&roleId={1}";
         }
     }
 }

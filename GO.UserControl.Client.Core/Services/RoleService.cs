@@ -6,26 +6,47 @@
     using Models;
     using Models.Role;
 
-    public class RoleService : IRoleService
+    public class RoleService : BaseHttpClient, IRoleService
     {
-        private readonly RoleClient roleClient = new RoleClient();
-
         public IList<Role> GetBySiteId(short siteId, bool? isActive = true)
-            => roleClient.GetBySiteId(siteId, isActive);
+            => Get<IList<Role>>(string.Format(RelativePaths.GetRoleBySiteIdPath, siteId, isActive));
 
         public async Task<IList<Role>> GetBySiteIdAsync(short siteId, bool? isActive = true)
-             => await roleClient.GetBySiteIdAsync(siteId, isActive);
+            => await GetAsync<IList<Role>>(string.Format(RelativePaths.GetRoleBySiteIdPath, siteId, isActive));
 
         public IList<Role> GetByUserId(int userId)
-            => roleClient.GetByUserId(userId);
+            => Get<IList<Role>>(string.Format(RelativePaths.GetRoleByUserIdPath, userId));
 
         public async Task<IList<Role>> GetByUserIdAsync(int userId)
-            => await roleClient.GetByUserIdAsync(userId);
+            => await GetAsync<IList<Role>>(string.Format(RelativePaths.GetRoleByUserIdPath, userId));
 
         public CommandResult AssignPermission(short siteId, short roleId, IList<FunctionPermission> permissions)
-            => roleClient.AssignPermission(siteId, roleId, permissions);
+        {
+            var data = new Dictionary<string, object>
+            {
+                { "siteId", siteId },
+                { "roleId", roleId },
+                { "permissions", permissions }
+            };
+            return Post<Dictionary<string, object>, CommandResult>(RelativePaths.AssignPermissionToRolePath, data);
+        }
 
         public async Task<CommandResult> AssignPermissionAsync(short siteId, short roleId, IList<FunctionPermission> permissions)
-            => await roleClient.AssignPermissionAsync(siteId, roleId, permissions);
+        {
+            var data = new Dictionary<string, object>
+            {
+                { "siteId", siteId },
+                { "roleId", roleId },
+                { "permissions", permissions }
+            };
+            return await PostAsync<Dictionary<string, object>, CommandResult>(RelativePaths.AssignPermissionToRolePath, data);
+        }
+
+        private static class RelativePaths
+        {
+            public const string GetRoleBySiteIdPath = "api/role/getBySiteId?siteId={0}&isActive={1}";
+            public const string GetRoleByUserIdPath = "api/role/getByUserId?userId={0}";
+            public const string AssignPermissionToRolePath = "api/role/assignPermission";
+        }
     }
 }
