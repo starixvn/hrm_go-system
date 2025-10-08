@@ -27,42 +27,41 @@ export class Update extends Component {
         this.props.getParentById(this.props.params).then(response => { this.handleParentOptions(response.data); });
     }
 
-    handleSiteSelected = () =>{
-        const {updateModalDialog, sites} = this.props;
-        const siteFilter = sites.filter(x=>x.siteId === updateModalDialog.item.siteId)[0];
+    handleSiteSelected = () => {
+        const { updateModalDialog, sites } = this.props;
+        const siteFilter = sites.filter(x => x.siteId === updateModalDialog.item.siteId)[0];
         const site = {
             value: siteFilter.siteId,
             label: siteFilter.siteName
         };
-        this.setState({site});
+        this.setState({ site });
     }
 
-    handleParentOptions = parents =>{
+    handleParentOptions = parents => {
         const defaultParent = [{
             functionId: null,
             functionName: 'None'
         }];
         const functionSelected = this.props.updateModalDialog.item;
         const parentCopy = [...defaultParent, ...parents];
-        const parentOptions = parentCopy.map(item =>{
+        const parentOptions = parentCopy.map(item => {
             return {
                 value: item.functionId,
                 label: item.functionName
             };
         });
-        const parentFilter = parentOptions.filter(x=>x.value === functionSelected.parentId);
+        const parentFilter = parentOptions.filter(x => x.value === functionSelected.parentId);
         const parent = (functionSelected.parentId === 0 || parentFilter.length === 0) ? parentOptions[0] : parentFilter[0];
-        this.setState({parentOptions, parent});
+        this.setState({ parentOptions, parent });
     }
 
     handleOpenConfirmRegenerateKeyModalDialog = () => {
-        this.props.setConfirmRegenerateKeyModalDialog({ show: true});
+        this.props.setConfirmRegenerateKeyModalDialog({ show: true });
     }
 
     handleCloseConfirmRegenerateKeyModalDialog = () => {
         this.props.setConfirmRegenerateKeyModalDialog({ show: false });
     }
-
 
     handleCloseModalDialog = () => {
         this.props.setUpdateModalDialog({ show: false });
@@ -71,14 +70,14 @@ export class Update extends Component {
         }
     };
 
-    handleChangeSite = site =>{
-        this.setState({site});
+    handleChangeSite = site => {
+        this.setState({ site });
         this.props.getParentById(site.value).then(data => { this.handleParentOptions(data.data); });
     }
 
     handleSubmit = (values, { setSubmitting }) => {
         setSubmitting(true);
-        const {site, parent} = this.state;
+        const { site, parent } = this.state;
         const params = {
             functionId: this.props.updateModalDialog.item.functionId,
             functionName: values.functionName,
@@ -119,8 +118,8 @@ export class Update extends Component {
         setFieldValue,
         isSubmitting
     }) => {
-        const {site, parent, parentOptions} = this.state;
-        const siteOptions = this.props.sites.map(item =>{
+        const { site, parent, parentOptions } = this.state;
+        const siteOptions = this.props.sites.map(item => {
             return {
                 value: item.siteId,
                 label: item.siteName
@@ -162,17 +161,17 @@ export class Update extends Component {
                             />
                         </Col>
                         <OverlayTrigger overlay={<Tooltip id="tooltip-refresh-token">Regenerate Key</Tooltip>}>
-                                <span className="text-center rounded-circle fa fa-refresh icon-edit"
-                                    onClick={this.handleOpenConfirmRegenerateKeyModalDialog}
-                                />
-                            </OverlayTrigger>
+                            <span className="text-center rounded-circle fa fa-refresh icon-edit"
+                                onClick={this.handleOpenConfirmRegenerateKeyModalDialog}
+                            />
+                        </OverlayTrigger>
                     </Form.Group>
                     <Form.Group as={Row}>
                         <Form.Label column sm="4" md="3" className="required" htmlFor="site">
                             {LangHelper.getResource('Site')}
                         </Form.Label>
                         <Col sm="7" md="8">
-                            <Select className={`react-select-container ${errors.siteId ? 'is-invalid' : ''}`}
+                            <Select className={`react-select-container ${touched.siteId && errors.siteId ? 'is-invalid' : ''}`}
                                 classNamePrefix="react-select" isSearchable={false}
                                 options={siteOptions} value={site}
                                 onChange={value => this.handleChangeSite(value)}
@@ -210,7 +209,7 @@ export class Update extends Component {
                         <Col sm="7" md="8">
                             <Select className='react-select-container' classNamePrefix="react-select" isSearchable
                                 options={parentOptions} value={parent}
-                                onChange={value => this.setState({parent: value})}
+                                onChange={value => this.setState({ parent: value })}
                             />
                         </Col>
                     </Form.Group>
@@ -231,7 +230,7 @@ export class Update extends Component {
                             {LangHelper.getResource('Status')}
                         </Form.Label>
                         <Col sm="7" md="8">
-                            <Form.Check type="checkbox"                        
+                            <Form.Check type="checkbox"
                                 checked={values.isActive}
                                 name="isActive" id="isActive"
                                 className="shadow-none"
@@ -254,7 +253,7 @@ export class Update extends Component {
 
     render() {
         const functionSelected = this.props.updateModalDialog.item;
-        const policy = PolicyOptions.filter(x=>x.value === functionSelected.policy);
+        const policy = PolicyOptions.filter(x => x.value === functionSelected.policy);
         const initialValues = {
             functionName: functionSelected.functionName,
             functionKey: functionSelected.functionKey,
@@ -275,7 +274,7 @@ export class Update extends Component {
                     <Formik
                         innerRef={el => this.formik = el}
                         initialValues={initialValues}
-                        validate={values =>validateFormik(values, this.state.site.value)}
+                        validate={values => validateFormik(values, this.state.site.value)}
                         onSubmit={this.handleSubmit}
                     >
                         {this.renderForm}
