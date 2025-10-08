@@ -49,7 +49,8 @@ export class UpdateRole extends Component {
         touched,
         handleChange,
         handleSubmit,
-        isSubmitting
+        isSubmitting,
+        setFieldValue
     }) => {
         const siteOptions = this.props.sites.map(item => {
             return { value: item.siteId, label: item.siteName };

@@ -163,7 +163,7 @@ export class Update extends Component {
                             {LangHelper.getResource('Site')}
                         </Form.Label>
                         <Col sm="8" md="9">
-                            <Select className={`react-select-container ${errors.siteId && errors.siteId ? 'is-invalid' : ''}`}
+                            <Select className={`react-select-container ${errors.siteId ? 'is-invalid' : ''}`}
                                 classNamePrefix="react-select" isSearchable={false}
                                 options={siteOptions} value={site}
                                 onChange={value => this.handleChangeSite(value)}

@@ -1,6 +1,8 @@
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using GO.Letstalk.WebAPI.Models;
 using Newtonsoft.Json;
@@ -26,7 +28,7 @@ public class HRMConnector(HRMSettings hrmSettings) : IHRMConnector
         // Create HttpClient with SSL certificate validation bypass
         var handler = new HttpClientHandler
         {
-            ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
+            ServerCertificateCustomValidationCallback = ServerCertificateCustomValidationCallback
         };
         using var httpClient = new HttpClient(handler);
 
@@ -63,7 +65,7 @@ public class HRMConnector(HRMSettings hrmSettings) : IHRMConnector
         // Create HttpClient with SSL certificate validation bypass for NexHRM
         var handler = new HttpClientHandler
         {
-            ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
+            ServerCertificateCustomValidationCallback = ServerCertificateCustomValidationCallback
         };
         using var httpClient = new HttpClient(handler);
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -106,7 +108,7 @@ public class HRMConnector(HRMSettings hrmSettings) : IHRMConnector
         // Create HttpClient with SSL certificate validation bypass for NexHRM
         var handler = new HttpClientHandler
         {
-            ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
+            ServerCertificateCustomValidationCallback = ServerCertificateCustomValidationCallback
         };
         using var httpClient = new HttpClient(handler);
 
@@ -115,4 +117,6 @@ public class HRMConnector(HRMSettings hrmSettings) : IHRMConnector
         var responseData = await response.Content.ReadAsStringAsync();
         return responseData;
     }
+
+    private static bool ServerCertificateCustomValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) => true;
 }
