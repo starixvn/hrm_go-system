@@ -121,11 +121,11 @@ export class Create extends Component {
                             {LangHelper.getResource('FunctionName')}
                         </Form.Label>
                         <Col sm="8" md="9">
-                            <Form.Control type="text" size="sm" value={values.functionName}
-                                name="functionName" id="functionName"
+                            <Form.Control type="text" size="sm"
                                 className="shadow-none" autoComplete="off"
+                                name="functionName" id="functionName"
                                 isInvalid={touched.functionName && errors.functionName}
-                                onChange={handleChange}
+                                value={values.functionName} onChange={handleChange}
                             />
                         </Col>
                     </Form.Group>
@@ -134,8 +134,8 @@ export class Create extends Component {
                             {LangHelper.getResource('Site')}
                         </Form.Label>
                         <Col sm="8" md="9">
-                            <Select className={`react-select-container ${touched.siteId && errors.siteId ? 'is-invalid' : ''}`}
-                                classNamePrefix="react-select" isSearchable={false}
+                            <Select classNamePrefix="react-select" isSearchable={false}
+                                className={`react-select-container ${touched.siteId && errors.siteId ? 'is-invalid' : ''}`}
                                 options={siteOptions} value={site}
                                 onChange={value => this.handleChangeSite(value)}
                             />
@@ -146,11 +146,11 @@ export class Create extends Component {
                             {LangHelper.getResource('Description')}
                         </Form.Label>
                         <Col sm="8" md="9">
-                            <Form.Control type="text" size="sm" value={values.description}
-                                name="description" id="description"
+                            <Form.Control type="text" size="sm"
                                 className="shadow-none" autoComplete="off"
+                                name="description" id="description"
                                 isInvalid={touched.description && errors.description}
-                                onChange={handleChange}
+                                value={values.description} onChange={handleChange}
                             />
                         </Col>
                     </Form.Group>
@@ -159,8 +159,8 @@ export class Create extends Component {
                             {LangHelper.getResource('Policy')}
                         </Form.Label>
                         <Col sm="8" md="9">
-                            <Select className='react-select-container' classNamePrefix="react-select" isSearchable={false}
-                                options={PolicyOptions} value={values.policy}
+                            <Select classNamePrefix="react-select" className='react-select-container'
+                                isSearchable={false} options={PolicyOptions} value={values.policy}
                                 onChange={value => setFieldValue('policy', value)}
                             />
                         </Col>
@@ -170,7 +170,7 @@ export class Create extends Component {
                             {LangHelper.getResource('Parent')}
                         </Form.Label>
                         <Col sm="8" md="9">
-                            <Select className='react-select-container' classNamePrefix="react-select" isSearchable
+                            <Select classNamePrefix="react-select" className='react-select-container' isSearchable
                                 options={parentOptions} value={parent}
                                 onChange={value => this.setState({parent: value})}
                             />
@@ -181,11 +181,10 @@ export class Create extends Component {
                             {LangHelper.getResource('Order')}
                         </Form.Label>
                         <Col sm="8" md="9">
-                            <Form.Control type="number" size="sm" value={values.order}
-                                name="order" id="order"
-                                className="shadow-none" autoComplete="off"
+                            <Form.Control type="number" size="sm"
+                                name="order" id="order" className="shadow-none" autoComplete="off"
                                 isInvalid={touched.order && errors.order}
-                                onChange={handleChange}
+                                value={values.order} onChange={handleChange}
                             />
                         </Col>
                     </Form.Group>
@@ -195,10 +194,8 @@ export class Create extends Component {
                         </Form.Label>
                         <Col sm="8" md="9">
                             <Form.Check type="checkbox"
-                                checked={values.isActive}
-                                name="isActive" id="isActive"
-                                className='shadow-none'
-                                onChange={handleChange}
+                                name="isActive" id="isActive" className='shadow-none'
+                                checked={values.isActive} onChange={handleChange}
                             />
                         </Col>
                     </Form.Group>
@@ -225,8 +222,7 @@ export class Create extends Component {
         };
 
         return (
-            <Modal show
-                backdrop="static" keyboard={false} size="lg" centered
+            <Modal show backdrop="static" keyboard={false} size="lg" centered
                 onHide={this.handleCloseModalDialog}
             >
                 <Modal.Header closeButton>
