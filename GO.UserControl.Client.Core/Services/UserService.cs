@@ -86,6 +86,16 @@
             return await PostAsync<Dictionary<string, object>, CommandResult>(RelativePaths.DeleteUserPath, data);
         }
 
+        public CommandResult UpdateUserSite(UpdateUserSiteParam param)
+        {
+            return Post<UpdateUserSiteParam, CommandResult>(RelativePaths.UpdateUserSitePath, param);
+        }
+
+        public async Task<CommandResult> UpdateUserSiteAsync(UpdateUserSiteParam param)
+        {
+            return await PostAsync<UpdateUserSiteParam, CommandResult>(RelativePaths.UpdateUserSitePath, param);
+        }
+
         private static class RelativePaths
         {
             public const string GetMenuItemPath = "api/user/getMenuItem";
@@ -99,6 +109,7 @@
             public const string UpdatePasswordPath = "api/user/updatePassword";
             public const string ResetPasswordPath = "api/user/resetPassword";
             public const string DeleteUserPath = "api/user/delete";
+            public const string UpdateUserSitePath = "api/user/updateUserSite";
         }
     }
 }

@@ -23,7 +23,7 @@
 
         Task<User> GetByIdAsync(int id);
 
-        IList<Site> GetSite(int userId); //NOSONAR
+        IList<Site> GetSite(int userId);
 
         Task<IList<Site>> GetSiteAsync(int userId);
 
@@ -50,5 +50,9 @@
         CommandResult Delete(int userId);
 
         Task<CommandResult> DeleteAsync(int userId);
+
+        CommandResult UpdateUserSite(UpdateUserSiteParam param);
+
+        Task<CommandResult> UpdateUserSiteAsync(UpdateUserSiteParam param);
     }
 }

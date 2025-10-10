@@ -169,6 +169,15 @@ public class UserController(
         return Json(commandResult);
     }
 
+    [HttpPost]
+    [Route("updateUserSite")]
+    public async Task<IActionResult> UpdateUserSite([FromBody] UpdateUserSiteCommand command)
+    {
+        command.ModifiedBy = UserId;
+        var commandResult = await baseService.ExecuteNonQueryAsync(command);
+        return Json(commandResult);
+    }
+
     private bool IsValidPassword(string plainPwd, User user)
     {
         if (!string.IsNullOrWhiteSpace(user.Password))
