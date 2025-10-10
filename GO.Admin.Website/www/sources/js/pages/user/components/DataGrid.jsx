@@ -89,10 +89,6 @@ export class DataGrid extends Component {
                 <Dropdown.Item href={Site.resolveClientUrl(`user/permission/${user.userId}`)}>
                     {LangHelper.getResource('ViewPermission')}
                 </Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item href={Site.resolveClientUrl(`user/usermapping/${user.userId}`)}>
-                    {LangHelper.getResource('ViewMapping')}
-                </Dropdown.Item>
             </Dropdown.Menu>
         </Dropdown>;
     };

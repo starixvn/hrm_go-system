@@ -28,7 +28,7 @@ export class CreateUser extends Component {
         const [rijndaelKey, rijndaelIV] = token.split(':');
 
         const params = {
-            username: RijndaelService.encrypt(values.username, rijndaelKey, rijndaelIV),
+            username: values.username,
             BCryptPassword: RijndaelService.encrypt(values.password, rijndaelKey, rijndaelIV),
             nickname: values.nickname,
             fullName: values.fullName,
@@ -170,8 +170,8 @@ export class CreateUser extends Component {
 const mapDispatchToProps = dispatch => bindActionCreators(ActionCreators, dispatch);
 
 const mapStateToProps = state => {
-    const { getAllSiteParams, createSiteResult } = state;
-    return { getAllSiteParams, createSiteResult };
+    const { getAllUserParams, createUserResult } = state;
+    return { getAllUserParams, createUserResult };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateUser);

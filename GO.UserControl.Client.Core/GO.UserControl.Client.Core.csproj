@@ -1,14 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
       <TargetFrameworks>net472;net8.0;net9.0</TargetFrameworks>
-      <Version>1.0.5</Version>
-      <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-      <IsPackable>true</IsPackable>
-      <Title>GO.UserControl.Client.Core</Title>
+      <Version>1.0.9</Version>
+      <PackageId>GO.UserControl.Client.Core</PackageId>
+      <Authors>tim.trinh</Authors>
+      <Description>GO.UserControl.Client.Core</Description>
+      <Copyright>2024</Copyright>
       <PackageTags>HRM</PackageTags>
   </PropertyGroup>
   <ItemGroup>
-      <PackageReference Include="jose-jwt" Version="5.1.1" />
+      <PackageReference Include="jose-jwt" Version="5.2.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
@@ -20,11 +21,11 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
       <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
       <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.3.0" />
-      <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.9" />
   </ItemGroup>
     <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
         <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
         <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.3.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.4" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.9" />
     </ItemGroup>
 </Project>

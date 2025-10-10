@@ -33,12 +33,12 @@ export default class Site {
                     url = 'auth/logout';
                     break;
 
-                case 404:
-                    url = 'error/PageNotFound';
+                case 403:
+                    url = 'error/AccessDenied';
                     break;
 
-                case 405:
-                    url = 'error/AccessDenied';
+                case 404:
+                    url = 'error/PageNotFound';
                     break;
 
                 case 500:
@@ -46,7 +46,7 @@ export default class Site {
                     break;
             }
 
-            //window.location = _rootUrl + url;
+            window.location = _rootUrl + url;
         }
     }
 

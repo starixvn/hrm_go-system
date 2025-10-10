@@ -9,12 +9,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="App_Data\SpNames.LOCAL.xml">
-          <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </Content>
-        <Content Include="App_Data\SpNames.PROD.xml">
-          <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </Content>
         <Content Include="App_Data\SpNames.xml">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
@@ -28,13 +22,13 @@
 
     <ItemGroup>
         <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
-        <PackageReference Include="Fanex.Data" Version="4.2.5.3" />
-        <PackageReference Include="Fanex.Data.Repository" Version="4.2.5.3" />
-        <PackageReference Include="Fanex.Data.SqlServer" Version="4.2.5.3" />
-        <PackageReference Include="Fanex.Logging.Extensions.AspNetCore" Version="1.0.1" />
-        <PackageReference Include="Fanex.Logging.Extensions.Database" Version="1.0.8" />
-        <PackageReference Include="Fanex.Logging.Sentry" Version="1.0.6" />
-        <PackageReference Include="GO.UserControl.Client.AspNetCore" Version="1.0.1" />
+        <PackageReference Include="Fanex.Data" Version="4.3.4.5" />
+        <PackageReference Include="Fanex.Data.Repository" Version="4.3.4.5" />
+        <PackageReference Include="Fanex.Data.SqlServer" Version="4.3.4.5" />
+        <PackageReference Include="Fanex.Logging.Extensions" Version="2.0.2.1" />
+        <PackageReference Include="Fanex.Logging.Extensions.Database" Version="2.0.2.1" />
+        <PackageReference Include="Fanex.Logging.Sentry.RavenClient" Version="2.0.2" />
+        <PackageReference Include="GO.UserControl.Client.Core" Version="1.0.9" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="NLog.Web.AspNetCore" Version="5.4.0" />
     </ItemGroup>

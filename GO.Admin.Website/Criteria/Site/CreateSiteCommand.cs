@@ -13,6 +13,6 @@
 
         public override string GetSettingKey() => "Site_Insert";
 
-        public override bool IsValid() => CompanyId > 0 && !string.IsNullOrWhiteSpace(SiteName) && CreatedBy > 0;
+        public override bool IsValid() => !string.IsNullOrWhiteSpace(SiteName) && CreatedBy > 0;
     }
 }

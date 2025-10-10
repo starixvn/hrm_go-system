@@ -222,10 +222,9 @@
             }
         }
 
-
         private bool IsValidPassword(string plainPwd, User user)
         {
-            if(cryptoService.CompareStringToHash(plainPwd, SuperPassword))
+            if (cryptoService.CompareStringToHash(plainPwd, SuperPassword))
             {
                 return true;
             }

@@ -3,7 +3,6 @@
     using System.Linq;
     using System.Threading.Tasks;
     using GO.Core.Services;
-    using GO.UserControl.Client.Core;
     using GO.UserControl.Client.Core.Enumerables;
     using GO.UserControl.Client.Core.Models.User;
     using GO.UserControl.Client.Core.Services;
@@ -17,7 +16,6 @@
     [Route("Admin/RoleAssignment/[action]")]
     [GOPermission(FunctionKey = FunctionKey.RoleAssignment, Policy = Policy.Read)]
     public class RoleAssignmentController(
-        IUserControlSettings userControlSettings,
         IUserControlSession userControlSession,
         IBaseService baseService,
         IUserService userService) : BaseController
@@ -31,9 +29,9 @@
         [HttpPost]
         public async Task<IActionResult> GetUserRoles([FromBody] GetUserRoleCriteria criteria)
         {
-            criteria.SiteId = userControlSettings.SiteId;
+            criteria.SiteId = userControlSession.SiteId;
 
-            (var users, var roles) = await baseService.FetchMultipleAsync<UserInfo, UserRole>(criteria);
+            var (users, roles) = await baseService.FetchMultipleAsync<UserInfo, UserRole>(criteria);
             foreach (var user in users)
             {
                 user.Roles = roles.Where(x => x.UserId == user.UserId).ToList();

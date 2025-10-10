@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GO.Core", "GO.Core\GO.Core.csproj", "{5DCAF336-1651-42A2-9834-306939A2EDDD}"
 EndProject
@@ -15,17 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GO.WebAPI", "GO.WebAPI\GO.W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GO.Letstalk.WebAPI", "GO.Letstalk.WebAPI\GO.Letstalk.WebAPI.csproj", "{BD6F7F0A-5E94-4399-83DF-F8691E8D8DB2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GO.Website", "GO.Website\GO.Website.csproj", "{2D52159B-23E0-4C68-A195-F079A49D460D}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{DF3EF079-C57A-4AB0-940B-0959740CB32A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GO.Website.UnitTests", "GO.Website.UnitTests\GO.Website.UnitTests.csproj", "{C1B0CB4C-B10D-40DC-8D85-DDE65F3CCE99}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GO.UserControl.Client.AspNetCore", "GO.UserControl.Client.AspNetCore\GO.UserControl.Client.AspNetCore.csproj", "{80012BB0-D51F-4537-8369-5358BD5A0168}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GO.UserControl.Client.Core", "GO.UserControl.Client.Core\GO.UserControl.Client.Core.csproj", "{1D10B6EB-077C-4063-9467-412DA94036AA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GO.UserControl.Client.AspNetMvc", "GO.UserControl.Client.AspNetMvc\GO.UserControl.Client.AspNetMvc.csproj", "{A0D67693-5265-4920-BF8B-BD16072891D9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GO.UserControl.Client.Core", "GO.UserControl.Client.Core\GO.UserControl.Client.Core.csproj", "{EDD9FFFC-3C5E-42CE-BDF1-075B0F96FF0D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,32 +47,13 @@ Global
 		{BD6F7F0A-5E94-4399-83DF-F8691E8D8DB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD6F7F0A-5E94-4399-83DF-F8691E8D8DB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD6F7F0A-5E94-4399-83DF-F8691E8D8DB2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2D52159B-23E0-4C68-A195-F079A49D460D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2D52159B-23E0-4C68-A195-F079A49D460D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2D52159B-23E0-4C68-A195-F079A49D460D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2D52159B-23E0-4C68-A195-F079A49D460D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C1B0CB4C-B10D-40DC-8D85-DDE65F3CCE99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C1B0CB4C-B10D-40DC-8D85-DDE65F3CCE99}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C1B0CB4C-B10D-40DC-8D85-DDE65F3CCE99}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C1B0CB4C-B10D-40DC-8D85-DDE65F3CCE99}.Release|Any CPU.Build.0 = Release|Any CPU
-		{80012BB0-D51F-4537-8369-5358BD5A0168}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{80012BB0-D51F-4537-8369-5358BD5A0168}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{80012BB0-D51F-4537-8369-5358BD5A0168}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{80012BB0-D51F-4537-8369-5358BD5A0168}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1D10B6EB-077C-4063-9467-412DA94036AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1D10B6EB-077C-4063-9467-412DA94036AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1D10B6EB-077C-4063-9467-412DA94036AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1D10B6EB-077C-4063-9467-412DA94036AA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A0D67693-5265-4920-BF8B-BD16072891D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A0D67693-5265-4920-BF8B-BD16072891D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A0D67693-5265-4920-BF8B-BD16072891D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A0D67693-5265-4920-BF8B-BD16072891D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDD9FFFC-3C5E-42CE-BDF1-075B0F96FF0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDD9FFFC-3C5E-42CE-BDF1-075B0F96FF0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDD9FFFC-3C5E-42CE-BDF1-075B0F96FF0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDD9FFFC-3C5E-42CE-BDF1-075B0F96FF0D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{C1B0CB4C-B10D-40DC-8D85-DDE65F3CCE99} = {DF3EF079-C57A-4AB0-940B-0959740CB32A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4363B81B-E0B0-430D-B384-C206CF65C55C}

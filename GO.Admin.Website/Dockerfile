@@ -1,34 +1,28 @@
-ARG CI_REGISTRY_IMAGE
-
-FROM $CI_REGISTRY_IMAGE:builder AS deps
-
-RUN mkdir -p /src/packages
-
 FROM hub.nexdev.net/base/dotnet/core/sdk:8.0-alpine AS builder
-
-ENV NUGET_PACKAGES=/src/packages
-
-COPY --from=deps $NUGET_PACKAGES/. $NUGET_PACKAGES/
 
 WORKDIR /src
 
 COPY ["GO.Admin.Website/GO.Admin.Website.csproj", "GO.Admin.Website/"]
 
+# Copy the rest of the source code
 RUN dotnet nuget add source https://nuget.nexdev.net/api/v2
-RUN dotnet restore -v n -r linux-x64 "GO.Admin.Website/GO.Admin.Website.csproj"
+# Restore dependencies
+RUN --mount=type=cache,target=/root/.nuget/packages \
+    dotnet restore -v n -r linux-x64 "GO.Admin.Website/GO.Admin.Website.csproj"
 
 COPY ["GO.Admin.Website/", "GO.Admin.Website/"]
 
 WORKDIR /src/GO.Admin.Website
 
-RUN dotnet publish -r linux-x64 --self-contained false -o /app
+RUN --mount=type=cache,target=/root/.nuget/packages \
+    dotnet publish -r linux-x64 --self-contained false -c Release -o /app
 
-FROM hub.nexdev.net/base/dotnet/core/aspnet:8.0-slim AS base
+FROM hub.nexdev.net/base/dotnet/core/aspnet:8.0-alpine AS base
 
-RUN sed -i 's/DEFAULT@SECLEVEL=2/DEFAULT@SECLEVEL=1/g' /etc/ssl/openssl.cnf
-RUN sed -i 's/MinProtocol = TLSv1.2/MinProtocol = TLSv1/g' /etc/ssl/openssl.cnf
-RUN sed -i 's/DEFAULT@SECLEVEL=2/DEFAULT@SECLEVEL=1/g' /usr/lib/ssl/openssl.cnf
-RUN sed -i 's/MinProtocol = TLSv1.2/MinProtocol = TLSv1/g' /usr/lib/ssl/openssl.cnf
+WORKDIR /app
+COPY --from=builder /app .
+
+ENV TZ="Asia/Bangkok"
 
 # Don’t run as root
 RUN adduser --disabled-password \
@@ -36,9 +30,5 @@ RUN adduser --disabled-password \
   --gecos '' dotnetuser && chown -R dotnetuser /app && chown -R dotnetuser /tmp
 USER dotnetuser
 #
-
-WORKDIR /app
-COPY --from=builder /app .
-ENV TZ="Asia/Bangkok"
 
 ENTRYPOINT ["dotnet", "GO.Admin.Website.dll"]

@@ -23,6 +23,10 @@
 
         Task<User> GetByIdAsync(int id);
 
+        IList<Site> GetSite(int userId); //NOSONAR
+
+        Task<IList<Site>> GetSiteAsync(int userId);
+
         CommandResult Create(CreateUserParam param);
 
         Task<CommandResult> CreateAsync(CreateUserParam param);

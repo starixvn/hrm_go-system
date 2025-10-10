@@ -25,7 +25,6 @@ export class CreateSite extends Component {
     handleSubmit = (values, { setSubmitting }) => {
         setSubmitting(true);
         const params = {
-            companyId: values.company.value,
             siteName: values.name,
             siteURL: values.url,
             ssoUrl: values.ssoUrl,
@@ -52,10 +51,6 @@ export class CreateSite extends Component {
         handleSubmit,
         isSubmitting
     }) => {
-        const companyOptions = window.companies ? window.companies.map(item => {
-            return { value: item.companyId, label: item.name };
-        }) : [];
-
         return (
             <Form noValidate onSubmit={handleSubmit}>
                 <Modal.Body>
@@ -89,18 +84,6 @@ export class CreateSite extends Component {
                                 className="shadow-none" autoComplete="off"
                                 isInvalid={touched.url && errors.url}
                                 onChange={handleChange}
-                            />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row}>
-                        <Form.Label column sm="4" md="3" className="required">
-                            {LangHelper.getResource('Company')}
-                        </Form.Label>
-                        <Col sm="8" md="9">
-                            <Select className={`react-select-container ${errors && errors.company ? 'is-invalid' : ''}`}
-                                classNamePrefix="react-select" isSearchable={false}
-                                options={companyOptions} value={values.company} placeholder={LangHelper.getResource('PleaseSelect')}
-                                onChange={value => setFieldValue('company', value)}
                             />
                         </Col>
                     </Form.Group>
@@ -146,7 +129,6 @@ export class CreateSite extends Component {
             name: '',
             url: '',
             ssoUrl: '',
-            company: null,
             isActive: true
         };
         return (

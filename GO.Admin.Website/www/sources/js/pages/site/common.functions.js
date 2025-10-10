@@ -29,11 +29,5 @@ export const validateFormik = values => {
         }
     }
 
-    if (!values.company) {
-        errors.company = LangHelper.formatString(
-            LangHelper.getResource('FieldRequired'),
-            LangHelper.getResource('Company'));
-    }
-
     return errors;
 };

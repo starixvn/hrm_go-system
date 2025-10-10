@@ -3,14 +3,10 @@
         <TargetFramework>net8.0</TargetFramework>
     </PropertyGroup>
     <ItemGroup>
-        <None Remove="App_Data\SpNames.LOCAL.xml" />
-        <None Remove="App_Data\SpNames.PROD.xml" />
         <None Remove="App_Data\SpNames.xml" />
         <None Remove="logs\log.txt" />
     </ItemGroup>
     <ItemGroup>
-        <Content Include="App_Data\SpNames.LOCAL.xml" />
-        <Content Include="App_Data\SpNames.PROD.xml" />
         <Content Include="App_Data\SpNames.xml">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>

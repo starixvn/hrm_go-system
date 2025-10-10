@@ -1,65 +1,51 @@
-﻿namespace GO.Admin.Website.Filters
+﻿namespace GO.Admin.Website.Filters;
+
+using System;
+using System.Net;
+using GO.UserControl.Client.Core.Enumerables;
+using GO.UserControl.Client.Core.Session;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.DependencyInjection;
+
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+public class UCPermissionAttribute : Attribute, IAuthorizationFilter
 {
-    using System;
-    using System.Net;
-    using System.Threading.Tasks;
-    using GO.UserControl.Client.Core;
-    using GO.UserControl.Client.Core.Enumerables;
-    using GO.UserControl.Client.Core.Session;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Filters;
+    public string FunctionKey { get; set; }
+    public Policy Policy { get; set; }
 
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class UCPermissionAttribute : Attribute, IAsyncAuthorizationFilter
+    public void OnAuthorization(AuthorizationFilterContext context)
     {
-        private readonly IUserControlSession session;
-
-        public UCPermissionAttribute() : this(null)
+        var session = context.HttpContext.RequestServices.GetRequiredService<IUserControlSession>();
+        if (session.UserId <= 0 || session.JwtToken == null || session.JwtToken.IsExpired)
         {
-        }
-
-        internal UCPermissionAttribute(IUserControlSession session)
-        {
-            this.session = session ?? UserControlClientManager.UserControlSession;
-        }
-
-        public string FunctionKey { get; set; }
-        public Policy Policy { get; set; }
-
-        public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
-        {
-            if (session.UserId <= 0 || session.JwtToken == null || session.JwtToken.IsExpired)
+            if (IsAjaxRequest(context.HttpContext.Request))
             {
-                if (IsAjaxRequest(context.HttpContext.Request))
-                {
-                    context.Result = new UnauthorizedResult();
-                }
-                else
-                {
-                    context.Result = new RedirectToActionResult("logout", "auth", null);
-                }
+                context.Result = new UnauthorizedResult();
             }
             else
             {
-                if (!session.HasPermissionOnFunction(FunctionKey, Policy))
+                context.Result = new RedirectToActionResult("logout", "auth", null);
+            }
+        }
+        else
+        {
+            if (!session.HasPermissionOnFunction(FunctionKey, Policy))
+            {
+                if (IsAjaxRequest(context.HttpContext.Request))
                 {
-                    if (IsAjaxRequest(context.HttpContext.Request))
-                    {
-                        var response = context.HttpContext.Response;
-                        response.StatusCode = (int)HttpStatusCode.MethodNotAllowed;
-                        await response.WriteAsync("<center><b>Access denied!</b></center>");
-                    }
-                    else
-                    {
-                        context.Result = new RedirectToActionResult("AccessDenied", "Error", null);
-                    }
+                    context.Result = new StatusCodeResult((int)HttpStatusCode.Forbidden);
+                }
+                else
+                {
+                    context.Result = new RedirectToActionResult("AccessDenied", "Error", null);
                 }
             }
         }
-
-        private static bool IsAjaxRequest(HttpRequest request)
-           => string.Equals(request.Query["X-Requested-With"], "XMLHttpRequest", StringComparison.OrdinalIgnoreCase) ||
-              string.Equals(request.Headers["X-Requested-With"], "XMLHttpRequest", StringComparison.OrdinalIgnoreCase);
     }
+
+    private static bool IsAjaxRequest(HttpRequest request)
+        => string.Equals(request.Query["X-Requested-With"], "XMLHttpRequest", StringComparison.OrdinalIgnoreCase) ||
+           string.Equals(request.Headers["X-Requested-With"], "XMLHttpRequest", StringComparison.OrdinalIgnoreCase);
 }

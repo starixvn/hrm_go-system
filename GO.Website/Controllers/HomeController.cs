@@ -15,7 +15,6 @@
     using Microsoft.AspNetCore.Mvc;
 
     public class HomeController(
-        IUserControlSettings userControlSettings,
         IUserControlSession userControlSession,
         IAuthService authService,
         IUserService userService,
@@ -36,7 +35,7 @@
                 UserId = userControlSession.UserId
             };
             var usersites = await baseService.GetDataAsync<UserSite>(criteria);
-            usersites = usersites.Where(x => x.SiteId != userControlSettings.SiteId).ToList();
+            usersites = usersites.Where(x => x.SiteId != UserControlClient.SiteId).ToList();
             foreach (var usersite in usersites)
             {
                 var username = !string.IsNullOrWhiteSpace(usersite.Username) ? usersite.Username : usersite.Code;
