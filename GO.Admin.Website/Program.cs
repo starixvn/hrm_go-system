@@ -35,7 +35,10 @@ services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
         options.Cookie = new CookieBuilder
         {
             Name = ".UserControl.Admin.Cookies",
-            SecurePolicy = CookieSecurePolicy.SameAsRequest
+            HttpOnly = true,
+            SecurePolicy = CookieSecurePolicy.SameAsRequest,
+            SameSite = SameSiteMode.Lax,
+            MaxAge = TimeSpan.FromMinutes(int.Parse(configuration.GetSection("AuthSettings:SessionTimeout").Value))
         };
         options.Events.OnSigningOut = context =>
         {
@@ -48,7 +51,10 @@ services.AddSession(options =>
 {
     options.Cookie.Name = ".UserControl.Admin.Session";
     options.IdleTimeout = TimeSpan.FromMinutes(int.Parse(configuration.GetSection("AuthSettings:SessionTimeout").Value));
+    options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    options.Cookie.SameSite = SameSiteMode.Lax;
 });
 
 services.AddControllersWithViews();
