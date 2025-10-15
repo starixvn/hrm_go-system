@@ -15,9 +15,9 @@
 
         Task<IList<FunctionPermission>> GetFunctionPermissionAsync(short siteId, int userId);
 
-        IList<User> GetUserBySiteId(string keyword = null, byte? statusId = null);
+        IList<User> GetUserBySiteId(short siteId, string keyword = null, byte? statusId = null);
 
-        Task<IList<User>> GetUserBySiteIdAsync(string keyword = null, byte? statusId = null);
+        Task<IList<User>> GetUserBySiteIdAsync(short siteId, string keyword = null, byte? statusId = null);
 
         User GetById(int id);
 

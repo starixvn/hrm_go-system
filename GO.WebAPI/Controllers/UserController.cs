@@ -46,7 +46,7 @@ public class UserController(
     [Route("getAll")]
     public async Task<IActionResult> GetBySiteId(GetUserBySiteIdCriteria criteria)
     {
-        criteria.SiteId = SiteId;
+        criteria.SiteId = criteria.SiteId > 0 ? criteria.SiteId : SiteId;
         var users = await baseService.GetDataAsync<User>(criteria);
         return Json(users);
     }
@@ -101,7 +101,7 @@ public class UserController(
     [Route("assignRole")]
     public async Task<IActionResult> AssignRole([FromBody] AssignRoleToUserCommand command)
     {
-        command.SiteId = SiteId;
+        command.SiteId = command.SiteId > 0 ? command.SiteId : SiteId;
         command.ModifiedBy = UserId;
         var commandResult = await baseService.ExecuteNonQueryAsync(command);
         return Json(commandResult);
