@@ -15,15 +15,15 @@
 
         Task<IList<FunctionPermission>> GetFunctionPermissionAsync(short siteId, int userId);
 
-        IList<User> GetUserBySiteId(string keyword = null, byte? statusId = null);
+        IList<User> GetUserBySiteId(short siteId, string keyword = null, byte? statusId = null);
 
-        Task<IList<User>> GetUserBySiteIdAsync(string keyword = null, byte? statusId = null);
+        Task<IList<User>> GetUserBySiteIdAsync(short siteId, string keyword = null, byte? statusId = null);
 
         User GetById(int id);
 
         Task<User> GetByIdAsync(int id);
 
-        IList<Site> GetSite(int userId); //NOSONAR
+        IList<Site> GetSite(int userId);
 
         Task<IList<Site>> GetSiteAsync(int userId);
 
@@ -50,5 +50,9 @@
         CommandResult Delete(int userId);
 
         Task<CommandResult> DeleteAsync(int userId);
+
+        CommandResult UpdateUserSite(UpdateUserSiteParam param);
+
+        Task<CommandResult> UpdateUserSiteAsync(UpdateUserSiteParam param);
     }
 }

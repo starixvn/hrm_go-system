@@ -5,6 +5,7 @@
     [Serializable]
     public class AssignRoleParam
     {
+        public short SiteId { get; set; }
         public int UserId { get; set; }
         public string RoleIds { get; set; }
     }

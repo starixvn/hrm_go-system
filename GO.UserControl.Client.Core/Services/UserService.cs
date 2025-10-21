@@ -20,10 +20,10 @@
         public async Task<IList<FunctionPermission>> GetFunctionPermissionAsync(short siteId, int userId)
             => await GetAsync<IList<FunctionPermission>>(string.Format(RelativePaths.GetFunctionPermissionPath, siteId, userId));
 
-        public IList<User> GetUserBySiteId(string keyword = null, byte? statusId = null)
+        public IList<User> GetUserBySiteId(short siteId, string keyword = null, byte? statusId = null)
             => Get<IList<User>>(string.Format(RelativePaths.GetUserBySiteIdPath, keyword, statusId));
 
-        public async Task<IList<User>> GetUserBySiteIdAsync(string keyword = null, byte? statusId = null)
+        public async Task<IList<User>> GetUserBySiteIdAsync(short siteId, string keyword = null, byte? statusId = null)
             => await GetAsync<IList<User>>(string.Format(RelativePaths.GetUserBySiteIdPath, keyword, statusId));
 
         public User GetById(int id)
@@ -86,6 +86,16 @@
             return await PostAsync<Dictionary<string, object>, CommandResult>(RelativePaths.DeleteUserPath, data);
         }
 
+        public CommandResult UpdateUserSite(UpdateUserSiteParam param)
+        {
+            return Post<UpdateUserSiteParam, CommandResult>(RelativePaths.UpdateUserSitePath, param);
+        }
+
+        public async Task<CommandResult> UpdateUserSiteAsync(UpdateUserSiteParam param)
+        {
+            return await PostAsync<UpdateUserSiteParam, CommandResult>(RelativePaths.UpdateUserSitePath, param);
+        }
+
         private static class RelativePaths
         {
             public const string GetMenuItemPath = "api/user/getMenuItem";
@@ -99,6 +109,7 @@
             public const string UpdatePasswordPath = "api/user/updatePassword";
             public const string ResetPasswordPath = "api/user/resetPassword";
             public const string DeleteUserPath = "api/user/delete";
+            public const string UpdateUserSitePath = "api/user/updateUserSite";
         }
     }
 }
